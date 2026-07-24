@@ -34,6 +34,9 @@
             <p class="company">{{ job.company }}</p>
             <p class="meta">{{ job.location or 'Location not listed' }}{% if job.salary %} · {{ job.salary }}{% endif %}{% if job.graduation_year %} · Class of {{ job.graduation_year }}{% endif %}</p>
             <p class="meta">{% if job.posted_at %}Posted {{ job.posted_at.strftime('%b %d, %Y') }}{% elif job.source_age %}Posted {{ job.source_age }} ago{% else %}Posting date unavailable{% endif %}</p>
+            {% if job.fit_confidence is not none %}
+            <p class="fit"><strong>{{ job.fit_confidence }}%</strong> — {{ job.fit_reasoning }}</p>
+            {% endif %}
             <p class="sources">{% for source in job.sources %}<a href="{{ source.source_url }}" target="_blank" rel="noopener">{{ source.source_name }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
           </div>
           <a class="apply" href="{{ job.application_url }}" target="_blank" rel="noopener">Apply ↗</a>

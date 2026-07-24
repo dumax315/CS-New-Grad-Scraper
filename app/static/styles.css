@@ -14,6 +14,8 @@ button, .apply { background: #74d5b4; border: 0; color: #092219; cursor: pointer
 h2 { font-size: 1.08rem; margin: 0 0 5px; }
 .company { margin: 0 0 4px; color: #74d5b4; font-weight: 650; }
 .meta, .sources { font-size: .88rem; color: #aab4c3; margin: 0; }
+.fit { color: #d9e2ed; font-size: .9rem; margin: 9px 0 7px; }
+.fit strong { color: #74d5b4; }
 .sources a { color: #aab4c3; }
 .apply { white-space: nowrap; padding: 10px 13px; border-radius: 8px; text-decoration: none; }
 .empty { color: #aab4c3; }
