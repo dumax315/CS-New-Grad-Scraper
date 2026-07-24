@@ -20,7 +20,7 @@ def store_candidates(session: Session, candidates: list[Candidate]) -> list[List
                 company=candidate.company, title=candidate.title, location=candidate.location,
                 application_url=candidate.application_url, salary=candidate.salary,
                 category=candidate.category, graduation_year=candidate.graduation_year,
-                source_age=candidate.source_age, last_seen_at=now,
+                source_age=candidate.source_age, posted_at=candidate.posted_at, last_seen_at=now,
             )
             session.add(listing)
             session.flush()
@@ -30,6 +30,8 @@ def store_candidates(session: Session, candidates: list[Candidate]) -> list[List
             listing.company, listing.title, listing.location = candidate.company, candidate.title, candidate.location
             listing.salary, listing.category, listing.source_age = candidate.salary, candidate.category, candidate.source_age
             listing.graduation_year = candidate.graduation_year or listing.graduation_year
+            if candidate.posted_at and (listing.posted_at is None or candidate.posted_at > listing.posted_at):
+                listing.posted_at = candidate.posted_at
         source_exists = session.scalar(select(ListingSource).where(
             ListingSource.listing_id == listing.id, ListingSource.source_name == candidate.source_name,
         ))

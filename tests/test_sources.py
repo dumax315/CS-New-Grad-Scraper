@@ -1,4 +1,6 @@
-from app.sources import Source, canonicalize_url, parse_source
+from datetime import date
+
+from app.sources import Source, canonicalize_url, parse_posted_date, parse_source
 
 
 TEST_SOURCE = Source("Test", "https://example.test/raw", "https://example.test")
@@ -28,6 +30,13 @@ def test_parser_handles_apply_column_and_missing_optional_values():
     jobs = parse_source(markdown, TEST_SOURCE)
     assert jobs[0].title == "Backend Developer"
     assert jobs[0].source_age == "Today"
+
+
+def test_parser_converts_relative_and_calendar_post_dates():
+    today = date(2026, 7, 23)
+    assert parse_posted_date("1d", today) == date(2026, 7, 22)
+    assert parse_posted_date("Jul 09", today) == date(2026, 7, 9)
+    assert parse_posted_date("2026-07-09", today) == date(2026, 7, 9)
 
 
 def test_canonicalization_removes_tracking_and_fragment():

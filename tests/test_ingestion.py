@@ -1,3 +1,5 @@
+from datetime import date
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -8,7 +10,10 @@ from app.sources import Candidate
 
 
 def candidate(source_name="Source A"):
-    return Candidate("Acme", "Software Engineer", "Seattle", "https://jobs.example/role", source_name, "https://github.com/example")
+    return Candidate(
+        "Acme", "Software Engineer", "Seattle", "https://jobs.example/role", source_name,
+        "https://github.com/example", posted_at=date(2026, 7, 23),
+    )
 
 
 def test_store_is_idempotent_and_keeps_both_sources():
@@ -22,3 +27,4 @@ def test_store_is_idempotent_and_keeps_both_sources():
         assert len(first) == 1
         assert second == []
         assert len(listing.sources) == 2
+        assert listing.posted_at == date(2026, 7, 23)

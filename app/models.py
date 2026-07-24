@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import date, datetime
 
-from sqlalchemy import DateTime, ForeignKey, String, Text, UniqueConstraint, func
+from sqlalchemy import Date, DateTime, ForeignKey, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -18,6 +18,7 @@ class Listing(Base):
     category: Mapped[str] = mapped_column(String(100), default="Other")
     graduation_year: Mapped[int | None] = mapped_column(nullable=True)
     source_age: Mapped[str] = mapped_column(String(100), default="")
+    posted_at: Mapped[date | None] = mapped_column(Date, nullable=True)
     first_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     sources: Mapped[list["ListingSource"]] = relationship(back_populates="listing", cascade="all, delete-orphan")

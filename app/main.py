@@ -40,7 +40,9 @@ def index(
     year: int | None = Query(default=None, ge=2020, le=2100),
     session: Session = Depends(get_session),
 ):
-    statement = select(Listing).options(selectinload(Listing.sources)).order_by(Listing.first_seen_at.desc())
+    statement = select(Listing).options(selectinload(Listing.sources)).order_by(
+        Listing.posted_at.desc().nulls_last(), Listing.first_seen_at.desc(),
+    )
     if q:
         term = f"%{q.strip()}%"
         statement = statement.where(or_(Listing.company.ilike(term), Listing.title.ilike(term), Listing.location.ilike(term)))

@@ -1,6 +1,7 @@
 """Fetch and parse the two curated GitHub job-list sources."""
 
 from dataclasses import dataclass
+from datetime import date, datetime, timedelta
 import logging
 import re
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
@@ -42,6 +43,7 @@ class Candidate:
     category: str = "Other"
     salary: str = ""
     source_age: str = ""
+    posted_at: date | None = None
     graduation_year: int | None = None
 
 
@@ -54,6 +56,7 @@ ENGINEERING_ROLE_RE = re.compile(
     r"\b(software|swe|developer|engineer|sdet|devops|site reliability|platform|machine learning|data engineer|backend|frontend|full[ -]?stack|infrastructure)\b",
     re.I,
 )
+RELATIVE_AGE_RE = re.compile(r"^(\d+)\s*(?:d|day|days)\b", re.I)
 
 
 def clean_text(value: str) -> str:
@@ -77,6 +80,37 @@ def canonicalize_url(url: str) -> str:
     kept_query = [(key, value) for key, value in parse_qsl(parts.query, keep_blank_values=True)
                   if not key.lower().startswith("utm_") and key.lower() not in {"ref", "source"}]
     return urlunsplit((parts.scheme.lower(), parts.netloc.lower(), parts.path.rstrip("/"), urlencode(sorted(kept_query)), ""))
+
+
+def parse_posted_date(value: str, today: date | None = None) -> date | None:
+    """Convert source age/date cells into a calendar date when possible."""
+    value = clean_text(value).strip()
+    if not value:
+        return None
+    today = today or date.today()
+    if value.lower() == "today":
+        return today
+    if value.lower() == "yesterday":
+        return today - timedelta(days=1)
+    if relative_age := RELATIVE_AGE_RE.match(value):
+        return today - timedelta(days=int(relative_age.group(1)))
+
+    for format_string in ("%Y-%m-%d", "%m/%d/%Y", "%m/%d/%y", "%b %d, %Y", "%B %d, %Y"):
+        try:
+            return datetime.strptime(value, format_string).date()
+        except ValueError:
+            pass
+    for format_string in ("%b %d", "%B %d", "%m/%d"):
+        try:
+            # Use an explicit leap year while parsing to avoid Python's
+            # yearless-date ambiguity and preserve February 29 when present.
+            parsed = datetime.strptime(f"2000 {value}", f"%Y {format_string}").date()
+            parsed = parsed.replace(year=today.year)
+            # A yearless source date in the future belongs to the prior year.
+            return parsed.replace(year=today.year - 1) if parsed > today else parsed
+        except ValueError:
+            pass
+    return None
 
 
 def split_markdown_row(line: str) -> list[str]:
@@ -127,6 +161,7 @@ def row_to_candidate(headers: list[str], row: list[str], source: Source, categor
     if EXCLUDED_ROLE_RE.search(combined_role) or not ENGINEERING_ROLE_RE.search(combined_role):
         return None
     year_match = YEAR_RE.search(title)
+    source_age = clean_text(field("age", "date", "dateposted"))
     return Candidate(
         company=company,
         title=title,
@@ -136,7 +171,8 @@ def row_to_candidate(headers: list[str], row: list[str], source: Source, categor
         source_url=source.repository_url,
         category=category,
         salary=clean_text(field("salary")),
-        source_age=clean_text(field("age", "date", "dateposted")),
+        source_age=source_age,
+        posted_at=parse_posted_date(source_age),
         graduation_year=int(year_match.group(1)) if year_match else None,
     )
 
