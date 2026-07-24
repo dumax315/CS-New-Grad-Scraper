@@ -3,7 +3,7 @@ services:
     build: .
     restart: unless-stopped
     environment: &app-env
-      DATABASE_URL: postgresql+psycopg://jobs:${POSTGRES_PASSWORD}@db:5432/jobs
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DATABASE}
       APP_TIMEZONE: ${APP_TIMEZONE:-America/Los_Angeles}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
@@ -34,8 +34,8 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: jobs
-      POSTGRES_USER: jobs
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
