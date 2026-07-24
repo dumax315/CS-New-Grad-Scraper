@@ -1,0 +1,20 @@
+:root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #10141e; color: #f2f5fa; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 960px; margin: 0 auto; padding: 56px 24px; }
+header { margin-bottom: 32px; }
+.eyebrow { color: #74d5b4; font-size: .75rem; font-weight: 700; letter-spacing: .11em; margin: 0 0 8px; }
+h1 { font-size: clamp(2.3rem, 7vw, 4rem); line-height: 1; margin: 0; }
+.intro { color: #b3bdcb; font-size: 1.1rem; }
+.filters { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px; }
+input, select, button { border-radius: 8px; border: 1px solid #354253; padding: 11px 12px; font: inherit; background: #18202c; color: inherit; }
+button, .apply { background: #74d5b4; border: 0; color: #092219; cursor: pointer; font-weight: 700; }
+.count { color: #aab4c3; margin: 28px 0 10px; }
+.listing { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 20px; margin-bottom: 10px; border: 1px solid #2b3645; border-radius: 10px; background: #151c27; }
+h2 { font-size: 1.08rem; margin: 0 0 5px; }
+.company { margin: 0 0 4px; color: #74d5b4; font-weight: 650; }
+.meta, .sources { font-size: .88rem; color: #aab4c3; margin: 0; }
+.sources a { color: #aab4c3; }
+.apply { white-space: nowrap; padding: 10px 13px; border-radius: 8px; text-decoration: none; }
+.empty { color: #aab4c3; }
+@media (max-width: 680px) { main { padding: 32px 16px; } .filters { grid-template-columns: 1fr; } .listing { align-items: flex-start; flex-direction: column; gap: 16px; } }

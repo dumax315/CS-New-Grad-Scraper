@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New Grad SWE Jobs</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="eyebrow">CURATED GITHUB SOURCES</p>
+        <h1>New Grad SWE Jobs</h1>
+        <p class="intro">Fresh software-engineering and adjacent new-grad roles in one place.</p>
+      </header>
+      <form class="filters" method="get">
+        <input name="q" value="{{ q }}" placeholder="Company, role, or location" aria-label="Search listings">
+        <select name="source" aria-label="Filter by source">
+          <option value="">All sources</option>
+          {% for name in source_names %}<option value="{{ name }}" {% if selected_source == name %}selected{% endif %}>{{ name }}</option>{% endfor %}
+        </select>
+        <select name="year" aria-label="Filter by graduation year">
+          <option value="">All years</option>
+          {% for value in years %}<option value="{{ value }}" {% if selected_year == value %}selected{% endif %}>{{ value }}</option>{% endfor %}
+        </select>
+        <button type="submit">Filter</button>
+      </form>
+      <p class="count">{{ listings|length }} listing{{ '' if listings|length == 1 else 's' }}</p>
+      <section class="listings" aria-label="Job listings">
+        {% for job in listings %}
+        <article class="listing">
+          <div>
+            <h2>{{ job.title }}</h2>
+            <p class="company">{{ job.company }}</p>
+            <p class="meta">{{ job.location or 'Location not listed' }}{% if job.salary %} · {{ job.salary }}{% endif %}{% if job.graduation_year %} · Class of {{ job.graduation_year }}{% endif %}</p>
+            <p class="sources">{% for source in job.sources %}<a href="{{ source.source_url }}" target="_blank" rel="noopener">{{ source.source_name }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
+          </div>
+          <a class="apply" href="{{ job.application_url }}" target="_blank" rel="noopener">Apply ↗</a>
+        </article>
+        {% else %}
+        <p class="empty">No listings match those filters yet. The next scheduled scrape will update this page.</p>
+        {% endfor %}
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+from dataclasses import dataclass
+import os
+
+
+@dataclass(frozen=True)
+class Settings:
+    database_url: str = os.getenv("DATABASE_URL", "sqlite:///./jobs.db")
+    timezone: str = os.getenv("APP_TIMEZONE", "America/Los_Angeles")
+    smtp_host: str = os.getenv("SMTP_HOST", "")
+    smtp_port: int = int(os.getenv("SMTP_PORT", "587"))
+    smtp_username: str = os.getenv("SMTP_USERNAME", "")
+    smtp_password: str = os.getenv("SMTP_PASSWORD", "")
+    smtp_from: str = os.getenv("SMTP_FROM", "")
+    alert_recipient: str = os.getenv("ALERT_RECIPIENT", "")
+    smtp_use_tls: bool = os.getenv("SMTP_USE_TLS", "true").lower() == "true"
+    send_initial_digest: bool = os.getenv("SEND_INITIAL_DIGEST", "false").lower() == "true"
+
+
+settings = Settings()
