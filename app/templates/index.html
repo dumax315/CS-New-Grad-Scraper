@@ -19,10 +19,6 @@
           <option value="">All sources</option>
           {% for name in source_names %}<option value="{{ name }}" {% if selected_source == name %}selected{% endif %}>{{ name }}</option>{% endfor %}
         </select>
-        <select name="year" aria-label="Filter by graduation year">
-          <option value="">All years</option>
-          {% for value in years %}<option value="{{ value }}" {% if selected_year == value %}selected{% endif %}>{{ value }}</option>{% endfor %}
-        </select>
         <button type="submit">Filter</button>
       </form>
       <p class="count">{{ listings|length }} listing{{ '' if listings|length == 1 else 's' }} · newest posts first</p>

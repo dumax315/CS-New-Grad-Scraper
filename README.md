@@ -16,6 +16,22 @@ The worker is intentionally the only component that fetches GitHub and sends ale
 
 After each ingestion, the worker scrapes the actual application pages for the first 10 new listings and runs the scraped text through `codex exec` in non-interactive, ephemeral, read-only mode. The resulting Spring 2027 CS-undergraduate fit percentage and short reasoning are stored with the listing and displayed on the board. `CODEX_MODEL` defaults to the cost-efficient `gpt-5.6-luna`; `CODEX_TIMEOUT_SECONDS` controls the per-listing timeout.
 
+The scraper reads standard HTML and JobPosting JSON-LD, and uses Workday's structured
+job endpoint for client-rendered Workday listings. The board hides listings with a
+known posting date older than 365 days.
+
+To evaluate every unfinished listing posted in the last 10 days, bypassing the
+scheduled worker's 10-listing cap, run this inside the Coolify `worker` terminal:
+
+```sh
+python -m app.backfill --days 10
+```
+
+Add `--force` to scrape and re-evaluate listings that already have a successful score.
+The backfill runs one `codex exec` process at a time, but a large run can still take a
+long time and consume significant API or ChatGPT plan usage. If a listing has no known
+posting date, the command uses the date the scraper first discovered it.
+
 ### Codex authentication on Coolify
 
 `CODEX_API_KEY` uses separately billed OpenAI API usage; it does not use a ChatGPT Plus subscription. Add it as a Coolify secret if that is the billing method you want.

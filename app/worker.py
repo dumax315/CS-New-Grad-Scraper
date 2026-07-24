@@ -1,10 +1,12 @@
 from datetime import datetime, timezone
 from html.parser import HTMLParser
+import json
 import logging
 import os
 import re
 import subprocess
 import tempfile
+from urllib.parse import urlsplit, urlunsplit
 from zoneinfo import ZoneInfo
 
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -61,18 +63,148 @@ def extract_visible_text(html: str) -> str:
     return "\n".join(line for line in lines if line)[:MAX_JOB_TEXT_CHARS]
 
 
+class StructuredJobParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.in_job_json = False
+        self.current_parts: list[str] = []
+        self.documents: list[object] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attributes = dict(attrs)
+        if tag == "script" and attributes.get("type", "").lower() == "application/ld+json":
+            self.in_job_json = True
+            self.current_parts = []
+
+    def handle_data(self, data: str) -> None:
+        if self.in_job_json:
+            self.current_parts.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag != "script" or not self.in_job_json:
+            return
+        self.in_job_json = False
+        try:
+            self.documents.append(json.loads("".join(self.current_parts)))
+        except json.JSONDecodeError:
+            pass
+
+
+def _find_job_postings(value: object) -> list[dict]:
+    if isinstance(value, list):
+        return [posting for item in value for posting in _find_job_postings(item)]
+    if not isinstance(value, dict):
+        return []
+    posting_type = value.get("@type")
+    types = posting_type if isinstance(posting_type, list) else [posting_type]
+    found = [value] if "JobPosting" in types else []
+    return found + [
+        posting
+        for child in value.values()
+        for posting in _find_job_postings(child)
+        if child is not value
+    ]
+
+
+def _structured_value(value: object) -> str:
+    if isinstance(value, str):
+        return extract_visible_text(value)
+    if isinstance(value, (dict, list)):
+        return json.dumps(value, ensure_ascii=False)
+    return str(value) if value is not None else ""
+
+
+def extract_structured_job_text(html: str) -> str:
+    parser = StructuredJobParser()
+    parser.feed(html)
+    postings = [posting for document in parser.documents for posting in _find_job_postings(document)]
+    if not postings:
+        return ""
+    posting = postings[0]
+    field_labels = (
+        ("title", "Title"),
+        ("datePosted", "Date posted"),
+        ("validThrough", "Valid through"),
+        ("employmentType", "Employment type"),
+        ("jobLocation", "Location"),
+        ("description", "Description"),
+        ("responsibilities", "Responsibilities"),
+        ("qualifications", "Qualifications"),
+        ("educationRequirements", "Education requirements"),
+        ("experienceRequirements", "Experience requirements"),
+        ("skills", "Skills"),
+    )
+    parts = [
+        f"{label}: {text}"
+        for field, label in field_labels
+        if (text := _structured_value(posting.get(field)))
+    ]
+    return "\n".join(parts)[:MAX_JOB_TEXT_CHARS]
+
+
+def workday_api_url(url: str) -> str | None:
+    parsed = urlsplit(url)
+    if not parsed.hostname or not parsed.hostname.lower().endswith(".myworkdayjobs.com"):
+        return None
+    segments = [segment for segment in parsed.path.split("/") if segment]
+    try:
+        job_index = next(index for index, segment in enumerate(segments) if segment.lower() == "job")
+    except StopIteration:
+        return None
+    if job_index < 1 or job_index == len(segments) - 1:
+        return None
+    tenant = parsed.hostname.split(".", 1)[0]
+    site = segments[job_index - 1]
+    job_path = "/".join(segments[job_index + 1:])
+    path = f"/wday/cxs/{tenant}/{site}/job/{job_path}"
+    return urlunsplit((parsed.scheme, parsed.netloc, path, "", ""))
+
+
+def extract_workday_job_text(payload: object) -> str:
+    if not isinstance(payload, dict) or not isinstance(payload.get("jobPostingInfo"), dict):
+        return ""
+    posting = payload["jobPostingInfo"]
+    locations = [posting.get("location", ""), *(posting.get("additionalLocations") or [])]
+    parts = [
+        f"Title: {posting.get('title', '')}",
+        f"Job requisition: {posting.get('jobReqId', '')}",
+        f"Location: {', '.join(location for location in locations if location)}",
+        f"Posting age: {posting.get('postedOn', '')}",
+        f"Description: {extract_visible_text(posting.get('jobDescription') or '')}",
+    ]
+    return "\n".join(part for part in parts if not part.endswith(": "))[:MAX_JOB_TEXT_CHARS]
+
+
 def scrape_job_listing(url: str, client: httpx.Client | None = None) -> str:
     own_client = client is None
     client = client or httpx.Client(
         timeout=30,
         follow_redirects=True,
-        headers={"User-Agent": "cs-new-grad-jobs/0.1"},
+        headers={
+            "Accept-Language": "en-US,en;q=0.9",
+            "User-Agent": (
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"
+            ),
+        },
     )
     try:
+        if api_url := workday_api_url(url):
+            try:
+                response = client.get(api_url)
+                response.raise_for_status()
+                if text := extract_workday_job_text(response.json()):
+                    return text
+            except (httpx.HTTPError, json.JSONDecodeError, ValueError):
+                logger.warning("Workday structured endpoint failed for %s; trying the public page", url)
+
         response = client.get(url)
         response.raise_for_status()
         content_type = response.headers.get("content-type", "")
-        text = extract_visible_text(response.text) if "html" in content_type.lower() else response.text.strip()
+        if "html" in content_type.lower():
+            text = extract_structured_job_text(response.text) or extract_visible_text(response.text)
+        else:
+            text = response.text.strip()
         if not text:
             raise ValueError("job page contained no readable text")
         return text[:MAX_JOB_TEXT_CHARS]
@@ -163,6 +295,27 @@ XX must be an integer from 0 through 100. Do not add any other text."""
     return parse_fit_result(completed.stdout)
 
 
+def evaluate_listings(session: Session, listings: list[Listing]) -> int:
+    evaluated = 0
+    for listing in listings:
+        try:
+            logger.info("Scraping job page for Codex evaluation: %s", listing.application_url)
+            job_text = scrape_job_listing(listing.application_url)
+            confidence, reasoning = run_codex_assessment(listing, job_text)
+            listing.fit_confidence = confidence
+            listing.fit_reasoning = reasoning
+            listing.fit_selected_at = listing.fit_selected_at or datetime.now(timezone.utc)
+            listing.fit_evaluated_at = datetime.now(timezone.utc)
+            listing.fit_model = settings.codex_model
+            session.commit()
+            evaluated += 1
+            logger.info("Codex job fit: %s%% — %s", confidence, reasoning)
+        except (httpx.HTTPError, OSError, subprocess.SubprocessError, ValueError):
+            session.rollback()
+            logger.exception("Could not evaluate listing %s", listing.application_url)
+    return evaluated
+
+
 def evaluate_new_listings(session: Session, listings: list[Listing]) -> int:
     newly_selected = listings[:MAX_CODEX_EVALUATIONS]
     if len(listings) > len(newly_selected):
@@ -185,23 +338,7 @@ def evaluate_new_listings(session: Session, listings: list[Listing]) -> int:
         .order_by(Listing.fit_selected_at, Listing.id)
         .limit(MAX_CODEX_EVALUATIONS)
     ).all()
-    evaluated = 0
-    for listing in selected:
-        try:
-            logger.info("Scraping job page for Codex evaluation: %s", listing.application_url)
-            job_text = scrape_job_listing(listing.application_url)
-            confidence, reasoning = run_codex_assessment(listing, job_text)
-            listing.fit_confidence = confidence
-            listing.fit_reasoning = reasoning
-            listing.fit_evaluated_at = datetime.now(timezone.utc)
-            listing.fit_model = settings.codex_model
-            session.commit()
-            evaluated += 1
-            logger.info("Codex job fit: %s%% — %s", confidence, reasoning)
-        except (httpx.HTTPError, OSError, subprocess.SubprocessError, ValueError):
-            session.rollback()
-            logger.exception("Could not evaluate listing %s", listing.application_url)
-    return evaluated
+    return evaluate_listings(session, list(selected))
 
 
 def scrape_and_notify() -> None:

@@ -1,5 +1,6 @@
 import subprocess
 
+import httpx
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker
 
@@ -24,6 +25,53 @@ def test_extract_visible_text_ignores_scripts_and_styles():
     <body><h1>Software Engineer</h1><p>Class of 2027 accepted.</p></body></html>
     """
     assert worker.extract_visible_text(html) == "Software Engineer\nClass of 2027 accepted."
+
+
+def test_extract_structured_job_text_reads_job_posting_json_ld():
+    html = """
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"JobPosting",
+       "title":"Graduate Engineer","datePosted":"2026-07-24",
+       "description":"<p>Class of 2027 accepted.</p>"}
+    </script>
+    """
+    assert worker.extract_structured_job_text(html) == (
+        "Title: Graduate Engineer\n"
+        "Date posted: 2026-07-24\n"
+        "Description: Class of 2027 accepted."
+    )
+
+
+def test_scrape_job_listing_uses_workday_structured_endpoint():
+    page_url = (
+        "https://nvidia.wd5.myworkdayjobs.com/en-US/nvidiaexternalcareersite/"
+        "job/US-CA-Remote/Software-Engineer_JR123"
+    )
+
+    def handler(request: httpx.Request):
+        assert request.url.path == (
+            "/wday/cxs/nvidia/nvidiaexternalcareersite/"
+            "job/US-CA-Remote/Software-Engineer_JR123"
+        )
+        return httpx.Response(200, json={
+            "jobPostingInfo": {
+                "title": "Software Engineer",
+                "jobReqId": "JR123",
+                "location": "US, Remote",
+                "additionalLocations": [],
+                "postedOn": "Posted Today",
+                "jobDescription": "<p>Full job description.</p>",
+            },
+        })
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        assert worker.scrape_job_listing(page_url, client) == (
+            "Title: Software Engineer\n"
+            "Job requisition: JR123\n"
+            "Location: US, Remote\n"
+            "Posting age: Posted Today\n"
+            "Description: Full job description."
+        )
 
 
 def test_parse_fit_result_requires_requested_format():
