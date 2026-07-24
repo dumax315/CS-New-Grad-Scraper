@@ -1,10 +1,13 @@
 """Fetch and parse the two curated GitHub job-list sources."""
 
 from dataclasses import dataclass
+import logging
 import re
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 import httpx
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -164,9 +167,27 @@ def fetch_candidates(client: httpx.Client | None = None) -> list[Candidate]:
     try:
         candidates: list[Candidate] = []
         for source in SOURCES:
+            logger.info("Fetching %s from %s", source.name, source.raw_url)
             response = client.get(source.raw_url)
             response.raise_for_status()
-            candidates.extend(parse_source(response.text, source))
+            parsed = parse_source(response.text, source)
+            logger.info(
+                "Parsed %s matching candidates from %s (%s bytes, %s lines)",
+                len(parsed),
+                source.name,
+                len(response.text),
+                len(response.text.splitlines()),
+            )
+            if logger.isEnabledFor(logging.DEBUG) and parsed:
+                for candidate in parsed[:5]:
+                    logger.debug(
+                        "Candidate sample from %s: %s | %s | %s",
+                        source.name,
+                        candidate.company,
+                        candidate.title,
+                        candidate.application_url,
+                    )
+            candidates.extend(parsed)
         return candidates
     finally:
         if own_client:

@@ -40,6 +40,7 @@ def store_candidates(session: Session, candidates: list[Candidate]) -> list[List
 
 
 def run_ingestion(session: Session) -> list[Listing]:
+    logger.info("Starting ingestion run")
     candidates = fetch_candidates()
     logger.info("Fetched %s matching candidates", len(candidates))
     return store_candidates(session, candidates)

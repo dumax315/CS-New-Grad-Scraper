@@ -18,9 +18,15 @@ def scrape_and_notify() -> None:
     try:
         with SessionLocal() as session:
             is_initial_run = session.scalar(select(func.count(Listing.id))) == 0
+            if is_initial_run:
+                logger.info("Initial load detected; running baseline scrape before scheduling begins")
+            else:
+                logger.info("Running scheduled scrape")
             new_listings = run_ingestion(session)
         sent = send_new_jobs_digest(new_listings) if (settings.send_initial_digest or not is_initial_run) else False
         logger.info("Ingestion completed: %s new listings; digest sent=%s", len(new_listings), sent)
+        if is_initial_run and not new_listings:
+            logger.warning("Initial load produced no stored listings; check the fetch and parser logs above")
     except Exception:
         logger.exception("Ingestion failed")
 
