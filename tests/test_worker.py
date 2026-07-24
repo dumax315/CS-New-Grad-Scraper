@@ -57,6 +57,30 @@ def test_run_codex_assessment_uses_noninteractive_sandbox_and_sanitized_env(monk
     assert "DATABASE_URL" not in captured["env"]
 
 
+def test_codex_prompt_makes_spring_2027_timing_a_gate(monkeypatch):
+    captured = {}
+
+    def fake_run(command, **kwargs):
+        captured["prompt"] = command[-1]
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout="70% — Technical fit is strong, but spring 2027 timing is unstated.\n",
+            stderr="",
+        )
+
+    monkeypatch.setattr(worker.subprocess, "run", fake_run)
+
+    assert worker.run_codex_assessment(
+        listing(),
+        "Bachelor's degree. Strong C skills; coursework and internships count.",
+    )[0] == 70
+    assert "hiring timing as a gating requirement" in captured["prompt"]
+    assert "must be 75% or below" in captured["prompt"]
+    assert "do not by themselves prove" in captured["prompt"]
+    assert "spring 2027 timing is" in captured["prompt"]
+
+
 def test_codex_environment_uses_persistent_login_without_api_key(monkeypatch):
     monkeypatch.setenv("CODEX_API_KEY", "")
     environment = worker.codex_environment("/tmp/temporary-codex")
