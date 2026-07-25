@@ -76,8 +76,9 @@ unless the user asks for that external effect.
 
 ## Application invariants
 
-- The worker owns external fetching and email delivery. Keep web requests
-  read-only with respect to scraping and notifications.
+- The worker owns external fetching and scheduled bulk digest delivery. The web
+  service may send only user-initiated subscription confirmation emails; keep
+  all other notification delivery out of web requests.
 - `Listing.application_url` is the listing deduplication key. Preserve that
   behavior unless a schema and migration change intentionally replaces it.
 - Scheduled runs evaluate at most 10 newly selected listings. Selection is

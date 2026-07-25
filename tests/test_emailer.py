@@ -1,7 +1,7 @@
 from email.message import EmailMessage
 
 from app.config import Settings
-from app.emailer import render_digest, send_new_jobs_digest
+from app.emailer import DigestRecipient, render_confirmation, render_digest, send_new_jobs_digest
 from app.models import Listing, ListingSource
 
 
@@ -56,6 +56,20 @@ def test_render_digest_omits_browse_button_without_public_url():
     assert "Browse all jobs" not in digest.html
 
 
+def test_confirmation_and_digest_render_tokenized_links_safely():
+    confirmation = render_confirmation("https://board.example/confirm?token=a&next=b")
+    digest = render_digest(
+        [listing("Acme", 75)],
+        "https://board.example",
+        "https://board.example/unsubscribe?token=secret&next=1",
+    )
+
+    assert "https://board.example/confirm?token=a&next=b" in confirmation.text
+    assert "token=a&amp;next=b" in confirmation.html
+    assert "Unsubscribe: https://board.example/unsubscribe?token=secret&next=1" in digest.text
+    assert "token=secret&amp;next=1" in digest.html
+
+
 def test_send_digest_builds_multipart_message(monkeypatch):
     captured: dict[str, EmailMessage | bool] = {}
 
@@ -95,3 +109,54 @@ def test_send_digest_builds_multipart_message(monkeypatch):
     assert message.is_multipart()
     assert message.get_body(preferencelist=("html",)).get_content_type() == "text/html"
     assert captured["tls"] is True
+
+
+def test_send_digest_reuses_connection_and_deduplicates_admin_recipient(monkeypatch):
+    messages = []
+    connections = []
+
+    class FakeSMTP:
+        def __init__(self, host, port, timeout):
+            connections.append((host, port, timeout))
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_):
+            return None
+
+        def starttls(self):
+            return None
+
+        def login(self, username, password):
+            return None
+
+        def send_message(self, message):
+            messages.append(message)
+
+    monkeypatch.setattr("app.emailer.smtplib.SMTP", FakeSMTP)
+    config = Settings(
+        smtp_host="smtp.example",
+        smtp_from="Jobs <jobs@example.com>",
+        alert_recipient="reader@example.com",
+        public_url="https://board.example",
+    )
+
+    assert send_new_jobs_digest(
+        [listing("Acme", 88)],
+        config,
+        recipients=[
+            DigestRecipient("reader@example.com", "https://board.example/unsubscribe?token=one"),
+            DigestRecipient("other@example.com", "https://board.example/unsubscribe?token=two"),
+        ],
+    ) is True
+
+    assert len(connections) == 1
+    assert {message["To"] for message in messages} == {
+        "reader@example.com", "other@example.com",
+    }
+    reader_message = next(message for message in messages if message["To"] == "reader@example.com")
+    assert reader_message["List-Unsubscribe"] == (
+        "<https://board.example/unsubscribe?token=one>"
+    )
+    assert reader_message["List-Unsubscribe-Post"] == "List-Unsubscribe=One-Click"

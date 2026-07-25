@@ -120,6 +120,71 @@ h1 span {
   max-width: 680px;
 }
 
+.signup-panel {
+  align-items: center;
+  background: var(--ink);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  color: #fff;
+  display: grid;
+  gap: 32px;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, .9fr);
+  margin: 48px 0 24px;
+  padding: 28px 30px;
+}
+
+.signup-panel .section-label {
+  color: #75d5b1;
+  margin-bottom: 5px;
+}
+
+.signup-panel h2 {
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  margin: 0;
+}
+
+.signup-panel > div > p:not(.section-label) {
+  color: #b8c4be;
+  font-size: .86rem;
+  margin: 8px 0 0;
+}
+
+.signup-form {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.signup-form input {
+  background: #fff;
+  padding-left: 14px;
+}
+
+.signup-form button {
+  white-space: nowrap;
+}
+
+button:disabled,
+input:disabled {
+  cursor: not-allowed;
+  opacity: .58;
+}
+
+.signup-panel .signup-notice,
+.signup-panel .signup-privacy {
+  font-size: .74rem;
+  margin: 8px 2px 0;
+}
+
+.signup-panel .signup-notice--success {
+  color: #9ce2c6;
+}
+
+.signup-panel .signup-notice--error {
+  color: #ffc7c7;
+}
+
 .filters {
   align-items: stretch;
   background: var(--surface);
@@ -129,7 +194,7 @@ h1 span {
   display: grid;
   gap: 10px;
   grid-template-columns: minmax(260px, 1fr) 210px auto auto;
-  margin: 48px 0 64px;
+  margin: 24px 0 64px;
   padding: 10px;
 }
 
@@ -428,6 +493,39 @@ button:hover,
   margin: 0;
 }
 
+.subscription-page {
+  min-height: calc(100vh - 80px);
+  padding-top: 100px;
+}
+
+.subscription-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  margin: 0 auto;
+  max-width: 620px;
+  padding: 38px;
+}
+
+.subscription-card h1 {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+}
+
+.subscription-card > p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 1rem;
+  margin: 20px 0 26px;
+}
+
+.subscription-card .apply-button {
+  min-height: 46px;
+}
+
+.subscription-card form {
+  margin: 24px 0 0;
+}
+
 .visually-hidden {
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
@@ -454,6 +552,10 @@ button:hover,
     margin: 38px 0 52px;
   }
 
+  .signup-panel {
+    grid-template-columns: 1fr;
+  }
+
   .clear-filter {
     padding: 8px;
     text-align: center;
@@ -469,6 +571,15 @@ button:hover,
 
   h1 br {
     display: none;
+  }
+
+  .signup-panel {
+    margin-top: 38px;
+    padding: 24px 20px;
+  }
+
+  .signup-form {
+    grid-template-columns: 1fr;
   }
 
   .job-card {

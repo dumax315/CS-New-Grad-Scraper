@@ -38,3 +38,16 @@ class ListingSource(Base):
     source_name: Mapped[str] = mapped_column(String(100))
     source_url: Mapped[str] = mapped_column(Text)
     listing: Mapped[Listing] = relationship(back_populates="sources")
+
+
+class Subscriber(Base):
+    __tablename__ = "subscribers"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(String(320), unique=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    confirmation_token_hash: Mapped[str] = mapped_column(String(64), unique=True)
+    confirmation_expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    confirmation_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    confirmed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    unsubscribed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

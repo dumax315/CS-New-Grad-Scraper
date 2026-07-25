@@ -19,3 +19,6 @@ Sources: {% for source in job.sources %}{{ source.name }} — {{ source.url }}{%
 {% if public_url %}
 Browse all jobs: {{ public_url }}
 {% endif %}
+{% if unsubscribe_url %}
+Unsubscribe: {{ unsubscribe_url }}
+{% endif %}

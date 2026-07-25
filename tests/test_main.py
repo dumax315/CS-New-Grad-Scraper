@@ -81,3 +81,5 @@ def test_index_renders_shared_job_card_and_static_brand_styles():
     assert "Spring 2027 timing is supported." in html
     assert "Apply now" in html
     assert "Curated List" in html
+    assert 'id="email-signup"' in html
+    assert "Get job alerts" in html

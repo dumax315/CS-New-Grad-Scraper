@@ -6,7 +6,7 @@ import os
 import re
 import subprocess
 import tempfile
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import quote, urlsplit, urlunsplit
 from zoneinfo import ZoneInfo
 
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -16,9 +16,10 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.config import settings
 from app.database import SessionLocal, create_tables
-from app.emailer import send_new_jobs_digest
+from app.emailer import DigestRecipient, send_new_jobs_digest
 from app.ingestion import run_ingestion
-from app.models import Listing
+from app.models import Listing, Subscriber
+from app.subscriptions import unsubscribe_token
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -357,7 +358,28 @@ def scrape_and_notify() -> None:
                 .where(Listing.id.in_(new_listing_ids))
                 .options(selectinload(Listing.sources))
             ).all()) if new_listing_ids else []
-        sent = send_new_jobs_digest(notification_listings) if (settings.send_initial_digest or not is_initial_run) else False
+            digest_recipients = []
+            if settings.public_url and settings.subscription_token_secret:
+                subscribers = session.scalars(
+                    select(Subscriber).where(
+                        Subscriber.confirmed_at.is_not(None),
+                        Subscriber.unsubscribed_at.is_(None),
+                    )
+                ).all()
+                digest_recipients = [
+                    DigestRecipient(
+                        address=subscriber.email,
+                        unsubscribe_url=(
+                            f"{settings.public_url}/unsubscribe?token="
+                            f"{quote(unsubscribe_token(subscriber, settings.subscription_token_secret), safe='')}"
+                        ),
+                    )
+                    for subscriber in subscribers
+                ]
+        sent = send_new_jobs_digest(
+            notification_listings,
+            recipients=digest_recipients,
+        ) if (settings.send_initial_digest or not is_initial_run) else False
         logger.info(
             "Ingestion completed: %s new listings; %s evaluated; digest sent=%s",
             len(new_listings),

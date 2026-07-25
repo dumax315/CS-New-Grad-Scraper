@@ -23,6 +23,28 @@
         <p class="intro">Software-engineering and adjacent new-grad openings, gathered from trusted sources and evaluated for graduation-timing fit.</p>
       </section>
 
+      <section class="signup-panel" id="email-signup" aria-labelledby="signup-title">
+        <div>
+          <p class="section-label">JOB ALERTS</p>
+          <h2 id="signup-title">New roles, sent to you.</h2>
+          <p>Get the latest Spring 2027 openings when the board updates. Confirm once, unsubscribe anytime.</p>
+        </div>
+        <div>
+          <form class="signup-form" method="post" action="/subscribe">
+            <label for="signup-email" class="visually-hidden">Email address</label>
+            <input id="signup-email" name="email" type="email" autocomplete="email" maxlength="320" placeholder="you@example.com" required {% if not signup_available %}disabled{% endif %}>
+            <button type="submit" {% if not signup_available %}disabled{% endif %}>Get job alerts</button>
+          </form>
+          {% if subscription_notice %}
+          <p class="signup-notice signup-notice--{{ subscription_notice[0] }}" role="status">{{ subscription_notice[1] }}</p>
+          {% elif not signup_available %}
+          <p class="signup-notice signup-notice--error" role="status">Email signup is temporarily unavailable.</p>
+          {% else %}
+          <p class="signup-privacy">We’ll send a confirmation link first. No tracking pixels.</p>
+          {% endif %}
+        </div>
+      </section>
+
       <form class="filters" method="get" aria-label="Filter job listings">
         <label class="search-field">
           <span class="visually-hidden">Company, role, or location</span>

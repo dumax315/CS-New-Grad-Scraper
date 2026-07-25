@@ -1,16 +1,28 @@
 from contextlib import asynccontextmanager
 from datetime import date, datetime, time, timedelta, timezone
+import smtplib
+from urllib.parse import quote
 
-from fastapi import Depends, FastAPI, Query, Request
-from fastapi.responses import HTMLResponse
+from fastapi import Depends, FastAPI, Form, Query, Request
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import and_, or_, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, selectinload
 
+from app.config import settings
 from app.database import SessionLocal, create_tables
+from app.emailer import send_confirmation_email
 from app.models import Listing, ListingSource
 from app.presentation import present_listings
+from app.subscriptions import (
+    confirm_subscription,
+    find_unsubscribe_subscriber,
+    mark_confirmation_sent,
+    prepare_confirmation,
+    unsubscribe,
+)
 
 
 def visible_listing_condition(today: date | None = None):
@@ -60,7 +72,157 @@ def index(
         statement = statement.where(Listing.sources.any(source_name=source))
     listings = session.scalars(statement).all()
     source_names = session.scalars(select(ListingSource.source_name).distinct().order_by(ListingSource.source_name)).all()
+    subscription_notices = {
+        "check-email": (
+            "success",
+            "If this address still needs confirmation, check your inbox for a link.",
+        ),
+        "invalid": ("error", "Enter a valid email address."),
+        "delivery-error": ("error", "We could not send the confirmation email. Please try again."),
+        "unavailable": ("error", "Email signup is temporarily unavailable."),
+    }
     return templates.TemplateResponse(request, "index.html", {
         "jobs": present_listings(listings), "source_names": source_names,
         "q": q, "selected_source": source,
+        "subscription_notice": subscription_notices.get(request.query_params.get("subscription", "")),
+        "signup_available": bool(
+            settings.public_url
+            and settings.subscription_token_secret
+            and settings.smtp_host
+            and settings.smtp_from
+        ),
     })
+
+
+def _redirect_to_signup(status: str) -> RedirectResponse:
+    return RedirectResponse(url=f"/?subscription={status}#email-signup", status_code=303)
+
+
+def _subscription_result(
+    request: Request,
+    *,
+    title: str,
+    message: str,
+    success: bool,
+    token: str = "",
+) -> HTMLResponse:
+    return templates.TemplateResponse(request, "subscription_result.html", {
+        "title": title,
+        "message": message,
+        "success": success,
+        "unsubscribe_token": token,
+    })
+
+
+@app.post("/subscribe")
+def subscribe(
+    email: str = Form(default="", max_length=320),
+    session: Session = Depends(get_session),
+):
+    if not all((
+        settings.public_url,
+        settings.subscription_token_secret,
+        settings.smtp_host,
+        settings.smtp_from,
+    )):
+        return _redirect_to_signup("unavailable")
+    try:
+        subscriber, raw_token = prepare_confirmation(session, email)
+    except ValueError:
+        return _redirect_to_signup("invalid")
+    except IntegrityError:
+        session.rollback()
+        subscriber, raw_token = prepare_confirmation(session, email)
+
+    if raw_token is None:
+        return _redirect_to_signup("check-email")
+
+    confirmation_url = (
+        f"{settings.public_url}/subscribe/confirm?token={quote(raw_token, safe='')}"
+    )
+    try:
+        sent = send_confirmation_email(subscriber.email, confirmation_url)
+    except (OSError, smtplib.SMTPException):
+        return _redirect_to_signup("delivery-error")
+    if not sent:
+        return _redirect_to_signup("delivery-error")
+    mark_confirmation_sent(session, subscriber)
+    return _redirect_to_signup("check-email")
+
+
+@app.get("/subscribe/confirm", response_class=HTMLResponse)
+def confirm_email(
+    request: Request,
+    token: str = Query(default="", max_length=200),
+    session: Session = Depends(get_session),
+):
+    subscriber = confirm_subscription(session, token) if token else None
+    if subscriber is None:
+        return _subscription_result(
+            request,
+            title="Confirmation link expired",
+            message="Submit your email again to receive a fresh confirmation link.",
+            success=False,
+        )
+    return _subscription_result(
+        request,
+        title="Email alerts confirmed",
+        message="You’ll receive a digest when newly discovered roles are available.",
+        success=True,
+    )
+
+
+@app.get("/unsubscribe", response_class=HTMLResponse)
+def unsubscribe_page(
+    request: Request,
+    token: str = Query(default="", max_length=500),
+    session: Session = Depends(get_session),
+):
+    subscriber = find_unsubscribe_subscriber(
+        session, token, settings.subscription_token_secret,
+    ) if token else None
+    if subscriber is None:
+        return _subscription_result(
+            request,
+            title="Unsubscribe link unavailable",
+            message="This link is invalid or no longer current.",
+            success=False,
+        )
+    if subscriber.unsubscribed_at is not None:
+        return _subscription_result(
+            request,
+            title="Already unsubscribed",
+            message="This address is no longer receiving job alerts.",
+            success=True,
+        )
+    return _subscription_result(
+        request,
+        title="Unsubscribe from alerts?",
+        message="You can sign up again at any time.",
+        success=True,
+        token=token,
+    )
+
+
+@app.post("/unsubscribe", response_class=HTMLResponse)
+def unsubscribe_email(
+    request: Request,
+    token: str = Query(default="", max_length=500),
+    session: Session = Depends(get_session),
+):
+    subscriber = unsubscribe(
+        session, token, settings.subscription_token_secret,
+    ) if token else None
+    if subscriber is None:
+        return _subscription_result(
+            request,
+            title="Unsubscribe link unavailable",
+            message="This link is invalid or no longer current.",
+            success=False,
+        )
+    return _subscription_result(
+        request,
+        title="You’re unsubscribed",
+        message="This address will no longer receive job alerts.",
+        success=True,
+    )

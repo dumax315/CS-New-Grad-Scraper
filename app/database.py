@@ -15,24 +15,28 @@ SessionLocal = sessionmaker(bind=engine, expire_on_commit=False)
 def create_tables() -> None:
     from app import models  # noqa: F401
 
-    Base.metadata.create_all(engine)
-    columns = {column["name"] for column in inspect(engine).get_columns("listings")}
-    missing_columns = {
-        "posted_at": "DATE",
-        "fit_confidence": "INTEGER",
-        "fit_reasoning": "TEXT",
-        "fit_selected_at": "TIMESTAMP WITH TIME ZONE" if engine.dialect.name == "postgresql" else "DATETIME",
-        "fit_evaluated_at": "TIMESTAMP WITH TIME ZONE" if engine.dialect.name == "postgresql" else "DATETIME",
-        "fit_model": "VARCHAR(100)",
-    }
-    for column_name, column_type in missing_columns.items():
-        if column_name in columns:
-            continue
+    with engine.begin() as connection:
         if engine.dialect.name == "postgresql":
-            # Web and worker can start at the same time, so each migration must
-            # be safe when both attempt it.
-            statement = f"ALTER TABLE listings ADD COLUMN IF NOT EXISTS {column_name} {column_type}"
-        else:
-            statement = f"ALTER TABLE listings ADD COLUMN {column_name} {column_type}"
-        with engine.begin() as connection:
+            # Web and worker start concurrently. Serializing schema setup also
+            # protects create_all's check-then-create sequence for new tables.
+            connection.execute(text(
+                "SELECT pg_advisory_xact_lock(hashtext('cs_new_grad_scraper_schema'))"
+            ))
+        Base.metadata.create_all(connection)
+        columns = {column["name"] for column in inspect(connection).get_columns("listings")}
+        missing_columns = {
+            "posted_at": "DATE",
+            "fit_confidence": "INTEGER",
+            "fit_reasoning": "TEXT",
+            "fit_selected_at": "TIMESTAMP WITH TIME ZONE" if engine.dialect.name == "postgresql" else "DATETIME",
+            "fit_evaluated_at": "TIMESTAMP WITH TIME ZONE" if engine.dialect.name == "postgresql" else "DATETIME",
+            "fit_model": "VARCHAR(100)",
+        }
+        for column_name, column_type in missing_columns.items():
+            if column_name in columns:
+                continue
+            if engine.dialect.name == "postgresql":
+                statement = f"ALTER TABLE listings ADD COLUMN IF NOT EXISTS {column_name} {column_type}"
+            else:
+                statement = f"ALTER TABLE listings ADD COLUMN {column_name} {column_type}"
             connection.execute(text(statement))

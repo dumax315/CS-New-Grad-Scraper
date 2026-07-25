@@ -1,12 +1,15 @@
 import subprocess
 
 import httpx
+from datetime import datetime, timezone
+
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker
 
 from app import database
 from app.database import Base
-from app.models import Listing
+from app.config import Settings
+from app.models import Listing, Subscriber
 from app import worker
 
 
@@ -91,6 +94,7 @@ def test_run_codex_assessment_uses_noninteractive_sandbox_and_sanitized_env(monk
 
     monkeypatch.setenv("DATABASE_URL", "postgresql://secret")
     monkeypatch.setenv("CODEX_API_KEY", "codex-secret")
+    monkeypatch.setenv("SUBSCRIPTION_TOKEN_SECRET", "subscription-secret")
     monkeypatch.setattr(worker.subprocess, "run", fake_run)
 
     assert worker.run_codex_assessment(listing(), "Actual scraped listing") == (
@@ -103,6 +107,7 @@ def test_run_codex_assessment_uses_noninteractive_sandbox_and_sanitized_env(monk
     assert captured["env"]["CODEX_API_KEY"] == "codex-secret"
     assert captured["env"]["CODEX_HOME"] == captured["cwd"]
     assert "DATABASE_URL" not in captured["env"]
+    assert "SUBSCRIPTION_TOKEN_SECRET" not in captured["env"]
 
 
 def test_codex_prompt_makes_spring_2027_timing_a_gate(monkeypatch):
@@ -193,3 +198,66 @@ def test_create_tables_migrates_existing_listing_table(monkeypatch):
     assert {
         "fit_confidence", "fit_reasoning", "fit_selected_at", "fit_evaluated_at", "fit_model",
     } <= columns
+    assert "subscribers" in inspect(engine).get_table_names()
+
+
+def test_scrape_and_notify_sends_only_to_active_subscribers(monkeypatch):
+    engine = create_engine("sqlite://")
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
+    Base.metadata.create_all(engine)
+    captured = {}
+    now = datetime(2026, 7, 24, tzinfo=timezone.utc)
+
+    with Session() as session:
+        session.add(listing(99))
+        session.add_all([
+            Subscriber(
+                email="active@example.com",
+                confirmation_token_hash="a" * 64,
+                confirmation_expires_at=now,
+                confirmed_at=now,
+            ),
+            Subscriber(
+                email="pending@example.com",
+                confirmation_token_hash="b" * 64,
+                confirmation_expires_at=now,
+            ),
+            Subscriber(
+                email="left@example.com",
+                confirmation_token_hash="c" * 64,
+                confirmation_expires_at=now,
+                confirmed_at=now,
+                unsubscribed_at=now,
+            ),
+        ])
+        session.commit()
+
+    def fake_ingestion(session):
+        new_listing = listing(100)
+        session.add(new_listing)
+        session.commit()
+        return [new_listing]
+
+    def fake_send(listings, config=worker.settings, recipients=()):
+        captured["listings"] = listings
+        captured["recipients"] = list(recipients)
+        return True
+
+    monkeypatch.setattr(worker, "SessionLocal", Session)
+    monkeypatch.setattr(worker, "run_ingestion", fake_ingestion)
+    monkeypatch.setattr(worker, "evaluate_new_listings", lambda session, listings: 0)
+    monkeypatch.setattr(worker, "send_new_jobs_digest", fake_send)
+    monkeypatch.setattr(worker, "settings", Settings(
+        public_url="https://board.example",
+        subscription_token_secret="test-secret",
+    ))
+
+    worker.scrape_and_notify()
+
+    assert len(captured["listings"]) == 1
+    assert [recipient.address for recipient in captured["recipients"]] == [
+        "active@example.com",
+    ]
+    assert captured["recipients"][0].unsubscribe_url.startswith(
+        "https://board.example/unsubscribe?token=",
+    )
