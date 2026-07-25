@@ -15,6 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
+jobs-discover-sources = "app.source_discovery:main"
 jobs-refetch = "app.refetch:main"
 jobs-review = "app.review:main"
 
