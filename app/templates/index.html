@@ -6,6 +6,7 @@
     <meta name="description" content="Software engineering and adjacent roles for Spring 2027 graduates.">
     <title>New Grad SWE Jobs</title>
     <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}?v={{ styles_version }}">
+    <script src="{{ url_for('static', path='/filters.js') }}?v={{ filters_version }}" defer></script>
   </head>
   <body>
     <main>
@@ -29,7 +30,7 @@
               {% endfor %}
             </select>
           </label>
-          <button type="submit">Filter</button>
+          <button class="filter-submit" type="submit">Filter</button>
           {% if q or selected_source %}<a class="clear-filter" href="/">Clear</a>{% endif %}
         </form>
 

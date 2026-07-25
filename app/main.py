@@ -47,6 +47,9 @@ STATIC_DIRECTORY = Path(__file__).with_name("static")
 STYLES_VERSION = hashlib.sha256(
     (STATIC_DIRECTORY / "styles.css").read_bytes()
 ).hexdigest()[:12]
+FILTERS_VERSION = hashlib.sha256(
+    (STATIC_DIRECTORY / "filters.js").read_bytes()
+).hexdigest()[:12]
 app.mount("/static", StaticFiles(directory=STATIC_DIRECTORY), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
@@ -91,6 +94,7 @@ def index(
         "jobs": present_listings(listings), "source_names": source_names,
         "q": q, "selected_source": source,
         "styles_version": STYLES_VERSION,
+        "filters_version": FILTERS_VERSION,
         "subscription_notice": subscription_notices.get(request.query_params.get("subscription", "")),
         "signup_available": bool(
             settings.public_url

@@ -95,6 +95,14 @@ main {
   grid-template-columns: minmax(230px, 1fr) minmax(150px, 200px) auto auto;
 }
 
+.filters[data-auto-submit="true"] {
+  grid-template-columns: minmax(230px, 1fr) minmax(150px, 200px) auto;
+}
+
+.filters[data-auto-submit="true"] .filter-submit {
+  display: none;
+}
+
 .filters label {
   min-width: 0;
 }
@@ -458,7 +466,8 @@ input:disabled {
     margin-bottom: 18px;
   }
 
-  .filters {
+  .filters,
+  .filters[data-auto-submit="true"] {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -491,6 +500,7 @@ input:disabled {
 
 @media (max-width: 420px) {
   .filters,
+  .filters[data-auto-submit="true"],
   .signup-form {
     grid-template-columns: 1fr;
   }

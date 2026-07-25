@@ -96,12 +96,13 @@ def test_index_renders_utility_controls_and_both_job_evaluations():
     html = response.body.decode()
     assert response.status_code == 200
     assert f'href="http://testserver/static/styles.css?v={main.STYLES_VERSION}"' in html
+    assert f'src="http://testserver/static/filters.js?v={main.FILTERS_VERSION}"' in html
     assert "<h1>New Grad SWE Jobs</h1>" in html
     assert "Updated twice daily" in html
     assert 'aria-label="Filter job listings"' in html
     assert ">Search</span>" in html
     assert ">Source</span>" in html
-    assert ">Filter</button>" in html
+    assert 'class="filter-submit" type="submit">Filter</button>' in html
     assert "2 jobs" in html
     assert "Newest first" in html
     assert "Spring 2027 fit" in html
