@@ -8,7 +8,10 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 import httpx
 
+from app.source_types import Candidate, SourceBatch, SourceFetchResult
+
 logger = logging.getLogger(__name__)
+MAX_ERROR_SUMMARY_LENGTH = 255
 
 
 @dataclass(frozen=True)
@@ -16,6 +19,7 @@ class Source:
     name: str
     raw_url: str
     repository_url: str
+    key: str = ""
 
 
 SOURCES = (
@@ -23,28 +27,15 @@ SOURCES = (
         "SpeedyApply 2027 SWE",
         "https://raw.githubusercontent.com/speedyapply/2027-SWE-College-Jobs/main/NEW_GRAD_USA.md",
         "https://github.com/speedyapply/2027-SWE-College-Jobs/blob/main/NEW_GRAD_USA.md",
+        "markdown:speedyapply-2027-swe",
     ),
     Source(
         "Vansh New Grad 2027",
         "https://raw.githubusercontent.com/vanshb03/New-Grad-2027/main/README.md",
         "https://github.com/vanshb03/New-Grad-2027",
+        "markdown:vansh-new-grad-2027",
     ),
 )
-
-
-@dataclass(frozen=True)
-class Candidate:
-    company: str
-    title: str
-    location: str
-    application_url: str
-    source_name: str
-    source_url: str
-    category: str = "Other"
-    salary: str = ""
-    source_age: str = ""
-    posted_at: date | None = None
-    graduation_year: int | None = None
 
 
 LINK_RE = re.compile(r"\[([^\]]*)\]\(([^)]+)\)")
@@ -174,6 +165,7 @@ def row_to_candidate(headers: list[str], row: list[str], source: Source, categor
         source_age=source_age,
         posted_at=parse_posted_date(source_age),
         graduation_year=int(year_match.group(1)) if year_match else None,
+        source_key=source.key,
     )
 
 
@@ -197,16 +189,52 @@ def parse_source(markdown: str, source: Source) -> list[Candidate]:
     return candidates
 
 
-def fetch_candidates(client: httpx.Client | None = None) -> list[Candidate]:
+def sanitized_fetch_error(error: Exception) -> tuple[str, str]:
+    if isinstance(error, httpx.HTTPStatusError):
+        category = "http_status"
+        summary = f"Source returned HTTP {error.response.status_code}."
+    elif isinstance(error, httpx.TimeoutException):
+        category = "timeout"
+        summary = "Source request timed out."
+    elif isinstance(error, httpx.HTTPError):
+        category = "network"
+        summary = "Source request failed."
+    else:
+        category = "parser"
+        summary = "Source response could not be parsed."
+    return category, summary[:MAX_ERROR_SUMMARY_LENGTH]
+
+
+def fetch_source_batch(
+    client: httpx.Client | None = None,
+    sources: tuple[Source, ...] = SOURCES,
+) -> SourceBatch:
     own_client = client is None
     client = client or httpx.Client(timeout=30, follow_redirects=True, headers={"User-Agent": "cs-new-grad-jobs/0.1"})
     try:
-        candidates: list[Candidate] = []
-        for source in SOURCES:
+        results: list[SourceFetchResult] = []
+        for source in sources:
             logger.info("Fetching %s from %s", source.name, source.raw_url)
-            response = client.get(source.raw_url)
-            response.raise_for_status()
-            parsed = parse_source(response.text, source)
+            try:
+                response = client.get(source.raw_url)
+                response.raise_for_status()
+                parsed = parse_source(response.text, source)
+            except (httpx.HTTPError, ValueError, TypeError, KeyError) as error:
+                category, summary = sanitized_fetch_error(error)
+                logger.warning(
+                    "Source fetch failed: key=%s category=%s summary=%s",
+                    source.key,
+                    category,
+                    summary,
+                )
+                results.append(SourceFetchResult(
+                    source_key=source.key,
+                    source_name=source.name,
+                    succeeded=False,
+                    error_category=category,
+                    error_summary=summary,
+                ))
+                continue
             logger.info(
                 "Parsed %s matching candidates from %s (%s bytes, %s lines)",
                 len(parsed),
@@ -223,8 +251,19 @@ def fetch_candidates(client: httpx.Client | None = None) -> list[Candidate]:
                         candidate.title,
                         candidate.application_url,
                     )
-            candidates.extend(parsed)
-        return candidates
+            results.append(SourceFetchResult(
+                source_key=source.key,
+                source_name=source.name,
+                succeeded=True,
+                candidates=tuple(parsed),
+                fetched_count=len(parsed),
+            ))
+        return SourceBatch(tuple(results))
     finally:
         if own_client:
             client.close()
+
+
+def fetch_candidates(client: httpx.Client | None = None) -> list[Candidate]:
+    """Compatibility wrapper returning candidates from successful sources."""
+    return fetch_source_batch(client).candidates

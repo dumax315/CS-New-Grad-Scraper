@@ -3,7 +3,15 @@ from pathlib import Path
 
 import httpx
 
-from app.sources import SOURCES, Source, canonicalize_url, fetch_candidates, parse_posted_date, parse_source
+from app.sources import (
+    SOURCES,
+    Source,
+    canonicalize_url,
+    fetch_candidates,
+    fetch_source_batch,
+    parse_posted_date,
+    parse_source,
+)
 
 
 TEST_SOURCE = Source("Test", "https://example.test/raw", "https://example.test")
@@ -98,3 +106,82 @@ def test_two_source_baseline_preserves_counts_order_and_canonical_overlap():
     ]
     assert candidates[0].application_url == candidates[2].application_url
     assert candidates[0].application_url == "https://boards.greenhouse.io/acme/jobs/100"
+
+
+def fetch_batch_with_statuses(statuses):
+    valid_markdown = (FIXTURES / "speedyapply_new_grad.md").read_text()
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        status = statuses[str(request.url)]
+        return httpx.Response(status, text=valid_markdown)
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        return fetch_source_batch(client)
+
+
+def test_first_source_failure_does_not_block_second_source():
+    batch = fetch_batch_with_statuses({
+        SOURCES[0].raw_url: 503,
+        SOURCES[1].raw_url: 200,
+    })
+
+    assert [result.succeeded for result in batch.results] == [False, True]
+    assert batch.failed_count == 1
+    assert len(batch.candidates) == 2
+    assert {candidate.source_key for candidate in batch.candidates} == {SOURCES[1].key}
+    assert batch.results[0].error_category == "http_status"
+    assert batch.results[0].error_summary == "Source returned HTTP 503."
+
+
+def test_second_source_failure_does_not_block_first_source():
+    batch = fetch_batch_with_statuses({
+        SOURCES[0].raw_url: 200,
+        SOURCES[1].raw_url: 500,
+    })
+
+    assert [result.succeeded for result in batch.results] == [True, False]
+    assert len(batch.candidates) == 2
+    assert {candidate.source_key for candidate in batch.candidates} == {SOURCES[0].key}
+
+
+def test_both_source_failures_return_an_empty_batch_without_raising():
+    batch = fetch_batch_with_statuses({
+        SOURCES[0].raw_url: 429,
+        SOURCES[1].raw_url: 503,
+    })
+
+    assert batch.succeeded_count == 0
+    assert batch.failed_count == 2
+    assert batch.candidates == []
+
+
+def test_successful_empty_source_is_not_reported_as_failed():
+    empty_markdown = "# No current roles\n"
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, text=empty_markdown)
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        batch = fetch_source_batch(client, (SOURCES[0],))
+
+    assert batch.results[0].succeeded is True
+    assert batch.results[0].fetched_count == 0
+    assert batch.results[0].candidates == ()
+
+
+def test_malformed_rows_do_not_poison_valid_rows():
+    markdown = """## SWE
+| Company | Position | Location | Posting | Age |
+|---|---|---|---|---|
+| Broken | Software Engineer |
+| Valid | Software Engineer | Remote | [Apply](https://jobs.example/valid) | Today |
+"""
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, text=markdown)
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        batch = fetch_source_batch(client, (SOURCES[0],))
+
+    assert batch.results[0].succeeded is True
+    assert [candidate.company for candidate in batch.candidates] == ["Valid"]
