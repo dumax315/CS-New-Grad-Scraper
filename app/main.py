@@ -3,7 +3,6 @@ from datetime import date, datetime, time, timedelta, timezone
 
 from fastapi import Depends, FastAPI, Query, Request
 from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import and_, or_, select
 from sqlalchemy.orm import Session, selectinload
@@ -28,7 +27,6 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="New Grad SWE Jobs", lifespan=lifespan)
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 
