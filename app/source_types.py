@@ -2,6 +2,21 @@
 
 from dataclasses import dataclass
 from datetime import date, datetime
+from types import MappingProxyType
+from typing import Mapping
+
+
+@dataclass(frozen=True)
+class SourceSpec:
+    key: str
+    name: str
+    kind: str
+    public_url: str
+    parameters: Mapping[str, str]
+    enabled: bool = True
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "parameters", MappingProxyType(dict(self.parameters)))
 
 
 @dataclass(frozen=True)
