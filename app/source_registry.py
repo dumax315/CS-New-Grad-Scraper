@@ -33,5 +33,32 @@ CURATED_SOURCES = (
     ),
 )
 
-DIRECT_SOURCES: tuple[SourceSpec, ...] = ()
+DIRECT_SOURCES = (
+    # Reviewed pilot definitions remain disabled until live fetching is
+    # explicitly authorized for deployment.
+    SourceSpec(
+        key="greenhouse:figma",
+        name="Figma Careers",
+        kind="greenhouse",
+        public_url="https://boards.greenhouse.io/figma",
+        parameters={"tenant": "figma", "employer": "Figma"},
+        enabled=False,
+    ),
+    SourceSpec(
+        key="lever:palantir",
+        name="Palantir Careers",
+        kind="lever",
+        public_url="https://jobs.lever.co/palantir",
+        parameters={"tenant": "palantir", "employer": "Palantir"},
+        enabled=False,
+    ),
+    SourceSpec(
+        key="ashby:ramp",
+        name="Ramp Careers",
+        kind="ashby",
+        public_url="https://jobs.ashbyhq.com/ramp",
+        parameters={"tenant": "ramp", "employer": "Ramp"},
+        enabled=False,
+    ),
+)
 SOURCE_REGISTRY = CURATED_SOURCES + DIRECT_SOURCES

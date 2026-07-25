@@ -99,6 +99,12 @@ def fetch_source_batch(
                     result.error_category,
                     result.error_summary,
                 )
+            elif result.exclusion_counts:
+                logger.info(
+                    "Source scope exclusions: key=%s counts=%s",
+                    result.source_key,
+                    dict(result.exclusion_counts),
+                )
             results.append(result)
         return SourceBatch(tuple(results))
     finally:

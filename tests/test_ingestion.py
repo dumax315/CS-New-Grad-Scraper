@@ -2,12 +2,13 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 
 import httpx
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, func, select
 from sqlalchemy.orm import sessionmaker
 
 from app import ingestion
 from app.database import Base
 from app.ingestion import run_ingestion, store_candidates
+from app.main import visible_listing_condition
 from app.models import Listing, SourceRun
 from app.source_types import SourceBatch, SourceFetchResult
 from app.sources import SOURCES, Candidate, fetch_candidates
@@ -59,6 +60,11 @@ def test_curated_source_overlap_is_one_listing_with_two_provenance_rows():
 
         assert len(stored) == 3
         assert len(listings) == 3
+        assert session.scalar(
+            select(func.count(Listing.id)).where(
+                visible_listing_condition(date(2026, 7, 25)),
+            ),
+        ) == 3
         overlap = next(listing for listing in listings if listing.company == "Acme Incorporated")
         assert [source.source_name for source in overlap.sources] == [
             SOURCES[0].name,

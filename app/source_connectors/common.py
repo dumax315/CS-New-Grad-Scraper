@@ -1,12 +1,15 @@
 """Shared, sanitized source-connector failure handling."""
 
 from datetime import datetime, timezone
+from html import unescape
+import re
 
 import httpx
 
 from app.source_types import SourceFetchResult, SourceSpec
 
 MAX_ERROR_SUMMARY_LENGTH = 255
+HTML_TAG_RE = re.compile(r"<[^>]+>")
 
 
 def sanitized_fetch_error(error: Exception) -> tuple[str, str]:
@@ -40,3 +43,18 @@ def failed_result(
         started_at=started_at,
         finished_at=datetime.now(timezone.utc),
     )
+
+
+def clean_description(value: object) -> str:
+    if not isinstance(value, str):
+        return ""
+    return re.sub(r"\s+", " ", unescape(HTML_TAG_RE.sub(" ", value))).strip()
+
+
+def parse_iso_date(value: object):
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        return datetime.fromisoformat(value.strip().replace("Z", "+00:00")).date()
+    except ValueError:
+        return None

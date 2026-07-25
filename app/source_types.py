@@ -34,6 +34,11 @@ class Candidate:
     graduation_year: int | None = None
     source_key: str = ""
     source_external_id: str | None = None
+    source_kind: str = "markdown"
+    description_text: str = ""
+    scope_decision: str = "include_curated"
+    timing_explicit: bool = False
+    exact_posted_date: bool = False
 
 
 @dataclass(frozen=True)
@@ -47,6 +52,7 @@ class SourceFetchResult:
     error_summary: str | None = None
     started_at: datetime | None = None
     finished_at: datetime | None = None
+    exclusion_counts: tuple[tuple[str, int], ...] = ()
 
 
 @dataclass(frozen=True)
