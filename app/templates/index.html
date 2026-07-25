@@ -4,16 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>New Grad SWE Jobs</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
   </head>
   <body>
     <main>
       <header>
-        <p class="eyebrow">CURATED GITHUB SOURCES</p>
+        <p>CURATED GITHUB SOURCES</p>
         <h1>New Grad SWE Jobs</h1>
-        <p class="intro">Fresh software-engineering and adjacent new-grad roles in one place.</p>
+        <p>Fresh software-engineering and adjacent new-grad roles in one place.</p>
       </header>
-      <form class="filters" method="get">
+      <form method="get">
         <input name="q" value="{{ q }}" placeholder="Company, role, or location" aria-label="Search listings">
         <select name="source" aria-label="Filter by source">
           <option value="">All sources</option>
@@ -21,24 +20,24 @@
         </select>
         <button type="submit">Filter</button>
       </form>
-      <p class="count">{{ listings|length }} listing{{ '' if listings|length == 1 else 's' }} · newest posts first</p>
-      <section class="listings" aria-label="Job listings">
+      <p>{{ listings|length }} listing{{ '' if listings|length == 1 else 's' }} · newest posts first</p>
+      <section aria-label="Job listings">
         {% for job in listings %}
-        <article class="listing">
+        <article>
           <div>
             <h2>{{ job.title }}</h2>
-            <p class="company">{{ job.company }}</p>
-            <p class="meta">{{ job.location or 'Location not listed' }}{% if job.salary %} · {{ job.salary }}{% endif %}{% if job.graduation_year %} · Class of {{ job.graduation_year }}{% endif %}</p>
-            <p class="meta">{% if job.posted_at %}Posted {{ job.posted_at.strftime('%b %d, %Y') }}{% elif job.source_age %}Posted {{ job.source_age }} ago{% else %}Posting date unavailable{% endif %}</p>
+            <p>{{ job.company }}</p>
+            <p>{{ job.location or 'Location not listed' }}{% if job.salary %} · {{ job.salary }}{% endif %}{% if job.graduation_year %} · Class of {{ job.graduation_year }}{% endif %}</p>
+            <p>{% if job.posted_at %}Posted {{ job.posted_at.strftime('%b %d, %Y') }}{% elif job.source_age %}Posted {{ job.source_age }} ago{% else %}Posting date unavailable{% endif %}</p>
             {% if job.fit_confidence is not none %}
-            <p class="fit"><strong>{{ job.fit_confidence }}%</strong> — {{ job.fit_reasoning }}</p>
+            <p><strong>{{ job.fit_confidence }}%</strong> — {{ job.fit_reasoning }}</p>
             {% endif %}
-            <p class="sources">{% for source in job.sources %}<a href="{{ source.source_url }}" target="_blank" rel="noopener">{{ source.source_name }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
+            <p>{% for source in job.sources %}<a href="{{ source.source_url }}" target="_blank" rel="noopener">{{ source.source_name }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
           </div>
-          <a class="apply" href="{{ job.application_url }}" target="_blank" rel="noopener">Apply ↗</a>
+          <a href="{{ job.application_url }}" target="_blank" rel="noopener">Apply ↗</a>
         </article>
         {% else %}
-        <p class="empty">No listings match those filters yet. The next scheduled scrape will update this page.</p>
+        <p>No listings match those filters yet. The next scheduled scrape will update this page.</p>
         {% endfor %}
       </section>
     </main>
