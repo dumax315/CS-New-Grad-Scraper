@@ -18,6 +18,7 @@ class JobView:
     title: str
     meta: tuple[str, ...]
     posted_label: str
+    fit_evaluation_error: str | None
     fit_confidence: int | None
     fit_label: str
     fit_tone: str
@@ -42,7 +43,9 @@ def _posted_label(listing: Listing) -> str:
     return "Posting date unavailable"
 
 
-def _fit_tone(confidence: int | None) -> str:
+def _fit_tone(confidence: int | None, *, evaluation_failed: bool = False) -> str:
+    if evaluation_failed:
+        return "failed"
     if confidence is None:
         return "pending"
     if confidence >= 80:
@@ -59,25 +62,43 @@ def present_listing(listing: Listing) -> JobView:
     if listing.graduation_year:
         meta.append(f"Class of {listing.graduation_year}")
 
-    confidence = listing.fit_confidence
+    evaluation_failed = listing.fit_evaluation_failed_at is not None
+    confidence = None if evaluation_failed else listing.fit_confidence
+    resume_confidence = None if evaluation_failed else listing.resume_fit_confidence
     return JobView(
         id=listing.id,
         company=listing.company,
         title=listing.title,
         meta=tuple(meta),
         posted_label=_posted_label(listing),
-        fit_confidence=confidence,
-        fit_label=f"{confidence}% match" if confidence is not None else "Not yet evaluated",
-        fit_tone=_fit_tone(confidence),
-        fit_reasoning=listing.fit_reasoning,
-        resume_fit_confidence=listing.resume_fit_confidence,
-        resume_fit_label=(
-            f"{listing.resume_fit_confidence}% match"
-            if listing.resume_fit_confidence is not None
-            else "Not yet evaluated"
+        fit_evaluation_error=(
+            listing.fit_evaluation_error
+            if evaluation_failed
+            else None
         ),
-        resume_fit_tone=_fit_tone(listing.resume_fit_confidence),
-        resume_fit_reasoning=listing.resume_fit_reasoning,
+        fit_confidence=confidence,
+        fit_label=(
+            "Evaluation failed"
+            if evaluation_failed
+            else f"{confidence}% match" if confidence is not None else "Not yet evaluated"
+        ),
+        fit_tone=_fit_tone(confidence, evaluation_failed=evaluation_failed),
+        fit_reasoning=None if evaluation_failed else listing.fit_reasoning,
+        resume_fit_confidence=resume_confidence,
+        resume_fit_label=(
+            "Evaluation failed"
+            if evaluation_failed
+            else (
+                f"{resume_confidence}% match"
+                if resume_confidence is not None
+                else "Not yet evaluated"
+            )
+        ),
+        resume_fit_tone=_fit_tone(
+            resume_confidence,
+            evaluation_failed=evaluation_failed,
+        ),
+        resume_fit_reasoning=None if evaluation_failed else listing.resume_fit_reasoning,
         application_url=listing.application_url,
         sources=tuple(
             SourceView(name=source.source_name, url=source.source_url)

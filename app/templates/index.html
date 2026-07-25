@@ -67,7 +67,11 @@
             <section class="fit-evaluation" aria-label="Spring 2027 fit evaluation">
               <h4>Spring 2027 fit</h4>
               <p class="fit-score fit-score--{{ job.fit_tone }}">{{ job.fit_label }}</p>
-              {% if job.fit_reasoning %}<p class="fit-reasoning">{{ job.fit_reasoning }}</p>{% endif %}
+              {% if job.fit_evaluation_error %}
+              <p class="fit-reasoning fit-error">{{ job.fit_evaluation_error }}</p>
+              {% elif job.fit_reasoning %}
+              <p class="fit-reasoning">{{ job.fit_reasoning }}</p>
+              {% endif %}
             </section>
 
             <section class="fit-evaluation" aria-label="Resume fit evaluation ignoring dates">

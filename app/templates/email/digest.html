@@ -41,6 +41,8 @@
                             <span style="display:inline-block;border-radius:99px;background:#fff4dd;color:#996214;font-size:10px;font-weight:700;letter-spacing:.4px;padding:5px 8px;text-transform:uppercase;">{{ job.fit_label }}</span>
                             {% elif job.fit_tone == 'limited' %}
                             <span style="display:inline-block;border-radius:99px;background:#fbeaea;color:#a44444;font-size:10px;font-weight:700;letter-spacing:.4px;padding:5px 8px;text-transform:uppercase;">{{ job.fit_label }}</span>
+                            {% elif job.fit_tone == 'failed' %}
+                            <span style="display:inline-block;border-radius:99px;background:#fbeaea;color:#a44444;font-size:10px;font-weight:700;letter-spacing:.4px;padding:5px 8px;text-transform:uppercase;">{{ job.fit_label }}</span>
                             {% else %}
                             <span style="display:inline-block;border-radius:99px;background:#eef1ef;color:#647069;font-size:10px;font-weight:700;letter-spacing:.4px;padding:5px 8px;text-transform:uppercase;">{{ job.fit_label }}</span>
                             {% endif %}
@@ -51,11 +53,13 @@
                       <p style="margin:0;color:#647069;font-size:13px;line-height:1.55;">{% for item in job.meta %}{{ item }}{% if not loop.last %} &nbsp;·&nbsp; {% endif %}{% endfor %}</p>
                       <p style="margin:4px 0 0;color:#8a948e;font-size:11px;">{{ job.posted_label }}</p>
 
-                      {% if job.fit_reasoning or job.resume_fit_reasoning %}
-                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:16px;background:#f5faf7;border-left:3px solid #75b99f;">
+                      {% if job.fit_evaluation_error or job.fit_reasoning or job.resume_fit_reasoning %}
+                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:16px;background:{% if job.fit_evaluation_error %}#fff7f7{% else %}#f5faf7{% endif %};border-left:3px solid {% if job.fit_evaluation_error %}#d58b8b{% else %}#75b99f{% endif %};">
                         <tr>
                           <td style="padding:11px 12px;color:#425048;font-size:13px;line-height:1.5;">
-                            {% if job.fit_reasoning %}
+                            {% if job.fit_evaluation_error %}
+                            <p style="margin:0;color:#a44444;"><strong>Evaluation error:</strong> {{ job.fit_evaluation_error }}</p>
+                            {% elif job.fit_reasoning %}
                             <p style="margin:0;"><strong>Spring 2027 fit:</strong> {{ job.fit_reasoning }}</p>
                             {% endif %}
                             {% if job.resume_fit_reasoning %}

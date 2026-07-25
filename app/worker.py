@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import subprocess
 import tempfile
+from typing import Literal
 from urllib.parse import quote, urlsplit, urlunsplit
 from zoneinfo import ZoneInfo
 
@@ -372,12 +373,38 @@ XX and YY must be integers from 0 through 100. Do not add any other text."""
     return parse_fit_result(completed.stdout)
 
 
+def evaluation_failure_reason(
+    error: Exception,
+    *,
+    stage: Literal["job_page", "codex"],
+) -> str:
+    if stage == "job_page":
+        if isinstance(error, httpx.HTTPStatusError):
+            return f"Job posting returned HTTP {error.response.status_code}."
+        if isinstance(error, httpx.RequestError):
+            return "Could not reach the job posting."
+        if isinstance(error, ValueError):
+            return "The job posting did not contain readable content."
+        return "The job posting could not be loaded."
+    if isinstance(error, subprocess.TimeoutExpired):
+        return "Codex review timed out."
+    if isinstance(error, FileNotFoundError):
+        return "The Codex executable was not available."
+    if isinstance(error, subprocess.CalledProcessError):
+        return "Codex review exited before producing a result."
+    if isinstance(error, ValueError):
+        return "Codex review did not produce a valid result."
+    return "Codex review could not be completed."
+
+
 def evaluate_listings(session: Session, listings: list[Listing]) -> int:
     evaluated = 0
     for listing in listings:
+        stage = "job_page"
         try:
             logger.info("Scraping job page for Codex evaluation: %s", listing.application_url)
             job_text = scrape_job_listing(listing.application_url)
+            stage = "codex"
             assessment = run_codex_assessment(listing, job_text)
             listing.fit_confidence = assessment.confidence
             listing.fit_reasoning = assessment.reasoning
@@ -385,6 +412,8 @@ def evaluate_listings(session: Session, listings: list[Listing]) -> int:
             listing.resume_fit_reasoning = assessment.resume_reasoning
             listing.fit_selected_at = listing.fit_selected_at or datetime.now(timezone.utc)
             listing.fit_evaluated_at = datetime.now(timezone.utc)
+            listing.fit_evaluation_failed_at = None
+            listing.fit_evaluation_error = None
             listing.fit_model = settings.codex_model
             session.commit()
             evaluated += 1
@@ -395,9 +424,23 @@ def evaluate_listings(session: Session, listings: list[Listing]) -> int:
                 assessment.resume_confidence,
                 assessment.resume_reasoning,
             )
-        except (httpx.HTTPError, OSError, subprocess.SubprocessError, ValueError):
+        except (
+            httpx.HTTPError,
+            OSError,
+            subprocess.SubprocessError,
+            ValueError,
+        ) as error:
+            reason = evaluation_failure_reason(error, stage=stage)
             session.rollback()
-            logger.exception("Could not evaluate listing %s", listing.application_url)
+            listing.fit_evaluation_failed_at = datetime.now(timezone.utc)
+            listing.fit_evaluation_error = reason
+            session.commit()
+            logger.error(
+                "Could not evaluate listing %s: %s (%s)",
+                listing.application_url,
+                reason,
+                type(error).__name__,
+            )
     return evaluated
 
 

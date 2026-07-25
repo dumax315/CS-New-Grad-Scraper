@@ -309,6 +309,11 @@ input:disabled {
   color: var(--red);
 }
 
+.fit-score--failed {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
 .fit-score--pending {
   background: #f0f2f1;
   color: var(--muted);
@@ -319,6 +324,10 @@ input:disabled {
   font-size: .78rem;
   line-height: 1.45;
   margin: 0;
+}
+
+.fit-error {
+  color: var(--red);
 }
 
 .job-actions {

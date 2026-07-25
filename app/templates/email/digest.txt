@@ -10,6 +10,8 @@ RESUME FIT: {{ job.resume_fit_label|upper }}
 {{ job.title }}
 {{ job.meta|join(' · ') }}
 {{ job.posted_label }}
+{% if job.fit_evaluation_error %}Evaluation error: {{ job.fit_evaluation_error }}
+{% endif -%}
 {% if job.fit_reasoning %}Spring 2027 fit: {{ job.fit_reasoning }}
 {% endif -%}
 {% if job.resume_fit_reasoning %}Resume fit (ignoring dates): {{ job.resume_fit_reasoning }}

@@ -286,6 +286,38 @@ def test_selected_jobs_are_retried_after_worker_restart(monkeypatch):
         assert job.resume_fit_confidence == 90
 
 
+def test_failed_evaluation_is_persisted_and_remains_retryable(monkeypatch):
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
+    job = listing()
+
+    def failed_codex(listing, text):
+        raise subprocess.TimeoutExpired(["codex", "candidate-secret"], 120)
+
+    monkeypatch.setattr(worker, "scrape_job_listing", lambda url: "job text")
+    monkeypatch.setattr(worker, "run_codex_assessment", failed_codex)
+
+    with Session() as session:
+        session.add(job)
+        session.commit()
+
+        assert worker.evaluate_new_listings(session, [job]) == 0
+        assert job.fit_evaluated_at is None
+        assert job.fit_evaluation_failed_at is not None
+        assert job.fit_evaluation_error == "Codex review timed out."
+        assert "candidate-secret" not in job.fit_evaluation_error
+
+    monkeypatch.setattr(worker, "run_codex_assessment", lambda listing, text: assessment())
+
+    with Session() as session:
+        saved = session.get(Listing, job.id)
+        assert worker.evaluate_new_listings(session, []) == 1
+        assert saved.fit_evaluated_at is not None
+        assert saved.fit_evaluation_failed_at is None
+        assert saved.fit_evaluation_error is None
+
+
 def test_create_tables_migrates_existing_listing_table(monkeypatch):
     engine = create_engine("sqlite://")
     with engine.begin() as connection:
@@ -297,7 +329,8 @@ def test_create_tables_migrates_existing_listing_table(monkeypatch):
     columns = {column["name"] for column in inspect(engine).get_columns("listings")}
     assert {
         "fit_confidence", "fit_reasoning", "resume_fit_confidence",
-        "resume_fit_reasoning", "fit_selected_at", "fit_evaluated_at", "fit_model",
+        "resume_fit_reasoning", "fit_selected_at", "fit_evaluated_at",
+        "fit_evaluation_failed_at", "fit_evaluation_error", "fit_model",
     } <= columns
     assert "subscribers" in inspect(engine).get_table_names()
 

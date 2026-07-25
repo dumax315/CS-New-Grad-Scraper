@@ -32,6 +32,12 @@ def create_tables() -> None:
             "resume_fit_reasoning": "TEXT",
             "fit_selected_at": "TIMESTAMP WITH TIME ZONE" if engine.dialect.name == "postgresql" else "DATETIME",
             "fit_evaluated_at": "TIMESTAMP WITH TIME ZONE" if engine.dialect.name == "postgresql" else "DATETIME",
+            "fit_evaluation_failed_at": (
+                "TIMESTAMP WITH TIME ZONE"
+                if engine.dialect.name == "postgresql"
+                else "DATETIME"
+            ),
+            "fit_evaluation_error": "VARCHAR(255)",
             "fit_model": "VARCHAR(100)",
         }
         for column_name, column_type in missing_columns.items():

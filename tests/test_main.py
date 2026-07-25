@@ -89,7 +89,13 @@ def test_index_renders_utility_controls_and_both_job_evaluations():
         pending.sources = [
             ListingSource(source_name="Curated List", source_url="https://github.com/example/list"),
         ]
-        session.add_all([job, pending])
+        failed = listing("failed", date(2026, 7, 22))
+        failed.fit_evaluation_failed_at = datetime(2026, 7, 25, tzinfo=timezone.utc)
+        failed.fit_evaluation_error = "Codex review timed out."
+        failed.sources = [
+            ListingSource(source_name="Curated List", source_url="https://github.com/example/list"),
+        ]
+        session.add_all([job, pending, failed])
         session.commit()
         response = index(request(), q="", source="", session=session)
 
@@ -103,7 +109,7 @@ def test_index_renders_utility_controls_and_both_job_evaluations():
     assert ">Search</span>" in html
     assert ">Source</span>" in html
     assert 'class="filter-submit" type="submit">Filter</button>' in html
-    assert "2 jobs" in html
+    assert "3 jobs" in html
     assert "Newest first" in html
     assert "Spring 2027 fit" in html
     assert "88% match" in html
@@ -114,6 +120,10 @@ def test_index_renders_utility_controls_and_both_job_evaluations():
     assert "$120k–$140k" in html
     assert "Class of 2027" in html
     assert html.count("Not yet evaluated") == 2
+    assert html.count("Evaluation failed") == 2
+    assert html.count("fit-score--failed") == 2
+    assert "Codex review timed out." in html
+    assert 'class="fit-reasoning fit-error"' in html
     assert ">Sources</span>" in html
     assert "Acme &amp; &lt;Partners&gt;" in html
     assert "Curated &amp; &lt;List&gt;" in html

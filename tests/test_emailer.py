@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from email.message import EmailMessage
 
 from app.config import Settings
@@ -62,6 +63,21 @@ def test_render_digest_omits_browse_button_without_public_url():
     assert digest.subject == "1 new role for Spring 2027"
     assert "Browse all jobs" not in digest.text
     assert "Browse all jobs" not in digest.html
+
+
+def test_render_digest_distinguishes_failed_evaluation_from_pending():
+    failed = listing("Failed", None)
+    failed.fit_evaluation_failed_at = datetime(2026, 7, 25, tzinfo=timezone.utc)
+    failed.fit_evaluation_error = "Codex review timed out."
+
+    digest = render_digest([failed])
+
+    assert "SPRING 2027 FIT: EVALUATION FAILED" in digest.text
+    assert "RESUME FIT: EVALUATION FAILED" in digest.text
+    assert "Evaluation error: Codex review timed out." in digest.text
+    assert "Evaluation failed" in digest.html
+    assert "<strong>Evaluation error:</strong> Codex review timed out." in digest.html
+    assert "background:#fbeaea;color:#a44444" in digest.html
 
 
 def test_confirmation_and_digest_render_tokenized_links_safely():

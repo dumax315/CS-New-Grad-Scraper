@@ -27,6 +27,11 @@ class Listing(Base):
     resume_fit_reasoning: Mapped[str | None] = mapped_column(Text, nullable=True)
     fit_selected_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     fit_evaluated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    fit_evaluation_failed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+    fit_evaluation_error: Mapped[str | None] = mapped_column(String(255), nullable=True)
     fit_model: Mapped[str | None] = mapped_column(String(100), nullable=True)
     sources: Mapped[list["ListingSource"]] = relationship(back_populates="listing", cascade="all, delete-orphan")
 

@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timezone
 
 from app.models import Listing, ListingSource
 from app.presentation import present_listing, present_listings
@@ -54,6 +54,24 @@ def test_present_listing_handles_unscored_and_source_age_without_awkward_ago():
     assert job.fit_tone == "pending"
     assert job.resume_fit_label == "Not yet evaluated"
     assert job.resume_fit_tone == "pending"
+
+
+def test_present_listing_distinguishes_failed_evaluation_from_pending():
+    item = listing()
+    item.fit_evaluation_failed_at = datetime(2026, 7, 25, tzinfo=timezone.utc)
+    item.fit_evaluation_error = "Codex review timed out."
+
+    job = present_listing(item)
+
+    assert job.fit_evaluation_error == "Codex review timed out."
+    assert job.fit_confidence is None
+    assert job.fit_label == "Evaluation failed"
+    assert job.fit_tone == "failed"
+    assert job.fit_reasoning is None
+    assert job.resume_fit_confidence is None
+    assert job.resume_fit_label == "Evaluation failed"
+    assert job.resume_fit_tone == "failed"
+    assert job.resume_fit_reasoning is None
 
 
 def test_present_listings_places_highest_scores_first_and_unscored_last():
