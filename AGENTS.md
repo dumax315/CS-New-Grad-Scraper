@@ -1,5 +1,132 @@
 # Agent Instructions
 
+## Project overview
+
+This repository is a Python 3.12 application that aggregates new-grad
+software-engineering jobs, evaluates a limited batch for Spring 2027 fit,
+serves a public FastAPI/Jinja job board, and sends HTML/plain-text email
+digests.
+
+The production stack is:
+
+- FastAPI and Jinja for the web application.
+- SQLAlchemy with PostgreSQL in Docker and SQLite as the local fallback.
+- APScheduler for twice-daily ingestion and notification work.
+- `httpx` and purpose-built parsers for source and job-page fetching.
+- The Codex CLI for fit evaluation.
+- Docker Compose for local development and Coolify deployment.
+
+Do not add a framework, frontend build step, or service dependency when the
+existing Python/Jinja/CSS architecture can handle the change cleanly.
+
+## Repository map
+
+- `app/main.py` — FastAPI routes, filtering, and visible-listing query.
+- `app/worker.py` — scheduled ingestion, page scraping, fit evaluation, and
+  digest orchestration.
+- `app/sources.py` — curated-source fetching and candidate parsing.
+- `app/ingestion.py` — listing deduplication and persistence.
+- `app/models.py` — SQLAlchemy models.
+- `app/database.py` — engine/session setup and additive startup migrations.
+- `app/presentation.py` — shared user-facing job labels and metadata for web
+  and email.
+- `app/emailer.py` — digest rendering and SMTP delivery.
+- `app/templates/` — board and email templates.
+- `app/static/styles.css` — board styling; email CSS remains inline for client
+  compatibility.
+- `tests/` — unit and rendering tests.
+- `docker-compose.yml` — deployable services.
+- `docker-compose.override.yml` — local port exposure.
+- `LAZYGIT_WORKFLOW.md` — expanded human-facing Git/Lazygit workflow.
+
+## Development and verification
+
+Use the repository virtual environment when it exists:
+
+```sh
+.venv/bin/python -m pytest -q
+.venv/bin/python -m compileall -q app tests
+docker compose config --quiet
+```
+
+If dependencies need to be installed:
+
+```sh
+.venv/bin/python -m pip install -e '.[dev]'
+```
+
+Run the full test suite for shared models, ingestion, worker, database, or
+presentation changes. A focused test is useful while iterating, but do not
+substitute it for the full suite before handoff when the full suite is
+available and fast.
+
+Tests must not call live job sources, SMTP servers, or Codex. Use
+`httpx.MockTransport`, fake SMTP objects, and monkeypatched subprocess calls,
+following the existing tests.
+
+For local end-to-end development:
+
+```sh
+docker compose up --build
+```
+
+The board is then available at `http://localhost:8000`. Do not send a test
+email, run a live ingestion, invoke a billable Codex evaluation, or deploy
+unless the user asks for that external effect.
+
+## Application invariants
+
+- The worker owns external fetching and email delivery. Keep web requests
+  read-only with respect to scraping and notifications.
+- `Listing.application_url` is the listing deduplication key. Preserve that
+  behavior unless a schema and migration change intentionally replaces it.
+- Scheduled runs evaluate at most 10 newly selected listings. Selection is
+  persisted so a failed or unauthenticated worker restart retries the same
+  batch.
+- Fit evaluation treats Spring 2027 timing as a gating requirement. Do not
+  weaken that prompt or silently reinterpret the score as offer probability.
+- The web board hides known postings older than 365 days. Unknown posting
+  dates fall back to `first_seen_at`.
+- `SessionLocal` uses `expire_on_commit=False`, but relationships needed after
+  a session closes must still be eagerly loaded.
+- Schema changes require both a model update and a safe additive migration in
+  `create_tables()`. Web and worker containers can start concurrently, so
+  PostgreSQL migrations must tolerate both processes attempting them.
+- Keep secrets out of logs, tests, templates, and subprocess environments.
+  The Codex subprocess receives only the allowlisted environment assembled by
+  `codex_environment()`.
+- Never commit `.env`, database files, Codex credentials, SMTP credentials, or
+  generated caches.
+
+## Web and email presentation
+
+The board and digest should share presentation semantics through
+`app/presentation.py`, but they should not share exact markup:
+
+- The board may use semantic HTML, responsive external CSS, filters, and richer
+  interaction.
+- Email HTML must use conservative table layout and inline styles, retain the
+  plain-text alternative, and render acceptably without images or external
+  assets.
+- Keep Jinja autoescaping enabled for HTML. Never mark scraped or database
+  content safe.
+- Preserve the content hierarchy: fit status, company, role, metadata, posted
+  date, fit reasoning, sources, and apply action.
+- Add or update rendering tests when changing labels, ordering, escaping,
+  optional fields, links, or score treatment.
+- `APP_PUBLIC_URL` controls the digest's “Browse all jobs” link. The digest
+  must still render correctly when it is unset.
+
+## Python conventions
+
+- Prefer small typed functions and dataclasses for data passed into templates.
+- Keep network, database, presentation, and delivery concerns separated.
+- Use timezone-aware UTC datetimes for stored timestamps.
+- Preserve graceful fallbacks for missing listing fields and malformed remote
+  content.
+- Match the existing direct, readable style; no formatter or linter is
+  currently configured.
+
 ## Git and Lazygit workflow
 
 This repository uses ordinary Git with Lazygit as the human interface. Each
@@ -8,7 +135,8 @@ from its parent. Pull requests are not the unit of change in this workflow.
 
 Lazygit is interactive and intended for the human operator. Agents should use
 non-interactive Git commands against the same native repository state. Do not
-use Sapling (`sl`) in this repository.
+use Sapling (`sl`) in this repository. See `LAZYGIT_WORKFLOW.md` for the
+expanded human workflow.
 
 ## Before editing
 
