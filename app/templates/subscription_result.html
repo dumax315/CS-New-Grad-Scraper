@@ -5,18 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Manage New Grad SWE Jobs email alerts.">
     <title>{{ title }} · New Grad SWE Jobs</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}?v={{ styles_version }}">
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="/" aria-label="New Grad SWE Jobs home">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>New Grad SWE Jobs</span>
-      </a>
+      <a href="/">New Grad SWE Jobs</a>
     </header>
     <main class="subscription-page">
       <section class="subscription-card" aria-labelledby="subscription-title">
-        <p class="eyebrow">{{ "ALL SET" if success else "EMAIL ALERTS" }}</p>
         <h1 id="subscription-title">{{ title }}</h1>
         <p>{{ message }}</p>
         {% if unsubscribe_token %}
@@ -24,7 +20,7 @@
           <button type="submit">Unsubscribe</button>
         </form>
         {% else %}
-        <a class="apply-button" href="/">Back to the job board</a>
+        <a class="button-link" href="/">Back to the job board</a>
         {% endif %}
       </section>
     </main>

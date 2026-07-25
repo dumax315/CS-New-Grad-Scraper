@@ -1,5 +1,7 @@
 from contextlib import asynccontextmanager
 from datetime import date, datetime, time, timedelta, timezone
+import hashlib
+from pathlib import Path
 import smtplib
 from urllib.parse import quote
 
@@ -41,7 +43,11 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="New Grad SWE Jobs", lifespan=lifespan)
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+STATIC_DIRECTORY = Path(__file__).with_name("static")
+STYLES_VERSION = hashlib.sha256(
+    (STATIC_DIRECTORY / "styles.css").read_bytes()
+).hexdigest()[:12]
+app.mount("/static", StaticFiles(directory=STATIC_DIRECTORY), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 
@@ -84,6 +90,7 @@ def index(
     return templates.TemplateResponse(request, "index.html", {
         "jobs": present_listings(listings), "source_names": source_names,
         "q": q, "selected_source": source,
+        "styles_version": STYLES_VERSION,
         "subscription_notice": subscription_notices.get(request.query_params.get("subscription", "")),
         "signup_available": bool(
             settings.public_url
@@ -110,6 +117,7 @@ def _subscription_result(
         "title": title,
         "message": message,
         "success": success,
+        "styles_version": STYLES_VERSION,
         "unsubscribe_token": token,
     })
 

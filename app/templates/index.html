@@ -3,134 +3,97 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Curated software engineering and adjacent roles for Spring 2027 graduates.">
+    <meta name="description" content="Software engineering and adjacent roles for Spring 2027 graduates.">
     <title>New Grad SWE Jobs</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}?v={{ styles_version }}">
   </head>
   <body>
-    <header class="site-header">
-      <a class="brand" href="/" aria-label="New Grad SWE Jobs home">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>New Grad SWE Jobs</span>
-      </a>
-      <p class="update-note"><span aria-hidden="true"></span> Updated twice daily</p>
-    </header>
-
     <main>
-      <section class="hero" aria-labelledby="page-title">
-        <p class="eyebrow">CURATED FOR SPRING 2027</p>
-        <h1 id="page-title">Find the right first role,<br><span>without the noise.</span></h1>
-        <p class="intro">Software-engineering and adjacent new-grad openings, gathered from trusted sources and evaluated for graduation-timing fit.</p>
-      </section>
+      <header class="board-header">
+        <h1>New Grad SWE Jobs</h1>
+        <p>Updated twice daily</p>
+      </header>
 
-      <section class="signup-panel" id="email-signup" aria-labelledby="signup-title">
-        <div>
-          <p class="section-label">JOB ALERTS</p>
-          <h2 id="signup-title">New roles, sent to you.</h2>
-          <p>Get the latest Spring 2027 openings when the board updates. Confirm once, unsubscribe anytime.</p>
-        </div>
-        <div>
+      <div class="utilities">
+        <form class="filters" method="get" aria-label="Filter job listings">
+          <label class="search-field">
+            <span>Search</span>
+            <input name="q" value="{{ q }}" placeholder="Company, role, or location">
+          </label>
+          <label class="source-field">
+            <span>Source</span>
+            <select name="source">
+              <option value="">All sources</option>
+              {% for name in source_names %}
+              <option value="{{ name }}" {% if selected_source == name %}selected{% endif %}>{{ name }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <button type="submit">Filter</button>
+          {% if q or selected_source %}<a class="clear-filter" href="/">Clear</a>{% endif %}
+        </form>
+
+        <section class="email-alerts" id="email-signup" aria-labelledby="signup-title">
+          <h2 id="signup-title">Email alerts</h2>
           <form class="signup-form" method="post" action="/subscribe">
             <label for="signup-email" class="visually-hidden">Email address</label>
             <input id="signup-email" name="email" type="email" autocomplete="email" maxlength="320" placeholder="you@example.com" required {% if not signup_available %}disabled{% endif %}>
-            <button type="submit" {% if not signup_available %}disabled{% endif %}>Get job alerts</button>
+            <button type="submit" {% if not signup_available %}disabled{% endif %}>Subscribe</button>
           </form>
           {% if subscription_notice %}
           <p class="signup-notice signup-notice--{{ subscription_notice[0] }}" role="status">{{ subscription_notice[1] }}</p>
           {% elif not signup_available %}
           <p class="signup-notice signup-notice--error" role="status">Email signup is temporarily unavailable.</p>
-          {% else %}
-          <p class="signup-privacy">We’ll send a confirmation link first. No tracking pixels.</p>
           {% endif %}
-        </div>
-      </section>
-
-      <form class="filters" method="get" aria-label="Filter job listings">
-        <label class="search-field">
-          <span class="visually-hidden">Company, role, or location</span>
-          <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20">
-            <path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"></path>
-          </svg>
-          <input name="q" value="{{ q }}" placeholder="Company, role, or location">
-        </label>
-        <label>
-          <span class="visually-hidden">Filter by source</span>
-          <select name="source">
-            <option value="">All sources</option>
-            {% for name in source_names %}
-            <option value="{{ name }}" {% if selected_source == name %}selected{% endif %}>{{ name }}</option>
-            {% endfor %}
-          </select>
-        </label>
-        <button type="submit">Filter jobs</button>
-        {% if q or selected_source %}<a class="clear-filter" href="/">Clear</a>{% endif %}
-      </form>
+        </section>
+      </div>
 
       <section class="results" aria-labelledby="results-title">
-        <div class="results-heading">
-          <div>
-            <p class="section-label">LATEST OPENINGS</p>
-            <h2 id="results-title">{{ jobs|length }} role{{ '' if jobs|length == 1 else 's' }}</h2>
-          </div>
-          <p>Newest posts first</p>
-        </div>
+        <h2 class="results-summary" id="results-title">{{ jobs|length }} job{{ '' if jobs|length == 1 else 's' }} <span aria-hidden="true">·</span> Newest first</h2>
 
         <div class="job-list">
           {% for job in jobs %}
-          <article class="job-card">
-            <div class="job-card__topline">
+          <article class="job-row">
+            <div class="job-identity">
               <p class="company">{{ job.company }}</p>
-              <div class="fit-badges" aria-label="Job fit scores">
-                <p class="fit-badge fit-badge--{{ job.fit_tone }}">Spring 2027: {{ job.fit_label }}</p>
-                <p class="fit-badge fit-badge--{{ job.resume_fit_tone }}">Resume: {{ job.resume_fit_label }}</p>
-              </div>
+              <h3>{{ job.title }}</h3>
+              <ul class="job-meta" aria-label="Job details">
+                {% for item in job.meta %}<li>{{ item }}</li>{% endfor %}
+                <li>{{ job.posted_label }}</li>
+              </ul>
             </div>
-            <h3>{{ job.title }}</h3>
-            <ul class="job-meta" aria-label="Job details">
-              {% for item in job.meta %}<li>{{ item }}</li>{% endfor %}
-            </ul>
-            <p class="posted">{{ job.posted_label }}</p>
 
-            {% if job.fit_reasoning or job.resume_fit_reasoning %}
-            <div class="fit-notes">
-              {% if job.fit_reasoning %}
-              <div class="fit-note">
-                <p><strong>Spring 2027 fit:</strong> {{ job.fit_reasoning }}</p>
-              </div>
-              {% endif %}
-              {% if job.resume_fit_reasoning %}
-              <div class="fit-note">
-                <p><strong>Resume fit (ignoring dates):</strong> {{ job.resume_fit_reasoning }}</p>
-              </div>
-              {% endif %}
-            </div>
-            {% endif %}
+            <section class="fit-evaluation" aria-label="Spring 2027 fit evaluation">
+              <h4>Spring 2027 fit</h4>
+              <p class="fit-score fit-score--{{ job.fit_tone }}">{{ job.fit_label }}</p>
+              {% if job.fit_reasoning %}<p class="fit-reasoning">{{ job.fit_reasoning }}</p>{% endif %}
+            </section>
 
-            <footer class="job-card__footer">
+            <section class="fit-evaluation" aria-label="Resume fit evaluation ignoring dates">
+              <h4>Resume fit <span>(ignoring dates)</span></h4>
+              <p class="fit-score fit-score--{{ job.resume_fit_tone }}">{{ job.resume_fit_label }}</p>
+              {% if job.resume_fit_reasoning %}<p class="fit-reasoning">{{ job.resume_fit_reasoning }}</p>{% endif %}
+            </section>
+
+            <footer class="job-actions">
               <div class="source-links">
-                <span>Source{% if job.sources|length != 1 %}s{% endif %}:</span>
+                <span>Source{% if job.sources|length != 1 %}s{% endif %}</span>
                 {% for source in job.sources %}
-                <a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.name }}</a>{% if not loop.last %}<span aria-hidden="true">·</span>{% endif %}
+                <a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.name }}</a>
                 {% endfor %}
               </div>
-              <a class="apply-button" href="{{ job.application_url }}" target="_blank" rel="noopener">Apply now <span aria-hidden="true">↗</span></a>
+              <a class="apply-button" href="{{ job.application_url }}" target="_blank" rel="noopener">Apply <span aria-hidden="true">↗</span></a>
             </footer>
           </article>
           {% else %}
           <div class="empty-state">
-            <span aria-hidden="true">⌕</span>
-            <h3>No matching roles</h3>
-            <p>Try a broader search or clear your filters. The next scheduled scrape will update this page.</p>
+            <h3>No matching jobs</h3>
+            <p>Try a broader search or clear your filters.</p>
             {% if q or selected_source %}<a href="/">Clear all filters</a>{% endif %}
           </div>
           {% endfor %}
         </div>
       </section>
     </main>
-
-    <footer class="page-footer">
-      <p><span class="brand-mark" aria-hidden="true"></span> New Grad SWE Jobs</p>
-      <p>Curated sources. Clear timing signals. No endless scrolling.</p>
-    </footer>
   </body>
 </html>

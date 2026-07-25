@@ -143,6 +143,9 @@ def test_signup_route_sends_confirmation_then_activates(monkeypatch):
         confirmation = client.get(f"/subscribe/confirm?token={token}")
         assert confirmation.status_code == 200
         assert "Email alerts confirmed" in confirmation.text
+        assert f"/static/styles.css?v={main.STYLES_VERSION}" in confirmation.text
+        assert 'class="subscription-card"' in confirmation.text
+        assert '<a class="button-link" href="/">Back to the job board</a>' in confirmation.text
 
         with Session() as session:
             subscriber = session.scalar(select(Subscriber))
@@ -153,6 +156,9 @@ def test_signup_route_sends_confirmation_then_activates(monkeypatch):
 
         unsubscribe_page = client.get(f"/unsubscribe?token={removal_token}")
         assert "Unsubscribe from alerts?" in unsubscribe_page.text
+        assert 'form method="post"' in unsubscribe_page.text
+        assert f'action="/unsubscribe?token={removal_token}"' in unsubscribe_page.text
+        assert ">Unsubscribe</button>" in unsubscribe_page.text
         removed = client.post(f"/unsubscribe?token={removal_token}")
         assert "You’re unsubscribed" in removed.text
 
