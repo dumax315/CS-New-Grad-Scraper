@@ -45,6 +45,50 @@ Starting the full stack runs the worker's external ingestion and fit-evaluation
 workflow once at startup, then at 8 AM and 8 PM in `APP_TIMEZONE`. Hot reload
 applies to the web service; the production Compose file remains unchanged.
 
+### Test refetching, email, and Codex during local development
+
+The normal hot-reload command starts only `web` and `db`, so the one-shot worker
+commands can run alongside it without stopping anything:
+
+```sh
+# Terminal 1: keep the board running with hot reload
+docker compose up --build web
+
+# Terminal 2: build the worker after worker, CLI, resume, or packaging changes
+docker compose build worker
+
+# Delete five recently saved jobs, refetch them, and send email without Codex
+docker compose run --rm worker jobs-refetch 5 --no-codex
+
+# Codex-review and save the five newest unreviewed jobs
+docker compose run --rm worker jobs-review 5
+```
+
+The one-shot container shares PostgreSQL with the hot-reloading board. Refresh
+`http://localhost:8000` after a command finishes to see its database changes. Repeated
+commands do not require another worker build unless its code, resume, packaging, or
+dependencies changed.
+
+Use `jobs-refetch 5` without `--no-codex` to delete, refetch, review, save, and email in
+one pass. The refetch command exits unsuccessfully if there was nothing to delete, no
+listing was restored, or no digest was sent. Deletion is committed before source
+fetching, so use it only against a development database. Digest delivery requires valid
+SMTP settings and at least one `ALERT_RECIPIENT` or confirmed subscriber.
+
+Use `jobs-review 5 --force` to include previously reviewed listings and overwrite their
+successful results. These commands are also available as `uv run jobs-refetch ...` and
+`uv run jobs-review ...` when the required database, SMTP, and Codex environment is
+available directly in the shell.
+
+If the full stack is running through `docker compose up --build`, stop its scheduled
+worker before a one-shot test and restart it afterward:
+
+```sh
+docker compose stop worker
+docker compose run --rm worker jobs-refetch 5 --no-codex
+docker compose start worker
+```
+
 ## Develop with uv
 
 Create or update the repository `.venv` from the exact versions in `uv.lock`:
@@ -94,52 +138,6 @@ uvx --from 'markitdown[pdf]==0.1.6' \
 
 Review the resulting diff before committing it because PDF extraction can lose visual
 structure such as headings or multi-column ordering.
-
-### Test refetching, email, and Codex locally
-
-Use the worker container so the commands share the same PostgreSQL database, SMTP
-settings, and persisted Codex login as the scheduled worker. Stop the long-running
-worker first so it cannot ingest concurrently with the test command:
-
-```sh
-docker compose stop worker
-```
-
-This command deletes the five most recently saved listings, refetches the live sources,
-reviews newly restored listings, saves their scores, and sends the resulting digest:
-
-```sh
-docker compose run --rm worker jobs-refetch 5
-```
-
-Skip Codex while still refetching and sending the digest with:
-
-```sh
-docker compose run --rm worker jobs-refetch 5 --no-codex
-```
-
-The command exits unsuccessfully if there was nothing to delete, no listing was
-refetched, or no digest was sent. Deletion is committed before source fetching, so use
-this only against a development database. Digest delivery requires valid SMTP settings
-and at least one `ALERT_RECIPIENT` or confirmed subscriber.
-
-To review and save fit results for the five newest listings that have not completed
-Codex review:
-
-```sh
-docker compose run --rm worker jobs-review 5
-```
-
-Include previously reviewed listings and overwrite their successful results with:
-
-```sh
-docker compose run --rm worker jobs-review 5 --force
-```
-
-The same entry points can be run as `uv run jobs-refetch ...` and
-`uv run jobs-review ...` when `DATABASE_URL`, SMTP, and Codex authentication are
-available in the shell environment. Restart the scheduled worker afterward with
-`docker compose start worker` when needed.
 
 To evaluate every unfinished listing posted in the last 10 days, bypassing the
 scheduled worker's 10-listing cap, run this inside the Coolify `worker` terminal:
