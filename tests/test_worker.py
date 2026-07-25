@@ -184,6 +184,14 @@ def test_load_candidate_resume_omits_contact_header(tmp_path):
     assert worker.load_candidate_resume(resume_path) == "## Education\n\nComputer Science"
 
 
+def test_load_candidate_resume_defaults_to_process_working_directory(tmp_path, monkeypatch):
+    resume_path = tmp_path / worker.DEFAULT_RESUME_FILENAME
+    resume_path.write_text("## Experience\n\nBuilt reliable systems.\n", encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+
+    assert worker.load_candidate_resume() == "## Experience\n\nBuilt reliable systems."
+
+
 def test_codex_environment_uses_persistent_login_without_api_key(monkeypatch):
     monkeypatch.setenv("CODEX_API_KEY", "")
     environment = worker.codex_environment("/tmp/temporary-codex")

@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 MAX_CODEX_EVALUATIONS = 10
 MAX_JOB_TEXT_CHARS = 30_000
-DEFAULT_RESUME_PATH = Path(__file__).resolve().parent.parent / "TheoHalpernResume.md"
+DEFAULT_RESUME_FILENAME = "TheoHalpernResume.md"
 FIT_RESULT_RE = re.compile(r"^(100|[1-9]?\d)%\s+—\s+(\S.+)$")
 BLOCK_TAGS = {
     "article", "br", "div", "footer", "h1", "h2", "h3", "h4", "h5", "h6",
@@ -233,7 +233,8 @@ def parse_fit_result(output: str) -> tuple[int, str]:
     return int(match.group(1)), match.group(2).strip()
 
 
-def load_candidate_resume(path: Path = DEFAULT_RESUME_PATH) -> str:
+def load_candidate_resume(path: Path | None = None) -> str:
+    path = path or Path.cwd() / DEFAULT_RESUME_FILENAME
     resume = path.read_text(encoding="utf-8").strip()
     if not resume:
         raise ValueError(f"candidate resume is empty: {path}")
