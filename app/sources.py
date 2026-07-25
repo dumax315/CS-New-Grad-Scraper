@@ -1,7 +1,7 @@
 """Fetch and parse the two curated GitHub job-list sources."""
 
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 import logging
 import re
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
@@ -214,6 +214,7 @@ def fetch_source_batch(
     try:
         results: list[SourceFetchResult] = []
         for source in sources:
+            started_at = datetime.now(timezone.utc)
             logger.info("Fetching %s from %s", source.name, source.raw_url)
             try:
                 response = client.get(source.raw_url)
@@ -233,6 +234,8 @@ def fetch_source_batch(
                     succeeded=False,
                     error_category=category,
                     error_summary=summary,
+                    started_at=started_at,
+                    finished_at=datetime.now(timezone.utc),
                 ))
                 continue
             logger.info(
@@ -257,6 +260,8 @@ def fetch_source_batch(
                 succeeded=True,
                 candidates=tuple(parsed),
                 fetched_count=len(parsed),
+                started_at=started_at,
+                finished_at=datetime.now(timezone.utc),
             ))
         return SourceBatch(tuple(results))
     finally:

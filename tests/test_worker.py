@@ -334,6 +334,10 @@ def test_create_tables_migrates_existing_listing_table(monkeypatch):
         "fit_evaluation_failed_at", "fit_evaluation_error", "fit_model",
     } <= columns
     assert "subscribers" in inspect(engine).get_table_names()
+    assert "source_runs" in inspect(engine).get_table_names()
+
+    database.create_tables()
+    assert "source_runs" in inspect(engine).get_table_names()
 
 
 def test_scrape_and_notify_sends_only_to_active_subscribers(monkeypatch):

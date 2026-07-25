@@ -1,7 +1,7 @@
 """Normalized types shared by source connectors and ingestion."""
 
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 
 
 @dataclass(frozen=True)
@@ -30,6 +30,8 @@ class SourceFetchResult:
     fetched_count: int = 0
     error_category: str | None = None
     error_summary: str | None = None
+    started_at: datetime | None = None
+    finished_at: datetime | None = None
 
 
 @dataclass(frozen=True)

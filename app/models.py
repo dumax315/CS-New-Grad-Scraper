@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from sqlalchemy import Date, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint, func
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -45,6 +45,22 @@ class ListingSource(Base):
     source_name: Mapped[str] = mapped_column(String(100))
     source_url: Mapped[str] = mapped_column(Text)
     listing: Mapped[Listing] = relationship(back_populates="sources")
+
+
+class SourceRun(Base):
+    __tablename__ = "source_runs"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    source_key: Mapped[str] = mapped_column(String(150), index=True)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    finished_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    succeeded: Mapped[bool] = mapped_column(Boolean)
+    status: Mapped[str] = mapped_column(String(20))
+    fetched_count: Mapped[int] = mapped_column(Integer, default=0)
+    accepted_count: Mapped[int] = mapped_column(Integer, default=0)
+    new_count: Mapped[int] = mapped_column(Integer, default=0)
+    error_category: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    error_summary: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
 
 class Subscriber(Base):
