@@ -44,7 +44,7 @@
                     <td style="border-top:1px solid #e7ebe8;padding:0;">
                       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                         <tr>
-                          <td width="50%" valign="top" style="padding:16px 18px;color:#46514b;font-size:12px;line-height:1.45;">
+                          <td width="{{ '50%' if show_resume_fit else '100%' }}" valign="top" style="padding:16px 18px;color:#46514b;font-size:12px;line-height:1.45;">
                             <p style="margin:0 0 6px;color:#17211c;font-size:12px;font-weight:700;">Is Spring 2027 New Grad</p>
                             {% if job.fit_tone == 'strong' %}
                             <p style="margin:0 0 7px;border-left:3px solid #056246;background:#e9f5f0;color:#056246;font-size:12px;font-weight:700;padding:3px 7px;">{{ job.fit_label }}</p>
@@ -63,6 +63,7 @@
                             <p style="margin:0;">{{ job.fit_reasoning }}</p>
                             {% endif %}
                           </td>
+                          {% if show_resume_fit %}
                           <td width="50%" valign="top" style="border-left:1px solid #e7ebe8;padding:16px 18px;color:#46514b;font-size:12px;line-height:1.45;">
                             <p style="margin:0 0 6px;color:#17211c;font-size:12px;font-weight:700;">Theo's Resume fit</p>
                             {% if job.resume_fit_tone == 'strong' %}
@@ -80,6 +81,7 @@
                             <p style="margin:0;">{{ job.resume_fit_reasoning }}</p>
                             {% endif %}
                           </td>
+                          {% endif %}
                         </tr>
                       </table>
                     </td>

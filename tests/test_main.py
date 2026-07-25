@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from app.config import Settings
 from app.database import Base
 from app import main
-from app.main import app, index, visible_listing_condition
+from app.main import app, index, resume, visible_listing_condition
 from app.models import Listing, ListingSource
 
 
@@ -26,12 +26,12 @@ def listing(
     )
 
 
-def request(query_string: bytes = b"") -> Request:
+def request(query_string: bytes = b"", path: str = "/") -> Request:
     return Request({
         "type": "http",
         "method": "GET",
-        "path": "/",
-        "raw_path": b"/",
+        "path": path,
+        "raw_path": path.encode(),
         "root_path": "",
         "scheme": "http",
         "query_string": query_string,
@@ -63,7 +63,7 @@ def test_visible_listing_condition_hides_only_known_dates_older_than_one_year():
     assert {item.title for item in visible} == {"boundary", "recent", "recent-unknown"}
 
 
-def test_index_renders_utility_controls_and_both_job_evaluations():
+def test_index_hides_resume_fit_and_resume_page_shows_both_evaluations():
     engine = create_engine("sqlite://")
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine, expire_on_commit=False)
@@ -98,8 +98,15 @@ def test_index_renders_utility_controls_and_both_job_evaluations():
         session.add_all([job, pending, failed])
         session.commit()
         response = index(request(), q="", source="", session=session)
+        resume_response = resume(
+            request(path="/resume"),
+            q="",
+            source="",
+            session=session,
+        )
 
     html = response.body.decode()
+    resume_html = resume_response.body.decode()
     assert response.status_code == 200
     assert f'href="http://testserver/static/styles.css?v={main.STYLES_VERSION}"' in html
     assert f'src="http://testserver/static/filters.js?v={main.FILTERS_VERSION}"' in html
@@ -111,19 +118,19 @@ def test_index_renders_utility_controls_and_both_job_evaluations():
     assert 'class="filter-submit" type="submit">Filter</button>' in html
     assert "3 jobs" in html
     assert "Newest first" in html
-    assert html.count('class="job-reviews"') == 3
+    assert html.count('class="job-reviews job-reviews--single"') == 3
     assert "Is Spring 2027 New Grad" in html
     assert "88% match" in html
     assert "Spring 2027 timing is supported." in html
-    assert "Theo's Resume fit" in html
+    assert "Theo's Resume fit" not in html
     assert "ignoring dates" not in html
-    assert "93% match" in html
-    assert "Resume shows strong Python experience." in html
+    assert "93% match" not in html
+    assert "Resume shows strong Python experience." not in html
     assert "$120k–$140k" in html
     assert "Class of 2027" in html
-    assert html.count("Not yet evaluated") == 2
-    assert html.count("Evaluation failed") == 2
-    assert html.count("fit-score--failed") == 2
+    assert html.count("Not yet evaluated") == 1
+    assert html.count("Evaluation failed") == 1
+    assert html.count("fit-score--failed") == 1
     assert "Codex review timed out." in html
     assert 'class="fit-reasoning fit-error"' in html
     assert ">Sources</span>" in html
@@ -135,6 +142,15 @@ def test_index_renders_utility_controls_and_both_job_evaluations():
     assert 'id="email-signup"' in html
     assert 'action="/subscribe"' in html
     assert ">Subscribe</button>" in html
+    assert resume_response.status_code == 200
+    assert '<meta name="robots" content="noindex,nofollow">' in resume_html
+    assert resume_html.count('class="job-reviews"') == 3
+    assert "Theo's Resume fit" in resume_html
+    assert "93% match" in resume_html
+    assert "Resume shows strong Python experience." in resume_html
+    assert resume_html.count("Not yet evaluated") == 2
+    assert resume_html.count("Evaluation failed") == 2
+    assert resume_html.count("fit-score--failed") == 2
 
 
 def test_index_preserves_filter_state_and_renders_subscription_notice():

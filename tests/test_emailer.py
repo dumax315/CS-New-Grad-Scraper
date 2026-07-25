@@ -39,6 +39,7 @@ def test_render_digest_uses_shared_hierarchy_sorting_and_escaping():
     digest = render_digest(
         [listing("Unscored", None), listing("Top & <Choice>", 94)],
         "https://board.example/",
+        include_resume_fit=True,
     )
 
     assert digest.subject == "2 new roles for Spring 2027"
@@ -72,6 +73,11 @@ def test_render_digest_omits_browse_button_without_public_url():
     digest = render_digest([listing("Acme", 75)])
 
     assert digest.subject == "1 new role for Spring 2027"
+    assert "THEO'S RESUME FIT" not in digest.text
+    assert "Theo's Resume fit" not in digest.html
+    assert "Resume shows matching systems experience." not in digest.text
+    assert "Resume shows matching systems experience." not in digest.html
+    assert 'width="100%" valign="top"' in digest.html
     assert "Browse all jobs" not in digest.text
     assert "Browse all jobs" not in digest.html
 
@@ -81,7 +87,7 @@ def test_render_digest_distinguishes_failed_evaluation_from_pending():
     failed.fit_evaluation_failed_at = datetime(2026, 7, 25, tzinfo=timezone.utc)
     failed.fit_evaluation_error = "Codex review timed out."
 
-    digest = render_digest([failed])
+    digest = render_digest([failed], include_resume_fit=True)
 
     assert "IS SPRING 2027 NEW GRAD: EVALUATION FAILED" in digest.text
     assert "THEO'S RESUME FIT: EVALUATION FAILED" in digest.text
@@ -194,7 +200,17 @@ def test_send_digest_reuses_connection_and_deduplicates_admin_recipient(monkeypa
         "reader@example.com", "other@example.com",
     }
     reader_message = next(message for message in messages if message["To"] == "reader@example.com")
+    other_message = next(message for message in messages if message["To"] == "other@example.com")
     assert reader_message["List-Unsubscribe"] == (
         "<https://board.example/unsubscribe?token=one>"
     )
     assert reader_message["List-Unsubscribe-Post"] == "List-Unsubscribe=One-Click"
+    assert "Theo's Resume fit" in reader_message.get_body(
+        preferencelist=("html",)
+    ).get_content()
+    assert "Theo's Resume fit" not in other_message.get_body(
+        preferencelist=("html",)
+    ).get_content()
+    assert "THEO'S RESUME FIT" not in other_message.get_body(
+        preferencelist=("plain",)
+    ).get_content()

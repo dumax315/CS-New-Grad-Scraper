@@ -38,6 +38,8 @@ def render_digest(
     listings: list[Listing],
     public_url: str = "",
     unsubscribe_url: str = "",
+    *,
+    include_resume_fit: bool = False,
 ) -> RenderedDigest:
     jobs = present_listings(listings, highest_fit_first=True)
     count = len(jobs)
@@ -47,6 +49,7 @@ def render_digest(
         "public_url": public_url.rstrip("/"),
         "subject": subject,
         "unsubscribe_url": unsubscribe_url,
+        "show_resume_fit": include_resume_fit,
     }
     return RenderedDigest(
         subject=subject,
@@ -136,8 +139,14 @@ def send_new_jobs_digest(
         return False
 
     messages = []
-    for recipient in recipients_by_address.values():
-        digest = render_digest(listings, config.public_url, recipient.unsubscribe_url)
+    admin_key = config.alert_recipient.strip().lower()
+    for address_key, recipient in recipients_by_address.items():
+        digest = render_digest(
+            listings,
+            config.public_url,
+            recipient.unsubscribe_url,
+            include_resume_fit=address_key == admin_key,
+        )
         messages.append(build_message(
             digest,
             recipient.address,

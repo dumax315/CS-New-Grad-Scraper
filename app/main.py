@@ -71,6 +71,42 @@ def index(
     source: str = Query(default="", max_length=100),
     session: Session = Depends(get_session),
 ):
+    return _render_job_board(
+        request,
+        q=q,
+        source=source,
+        session=session,
+        show_resume_fit=False,
+        board_path="/",
+    )
+
+
+@app.get("/resume", response_class=HTMLResponse)
+def resume(
+    request: Request,
+    q: str = Query(default="", max_length=100),
+    source: str = Query(default="", max_length=100),
+    session: Session = Depends(get_session),
+):
+    return _render_job_board(
+        request,
+        q=q,
+        source=source,
+        session=session,
+        show_resume_fit=True,
+        board_path="/resume",
+    )
+
+
+def _render_job_board(
+    request: Request,
+    *,
+    q: str,
+    source: str,
+    session: Session,
+    show_resume_fit: bool,
+    board_path: str,
+) -> HTMLResponse:
     statement = select(Listing).where(visible_listing_condition()).options(selectinload(Listing.sources)).order_by(
         Listing.posted_at.desc().nulls_last(), Listing.first_seen_at.desc(),
     )
@@ -95,6 +131,8 @@ def index(
         "q": q, "selected_source": source,
         "styles_version": STYLES_VERSION,
         "filters_version": FILTERS_VERSION,
+        "show_resume_fit": show_resume_fit,
+        "board_path": board_path,
         "subscription_notice": subscription_notices.get(request.query_params.get("subscription", "")),
         "signup_available": bool(
             settings.public_url

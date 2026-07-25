@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Software engineering and adjacent roles for Spring 2027 graduates.">
+    {% if show_resume_fit %}<meta name="robots" content="noindex,nofollow">{% endif %}
     <title>New Grad SWE Jobs</title>
     <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}?v={{ styles_version }}">
     <script src="{{ url_for('static', path='/filters.js') }}?v={{ filters_version }}" defer></script>
@@ -16,7 +17,7 @@
       </header>
 
       <div class="utilities">
-        <form class="filters" method="get" aria-label="Filter job listings">
+        <form class="filters" method="get" action="{{ board_path }}" aria-label="Filter job listings">
           <label class="search-field">
             <span>Search</span>
             <input name="q" value="{{ q }}" placeholder="Company, role, or location">
@@ -31,7 +32,7 @@
             </select>
           </label>
           <button class="filter-submit" type="submit">Filter</button>
-          {% if q or selected_source %}<a class="clear-filter" href="/">Clear</a>{% endif %}
+          {% if q or selected_source %}<a class="clear-filter" href="{{ board_path }}">Clear</a>{% endif %}
         </form>
 
         <section class="email-alerts" id="email-signup" aria-labelledby="signup-title">
@@ -64,7 +65,7 @@
               </ul>
             </div>
 
-            <div class="job-reviews">
+            <div class="job-reviews{% if not show_resume_fit %} job-reviews--single{% endif %}">
               <section class="fit-evaluation" aria-label="Is Spring 2027 New Grad evaluation">
                 <h4>Is Spring 2027 New Grad</h4>
                 <p class="fit-score fit-score--{{ job.fit_tone }}">{{ job.fit_label }}</p>
@@ -75,11 +76,13 @@
                 {% endif %}
               </section>
 
+              {% if show_resume_fit %}
               <section class="fit-evaluation" aria-label="Theo's Resume fit evaluation">
                 <h4>Theo's Resume fit</h4>
                 <p class="fit-score fit-score--{{ job.resume_fit_tone }}">{{ job.resume_fit_label }}</p>
                 {% if job.resume_fit_reasoning %}<p class="fit-reasoning">{{ job.resume_fit_reasoning }}</p>{% endif %}
               </section>
+              {% endif %}
             </div>
 
             <footer class="job-actions">
@@ -96,7 +99,7 @@
           <div class="empty-state">
             <h3>No matching jobs</h3>
             <p>Try a broader search or clear your filters.</p>
-            {% if q or selected_source %}<a href="/">Clear all filters</a>{% endif %}
+            {% if q or selected_source %}<a href="{{ board_path }}">Clear all filters</a>{% endif %}
           </div>
           {% endfor %}
         </div>
