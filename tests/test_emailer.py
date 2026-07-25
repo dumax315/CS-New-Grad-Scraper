@@ -53,8 +53,16 @@ def test_render_digest_uses_shared_hierarchy_sorting_and_escaping():
     assert 'href="https://jobs.example/apply?a=1&amp;b=2"' in digest.html
     assert "Remote &nbsp;·&nbsp; Class of 2027" in digest.html
     assert "&amp;nbsp;" not in digest.html
-    assert "Is Spring 2027 New Grad:" in digest.html
-    assert "Theo's Resume fit:" in digest.html
+    assert digest.html.index("Top &amp; &lt;Choice&gt;") < digest.html.index(
+        "Is Spring 2027 New Grad"
+    )
+    assert digest.html.count('width="50%" valign="top"') == 4
+    assert "background:#e9f5f0;color:#056246" in digest.html
+    assert "border-bottom:1px solid #d9dfdb" in digest.html
+    assert "border-top:1px solid #d9dfdb" in digest.html
+    assert "border-radius:12px" not in digest.html
+    assert "Timing supported &amp; technical fit is strong." in digest.html
+    assert "Resume shows matching systems experience." in digest.html
     assert "ignoring dates" not in digest.html
     assert "ignoring dates" not in digest.text
     assert "Browse all jobs" in digest.html
@@ -79,8 +87,8 @@ def test_render_digest_distinguishes_failed_evaluation_from_pending():
     assert "THEO'S RESUME FIT: EVALUATION FAILED" in digest.text
     assert "Evaluation error: Codex review timed out." in digest.text
     assert "Evaluation failed" in digest.html
-    assert "<strong>Evaluation error:</strong> Codex review timed out." in digest.html
-    assert "background:#fbeaea;color:#a44444" in digest.html
+    assert "Codex review timed out." in digest.html
+    assert "background:#fdf0f0;color:#923e3e" in digest.html
 
 
 def test_confirmation_and_digest_render_tokenized_links_safely():
@@ -93,6 +101,9 @@ def test_confirmation_and_digest_render_tokenized_links_safely():
 
     assert "https://board.example/confirm?token=a&next=b" in confirmation.text
     assert "token=a&amp;next=b" in confirmation.html
+    assert "background:#f7f8f7;color:#17211c" in confirmation.html
+    assert "border-bottom:1px solid #d9dfdb" in confirmation.html
+    assert "border-radius:12px" not in confirmation.html
     assert "Unsubscribe: https://board.example/unsubscribe?token=secret&next=1" in digest.text
     assert "token=secret&amp;next=1" in digest.html
 

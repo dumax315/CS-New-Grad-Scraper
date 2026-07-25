@@ -5,83 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ subject }}</title>
   </head>
-  <body style="margin:0;padding:0;background:#f5f7f4;color:#14211b;font-family:Arial,sans-serif;">
+  <body style="margin:0;padding:0;background:#f7f8f7;color:#17211c;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
     <div style="display:none;max-height:0;overflow:hidden;opacity:0;">
       {{ jobs|length }} newly discovered role{{ '' if jobs|length == 1 else 's' }}, with the strongest matches first.
     </div>
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f5f7f4;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f7f8f7;">
       <tr>
-        <td align="center" style="padding:32px 14px;">
+        <td align="center" style="padding:28px 14px;">
           <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:620px;">
             <tr>
-              <td style="padding:0 4px 24px;">
-                <p style="margin:0 0 20px;color:#14211b;font-size:14px;font-weight:700;">
-                  <span style="color:#087f5b;font-size:18px;line-height:0;">●</span>&nbsp; New Grad SWE Jobs
+              <td style="padding:0 0 22px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                  <tr>
+                    <td valign="baseline">
+                      <h1 style="margin:0;color:#17211c;font-size:28px;line-height:1.15;letter-spacing:-.7px;">New Grad SWE Jobs</h1>
+                    </td>
+                    <td align="right" valign="baseline" style="padding-left:16px;color:#5d6862;font-size:12px;white-space:nowrap;">Updated twice daily</td>
+                  </tr>
+                </table>
+                <p style="margin:18px 0 0;border-bottom:1px solid #d9dfdb;border-top:1px solid #d9dfdb;color:#5d6862;font-size:13px;font-weight:600;padding:12px 0;">
+                  {{ jobs|length }} new role{{ '' if jobs|length == 1 else 's' }} for Spring 2027 &nbsp;·&nbsp; Strongest matches first
                 </p>
-                <p style="margin:0 0 8px;color:#087f5b;font-size:11px;font-weight:700;letter-spacing:1.5px;">NEW SINCE THE LAST UPDATE</p>
-                <h1 style="margin:0;color:#14211b;font-size:32px;line-height:1.15;letter-spacing:-1px;">{{ jobs|length }} new role{{ '' if jobs|length == 1 else 's' }} for Spring 2027</h1>
-                <p style="margin:12px 0 0;color:#647069;font-size:15px;line-height:1.6;">Curated openings with the strongest evaluated matches shown first.</p>
               </td>
             </tr>
 
             {% for job in jobs %}
             <tr>
-              <td style="padding:0 0 12px;">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#ffffff;border:1px solid #dce3de;border-radius:12px;">
+              <td style="padding:0;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#ffffff;border-bottom:1px solid #d9dfdb;{% if loop.first %}border-top:1px solid #d9dfdb;{% endif %}">
                   <tr>
-                    <td style="padding:22px;">
+                    <td style="padding:16px 18px;">
+                      <p style="margin:0 0 3px;color:#056246;font-size:13px;font-weight:700;">{{ job.company }}</p>
+                      <h2 style="margin:0 0 8px;color:#17211c;font-size:16px;line-height:1.35;letter-spacing:-.15px;">{{ job.title }}</h2>
+                      <p style="margin:0;color:#5d6862;font-size:12px;line-height:1.45;">{% for item in job.meta %}{{ item }}{% if not loop.last %} &nbsp;·&nbsp; {% endif %}{% endfor %} &nbsp;·&nbsp; {{ job.posted_label }}</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="border-top:1px solid #e7ebe8;padding:0;">
                       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                         <tr>
-                          <td valign="middle" style="padding:0 12px 8px 0;color:#087f5b;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">{{ job.company }}</td>
-                          <td align="right" valign="middle" style="padding:0 0 8px;">
-                            <span style="color:#647069;font-size:10px;font-weight:700;">IS SPRING 2027 NEW GRAD&nbsp;</span>
+                          <td width="50%" valign="top" style="padding:16px 18px;color:#46514b;font-size:12px;line-height:1.45;">
+                            <p style="margin:0 0 6px;color:#17211c;font-size:12px;font-weight:700;">Is Spring 2027 New Grad</p>
                             {% if job.fit_tone == 'strong' %}
-                            <span style="display:inline-block;border-radius:99px;background:#e7f5ef;color:#056246;font-size:10px;font-weight:700;letter-spacing:.4px;padding:5px 8px;text-transform:uppercase;">{{ job.fit_label }}</span>
+                            <p style="margin:0 0 7px;border-left:3px solid #056246;background:#e9f5f0;color:#056246;font-size:12px;font-weight:700;padding:3px 7px;">{{ job.fit_label }}</p>
                             {% elif job.fit_tone == 'promising' %}
-                            <span style="display:inline-block;border-radius:99px;background:#fff4dd;color:#996214;font-size:10px;font-weight:700;letter-spacing:.4px;padding:5px 8px;text-transform:uppercase;">{{ job.fit_label }}</span>
+                            <p style="margin:0 0 7px;border-left:3px solid #805719;background:#fff7e7;color:#805719;font-size:12px;font-weight:700;padding:3px 7px;">{{ job.fit_label }}</p>
                             {% elif job.fit_tone == 'limited' %}
-                            <span style="display:inline-block;border-radius:99px;background:#fbeaea;color:#a44444;font-size:10px;font-weight:700;letter-spacing:.4px;padding:5px 8px;text-transform:uppercase;">{{ job.fit_label }}</span>
+                            <p style="margin:0 0 7px;border-left:3px solid #923e3e;background:#fdf0f0;color:#923e3e;font-size:12px;font-weight:700;padding:3px 7px;">{{ job.fit_label }}</p>
                             {% elif job.fit_tone == 'failed' %}
-                            <span style="display:inline-block;border-radius:99px;background:#fbeaea;color:#a44444;font-size:10px;font-weight:700;letter-spacing:.4px;padding:5px 8px;text-transform:uppercase;">{{ job.fit_label }}</span>
+                            <p style="margin:0 0 7px;border-left:3px solid #923e3e;background:#fdf0f0;color:#923e3e;font-size:12px;font-weight:700;padding:3px 7px;">{{ job.fit_label }}</p>
                             {% else %}
-                            <span style="display:inline-block;border-radius:99px;background:#eef1ef;color:#647069;font-size:10px;font-weight:700;letter-spacing:.4px;padding:5px 8px;text-transform:uppercase;">{{ job.fit_label }}</span>
+                            <p style="margin:0 0 7px;border-left:3px solid #5d6862;background:#f0f2f1;color:#5d6862;font-size:12px;font-weight:700;padding:3px 7px;">{{ job.fit_label }}</p>
+                            {% endif %}
+                            {% if job.fit_evaluation_error %}
+                            <p style="margin:0;color:#923e3e;">{{ job.fit_evaluation_error }}</p>
+                            {% elif job.fit_reasoning %}
+                            <p style="margin:0;">{{ job.fit_reasoning }}</p>
                             {% endif %}
                           </td>
-                        </tr>
-                      </table>
-                      <h2 style="margin:0 0 8px;color:#14211b;font-size:21px;line-height:1.3;letter-spacing:-.3px;">{{ job.title }}</h2>
-                      <p style="margin:0;color:#647069;font-size:13px;line-height:1.55;">{% for item in job.meta %}{{ item }}{% if not loop.last %} &nbsp;·&nbsp; {% endif %}{% endfor %}</p>
-                      <p style="margin:4px 0 0;color:#8a948e;font-size:11px;">{{ job.posted_label }}</p>
-
-                      {% if job.fit_evaluation_error or job.fit_reasoning or job.resume_fit_reasoning %}
-                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:16px;background:{% if job.fit_evaluation_error %}#fff7f7{% else %}#f5faf7{% endif %};border-left:3px solid {% if job.fit_evaluation_error %}#d58b8b{% else %}#75b99f{% endif %};">
-                        <tr>
-                          <td style="padding:11px 12px;color:#425048;font-size:13px;line-height:1.5;">
-                            {% if job.fit_evaluation_error %}
-                            <p style="margin:0;color:#a44444;"><strong>Evaluation error:</strong> {{ job.fit_evaluation_error }}</p>
-                            {% elif job.fit_reasoning %}
-                            <p style="margin:0;"><strong>Is Spring 2027 New Grad:</strong> {{ job.fit_reasoning }}</p>
+                          <td width="50%" valign="top" style="border-left:1px solid #e7ebe8;padding:16px 18px;color:#46514b;font-size:12px;line-height:1.45;">
+                            <p style="margin:0 0 6px;color:#17211c;font-size:12px;font-weight:700;">Theo's Resume fit</p>
+                            {% if job.resume_fit_tone == 'strong' %}
+                            <p style="margin:0 0 7px;border-left:3px solid #056246;background:#e9f5f0;color:#056246;font-size:12px;font-weight:700;padding:3px 7px;">{{ job.resume_fit_label }}</p>
+                            {% elif job.resume_fit_tone == 'promising' %}
+                            <p style="margin:0 0 7px;border-left:3px solid #805719;background:#fff7e7;color:#805719;font-size:12px;font-weight:700;padding:3px 7px;">{{ job.resume_fit_label }}</p>
+                            {% elif job.resume_fit_tone == 'limited' %}
+                            <p style="margin:0 0 7px;border-left:3px solid #923e3e;background:#fdf0f0;color:#923e3e;font-size:12px;font-weight:700;padding:3px 7px;">{{ job.resume_fit_label }}</p>
+                            {% elif job.resume_fit_tone == 'failed' %}
+                            <p style="margin:0 0 7px;border-left:3px solid #923e3e;background:#fdf0f0;color:#923e3e;font-size:12px;font-weight:700;padding:3px 7px;">{{ job.resume_fit_label }}</p>
+                            {% else %}
+                            <p style="margin:0 0 7px;border-left:3px solid #5d6862;background:#f0f2f1;color:#5d6862;font-size:12px;font-weight:700;padding:3px 7px;">{{ job.resume_fit_label }}</p>
                             {% endif %}
                             {% if job.resume_fit_reasoning %}
-                            <p style="margin:{% if job.fit_reasoning %}7px{% else %}0{% endif %} 0 0;"><strong>Theo's Resume fit:</strong> {{ job.resume_fit_label }} — {{ job.resume_fit_reasoning }}</p>
+                            <p style="margin:0;">{{ job.resume_fit_reasoning }}</p>
                             {% endif %}
                           </td>
                         </tr>
                       </table>
-                      {% endif %}
-
-                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:18px;border-top:1px solid #edf0ee;">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="border-top:1px solid #e7ebe8;padding:14px 18px;">
+                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                         <tr>
-                          <td valign="middle" style="padding-top:15px;color:#8a948e;font-size:11px;line-height:1.5;">
+                          <td valign="middle" style="color:#5d6862;font-size:12px;line-height:1.45;">
                             {% if job.sources %}
-                            Source{% if job.sources|length != 1 %}s{% endif %}:
+                            <span style="font-weight:600;">Source{% if job.sources|length != 1 %}s{% endif %}</span>
                             {% for source in job.sources %}
-                            <a href="{{ source.url }}" style="color:#647069;font-weight:700;">{{ source.name }}</a>{% if not loop.last %} · {% endif %}
+                            <a href="{{ source.url }}" style="color:#056246;">{{ source.name }}</a>{% if not loop.last %} · {% endif %}
                             {% endfor %}
                             {% endif %}
                           </td>
-                          <td align="right" valign="middle" style="padding-top:15px;padding-left:12px;">
-                            <a href="{{ job.application_url }}" style="display:inline-block;border-radius:8px;background:#087f5b;color:#ffffff;font-size:13px;font-weight:700;padding:11px 15px;text-decoration:none;white-space:nowrap;">Apply now&nbsp; ↗</a>
+                          <td align="right" valign="middle" style="padding-left:14px;">
+                            <a href="{{ job.application_url }}" style="display:inline-block;border:1px solid #087f5b;border-radius:5px;background:#087f5b;color:#ffffff;font-size:13px;font-weight:700;padding:9px 12px;text-decoration:none;white-space:nowrap;">Apply&nbsp; ↗</a>
                           </td>
                         </tr>
                       </table>
@@ -95,15 +111,15 @@
             {% if public_url %}
             <tr>
               <td align="center" style="padding:20px 0 8px;">
-                <a href="{{ public_url }}" style="display:inline-block;border:1px solid #087f5b;border-radius:8px;color:#087f5b;font-size:13px;font-weight:700;padding:11px 18px;text-decoration:none;">Browse all jobs</a>
+                <a href="{{ public_url }}" style="display:inline-block;border:1px solid #087f5b;border-radius:5px;color:#056246;font-size:13px;font-weight:700;padding:10px 16px;text-decoration:none;">Browse all jobs</a>
               </td>
             </tr>
             {% endif %}
             <tr>
-              <td align="center" style="padding:24px 12px 0;color:#8a948e;font-size:11px;line-height:1.6;">
+              <td align="center" style="padding:24px 12px 0;color:#77817b;font-size:11px;line-height:1.6;">
                 Curated sources. Clear timing signals. No endless scrolling.<br>
                 You are receiving this because job alerts are enabled for this address.
-                {% if unsubscribe_url %}<br><a href="{{ unsubscribe_url }}" style="color:#647069;">Unsubscribe</a>{% endif %}
+                {% if unsubscribe_url %}<br><a href="{{ unsubscribe_url }}" style="color:#5d6862;">Unsubscribe</a>{% endif %}
               </td>
             </tr>
           </table>

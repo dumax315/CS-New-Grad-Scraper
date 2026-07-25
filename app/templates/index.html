@@ -64,21 +64,23 @@
               </ul>
             </div>
 
-            <section class="fit-evaluation" aria-label="Is Spring 2027 New Grad evaluation">
-              <h4>Is Spring 2027 New Grad</h4>
-              <p class="fit-score fit-score--{{ job.fit_tone }}">{{ job.fit_label }}</p>
-              {% if job.fit_evaluation_error %}
-              <p class="fit-reasoning fit-error">{{ job.fit_evaluation_error }}</p>
-              {% elif job.fit_reasoning %}
-              <p class="fit-reasoning">{{ job.fit_reasoning }}</p>
-              {% endif %}
-            </section>
+            <div class="job-reviews">
+              <section class="fit-evaluation" aria-label="Is Spring 2027 New Grad evaluation">
+                <h4>Is Spring 2027 New Grad</h4>
+                <p class="fit-score fit-score--{{ job.fit_tone }}">{{ job.fit_label }}</p>
+                {% if job.fit_evaluation_error %}
+                <p class="fit-reasoning fit-error">{{ job.fit_evaluation_error }}</p>
+                {% elif job.fit_reasoning %}
+                <p class="fit-reasoning">{{ job.fit_reasoning }}</p>
+                {% endif %}
+              </section>
 
-            <section class="fit-evaluation" aria-label="Theo's Resume fit evaluation">
-              <h4>Theo's Resume fit</h4>
-              <p class="fit-score fit-score--{{ job.resume_fit_tone }}">{{ job.resume_fit_label }}</p>
-              {% if job.resume_fit_reasoning %}<p class="fit-reasoning">{{ job.resume_fit_reasoning }}</p>{% endif %}
-            </section>
+              <section class="fit-evaluation" aria-label="Theo's Resume fit evaluation">
+                <h4>Theo's Resume fit</h4>
+                <p class="fit-score fit-score--{{ job.resume_fit_tone }}">{{ job.resume_fit_label }}</p>
+                {% if job.resume_fit_reasoning %}<p class="fit-reasoning">{{ job.resume_fit_reasoning }}</p>{% endif %}
+              </section>
+            </div>
 
             <footer class="job-actions">
               <div class="source-links">

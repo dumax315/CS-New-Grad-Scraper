@@ -111,6 +111,7 @@ def test_index_renders_utility_controls_and_both_job_evaluations():
     assert 'class="filter-submit" type="submit">Filter</button>' in html
     assert "3 jobs" in html
     assert "Newest first" in html
+    assert html.count('class="job-reviews"') == 3
     assert "Is Spring 2027 New Grad" in html
     assert "88% match" in html
     assert "Spring 2027 timing is supported." in html
