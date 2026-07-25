@@ -41,19 +41,26 @@ existing Python/Jinja/CSS architecture can handle the change cleanly.
 
 ## Development and verification
 
-Use the repository virtual environment when it exists:
+Use uv 0.11.32 and run Python commands through `uv run` so the repository
+environment is synchronized before each command:
 
 ```sh
-.venv/bin/python -m pytest -q
-.venv/bin/python -m compileall -q app tests
+uv run python -m pytest -q
+uv run python -m compileall -q app tests
 docker compose config --quiet
 ```
 
-If dependencies need to be installed:
+Create or synchronize `.venv` from the committed lockfile with:
 
 ```sh
-.venv/bin/python -m pip install -e '.[dev]'
+uv sync --locked
 ```
+
+Dependency changes must update both `pyproject.toml` and `uv.lock`; run
+`uv lock` after intentionally editing dependency declarations. Do not run
+`uv lock --upgrade`, `uv sync --upgrade`, or `uv add` unless the task
+explicitly requests a dependency change. Agents should use `uv run` rather
+than relying on shell activation, because commands may run in separate shells.
 
 Run the full test suite for shared models, ingestion, worker, database, or
 presentation changes. A focused test is useful while iterating, but do not

@@ -2,11 +2,68 @@
 
 A small, public job board that aggregates software-engineering new-grad listings from two curated GitHub repositories and emails a digest when new roles appear.
 
-## Run locally
+## Prerequisites
+
+Docker Compose is the primary local and production workflow. Python development
+outside Docker uses Python 3.12 and [uv](https://docs.astral.sh/uv/) 0.11.32.
+Install the pinned uv release on macOS or Linux with:
+
+```sh
+curl --proto '=https' --tlsv1.2 -LsSf https://astral.sh/uv/0.11.32/install.sh | sh
+```
+
+## Run locally with Docker
 
 1. Copy `.env.example` to `.env` and set `POSTGRES_USERNAME`, `POSTGRES_PASSWORD`, `POSTGRES_DATABASE`, and `POSTGRES_PORT` (normally `5432`). Set `APP_PUBLIC_URL` to the deployed board URL so email links use the public domain. Set `SUBSCRIPTION_TOKEN_SECRET` to a long random value. Set `CODEX_API_KEY` for API billing, or leave it blank and follow the ChatGPT login steps below. SMTP settings can remain blank for local development, in which case public email signup is disabled.
-2. Run `docker compose up --build`.
-3. Open `http://localhost:8000`. The worker ingests once at startup, then at 8 AM and 8 PM in `APP_TIMEZONE`.
+2. Start the web app and its database with hot reload:
+
+   ```sh
+   docker compose up --build web
+   ```
+
+3. Open `http://localhost:8000`.
+
+The local Compose override bind-mounts `app/` and runs Uvicorn with `--reload`.
+Starting only `web` also starts its database dependency without starting the
+scheduled worker. Use these related commands as needed:
+
+```sh
+# Run the full stack, including the ingestion worker
+docker compose up --build
+
+# Run the hot-reloading web app in the background
+docker compose up --build --detach web
+
+# Follow web logs
+docker compose logs --follow web
+
+# Stop and remove the local containers
+docker compose down
+```
+
+Starting the full stack runs the worker's external ingestion and fit-evaluation
+workflow once at startup, then at 8 AM and 8 PM in `APP_TIMEZONE`. Hot reload
+applies to the web service; the production Compose file remains unchanged.
+
+## Develop with uv
+
+Create or update the repository `.venv` from the exact versions in `uv.lock`:
+
+```sh
+uv sync --locked
+```
+
+Run Python commands through uv so it checks that the lockfile and environment
+are current:
+
+```sh
+uv run python -m pytest -q
+uv run python -m compileall -q app tests
+uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+When intentionally changing dependencies, update `pyproject.toml`, run
+`uv lock`, and include the resulting `uv.lock` change in the same commit.
 
 ## Deploy on Coolify
 

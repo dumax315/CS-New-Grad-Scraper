@@ -3,5 +3,17 @@ services:
     # Local development only. Coolify reaches this service through its private
     # Docker network and reverse proxy, so the production compose file must not
     # reserve a host port.
+    command:
+      - uvicorn
+      - app.main:app
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "8000"
+      - --reload
+      - --reload-dir
+      - /app/app
     ports:
       - "8000:8000"
+    volumes:
+      - ./app:/app/app
