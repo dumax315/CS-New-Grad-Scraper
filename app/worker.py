@@ -454,12 +454,22 @@ def evaluate_listings(session: Session, listings: list[Listing]) -> int:
 
 
 def evaluate_new_listings(session: Session, listings: list[Listing]) -> int:
-    newly_selected = listings[:MAX_CODEX_EVALUATIONS]
-    if len(listings) > len(newly_selected):
+    selected = session.scalars(
+        select(Listing)
+        .where(Listing.fit_selected_at.is_not(None), Listing.fit_evaluated_at.is_(None))
+        .order_by(Listing.fit_selected_at, Listing.id)
+        .limit(MAX_CODEX_EVALUATIONS)
+    ).all()
+    if selected:
+        return evaluate_listings(session, list(selected))
+
+    ranked = rank_new_listings(listings)
+    newly_selected = ranked[:MAX_CODEX_EVALUATIONS]
+    if len(ranked) > len(newly_selected):
         logger.info(
-            "Capping Codex evaluations at the first %s of %s new listings",
+            "Capping Codex evaluations at the highest-priority %s of %s new listings",
             MAX_CODEX_EVALUATIONS,
-            len(listings),
+            len(ranked),
         )
     selected_at = datetime.now(timezone.utc)
     for listing in newly_selected:
@@ -476,6 +486,36 @@ def evaluate_new_listings(session: Session, listings: list[Listing]) -> int:
         .limit(MAX_CODEX_EVALUATIONS)
     ).all()
     return evaluate_listings(session, list(selected))
+
+
+def evaluation_priority(listing: Listing) -> tuple:
+    source_count = len(listing.sources)
+    explicit_timing = bool(
+        listing.timing_explicit or listing.graduation_year == 2027
+    )
+    explicit_new_grad = listing.scope_decision == "include_explicit"
+    plausible = listing.scope_decision == "include_plausible"
+    posted_ordinal = listing.posted_at.toordinal() if listing.posted_at else 0
+    first_seen = (
+        listing.first_seen_at.replace(tzinfo=None)
+        if listing.first_seen_at is not None
+        else datetime.max
+    )
+    return (
+        0 if explicit_timing else 1,
+        0 if explicit_new_grad else 1,
+        0 if listing.exact_posted_date else 1,
+        -source_count,
+        0 if plausible else 1,
+        -posted_ordinal,
+        first_seen,
+        listing.id or 0,
+        listing.application_url,
+    )
+
+
+def rank_new_listings(listings: list[Listing]) -> list[Listing]:
+    return sorted(listings, key=evaluation_priority)
 
 
 def run_ingestion_cycle(

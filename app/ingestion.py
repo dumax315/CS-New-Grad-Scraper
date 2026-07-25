@@ -22,6 +22,9 @@ def _store_candidates(session: Session, candidates: list[Candidate]) -> list[Lis
                 application_url=candidate.application_url, salary=candidate.salary,
                 category=candidate.category, graduation_year=candidate.graduation_year,
                 source_age=candidate.source_age, posted_at=candidate.posted_at, last_seen_at=now,
+                scope_decision=candidate.scope_decision,
+                timing_explicit=candidate.timing_explicit,
+                exact_posted_date=candidate.exact_posted_date,
             )
             session.add(listing)
             session.flush()
@@ -31,8 +34,27 @@ def _store_candidates(session: Session, candidates: list[Candidate]) -> list[Lis
             listing.company, listing.title, listing.location = candidate.company, candidate.title, candidate.location
             listing.salary, listing.category, listing.source_age = candidate.salary, candidate.category, candidate.source_age
             listing.graduation_year = candidate.graduation_year or listing.graduation_year
-            if candidate.posted_at and (listing.posted_at is None or candidate.posted_at > listing.posted_at):
-                listing.posted_at = candidate.posted_at
+            if candidate.scope_decision == "include_explicit":
+                listing.scope_decision = candidate.scope_decision
+            elif listing.scope_decision is None:
+                listing.scope_decision = candidate.scope_decision
+            listing.timing_explicit = bool(listing.timing_explicit or candidate.timing_explicit)
+            had_exact_posted_date = bool(listing.exact_posted_date)
+            listing.exact_posted_date = bool(
+                had_exact_posted_date or candidate.exact_posted_date
+            )
+            if candidate.posted_at:
+                if candidate.exact_posted_date and (
+                    not had_exact_posted_date
+                    or listing.posted_at is None
+                    or candidate.posted_at < listing.posted_at
+                ):
+                    listing.posted_at = candidate.posted_at
+                elif not had_exact_posted_date and (
+                    listing.posted_at is None
+                    or candidate.posted_at < listing.posted_at
+                ):
+                    listing.posted_at = candidate.posted_at
         source_exists = session.scalar(select(ListingSource).where(
             ListingSource.listing_id == listing.id, ListingSource.source_name == candidate.source_name,
         ))

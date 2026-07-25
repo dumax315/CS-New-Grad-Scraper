@@ -22,6 +22,10 @@ ENGINEERING_ROLE_RE = re.compile(
     re.I,
 )
 RELATIVE_AGE_RE = re.compile(r"^(\d+)\s*(?:d|day|days)\b", re.I)
+NEW_GRAD_RE = re.compile(
+    r"\b(new grad(?:uate)?|university grad(?:uate)?|early career|class of 20\d{2})\b",
+    re.I,
+)
 
 
 def clean_text(value: str) -> str:
@@ -119,6 +123,7 @@ def row_to_candidate(
         return None
     year_match = YEAR_RE.search(title)
     source_age = clean_text(field("age", "date", "dateposted"))
+    graduation_year = int(year_match.group(1)) if year_match else None
     return Candidate(
         company=company,
         title=title,
@@ -130,8 +135,12 @@ def row_to_candidate(
         salary=clean_text(field("salary")),
         source_age=source_age,
         posted_at=parse_posted_date(source_age),
-        graduation_year=int(year_match.group(1)) if year_match else None,
+        graduation_year=graduation_year,
         source_key=spec.key,
+        scope_decision=(
+            "include_explicit" if NEW_GRAD_RE.search(title) else "include_curated"
+        ),
+        timing_explicit=graduation_year == 2027,
     )
 
 

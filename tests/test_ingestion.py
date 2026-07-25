@@ -38,6 +38,43 @@ def test_store_is_idempotent_and_keeps_both_sources():
         assert listing.posted_at == date(2026, 7, 23)
 
 
+def test_exact_source_date_backfills_with_earliest_credible_date():
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine)
+    curated = candidate()
+    exact = Candidate(
+        "Acme",
+        "New Graduate Software Engineer",
+        "Seattle",
+        curated.application_url,
+        "Acme Careers",
+        "https://jobs.example/acme",
+        posted_at=date(2026, 7, 20),
+        source_key="greenhouse:acme",
+        source_kind="greenhouse",
+        scope_decision="include_explicit",
+        exact_posted_date=True,
+    )
+    weaker = Candidate(
+        "Acme",
+        "New Graduate Software Engineer",
+        "Seattle",
+        curated.application_url,
+        "Other Source",
+        "https://jobs.example/other",
+        posted_at=date(2026, 7, 19),
+    )
+
+    with Session() as session:
+        store_candidates(session, [curated, exact, weaker])
+        listing = session.query(Listing).one()
+
+        assert listing.posted_at == date(2026, 7, 20)
+        assert listing.exact_posted_date is True
+        assert listing.scope_decision == "include_explicit"
+
+
 def test_curated_source_overlap_is_one_listing_with_two_provenance_rows():
     fixture_names = ("speedyapply_new_grad.md", "vansh_new_grad.md")
     bodies = {

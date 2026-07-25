@@ -26,6 +26,9 @@ def create_tables() -> None:
         columns = {column["name"] for column in inspect(connection).get_columns("listings")}
         missing_columns = {
             "posted_at": "DATE",
+            "scope_decision": "VARCHAR(30)",
+            "timing_explicit": "BOOLEAN",
+            "exact_posted_date": "BOOLEAN",
             "fit_confidence": "INTEGER",
             "fit_reasoning": "TEXT",
             "resume_fit_confidence": "INTEGER",

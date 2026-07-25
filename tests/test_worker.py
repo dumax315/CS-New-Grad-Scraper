@@ -287,6 +287,87 @@ def test_selected_jobs_are_retried_after_worker_restart(monkeypatch):
         assert job.resume_fit_confidence == 90
 
 
+def test_explicit_2027_role_outranks_plausible_roles(monkeypatch):
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
+    plausible_jobs = [listing(index) for index in range(10)]
+    for job in plausible_jobs:
+        job.scope_decision = "include_plausible"
+        job.exact_posted_date = True
+    explicit = listing(99)
+    explicit.graduation_year = 2027
+    explicit.timing_explicit = True
+    seen = []
+
+    def fake_evaluate(session, listings):
+        seen.extend(item.application_url for item in listings)
+        return len(listings)
+
+    monkeypatch.setattr(worker, "evaluate_listings", fake_evaluate)
+
+    with Session() as session:
+        session.add_all(plausible_jobs + [explicit])
+        session.commit()
+        assert worker.evaluate_new_listings(
+            session,
+            plausible_jobs + [explicit],
+        ) == 10
+
+    assert explicit.application_url in seen
+    assert sum(job.fit_selected_at is not None for job in plausible_jobs) == 9
+
+
+def test_priority_is_independent_of_input_registry_order():
+    explicit = listing(1)
+    explicit.graduation_year = 2027
+    plausible = listing(2)
+    plausible.scope_decision = "include_plausible"
+    plausible.exact_posted_date = True
+    ambiguous = listing(3)
+
+    forward = worker.rank_new_listings([ambiguous, plausible, explicit])
+    reverse = worker.rank_new_listings([explicit, plausible, ambiguous])
+
+    assert [job.application_url for job in forward] == [
+        explicit.application_url,
+        plausible.application_url,
+        ambiguous.application_url,
+    ]
+    assert [job.application_url for job in reverse] == [
+        explicit.application_url,
+        plausible.application_url,
+        ambiguous.application_url,
+    ]
+
+
+def test_existing_failed_batch_is_not_expanded_by_new_ingestion(monkeypatch):
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
+    selected = [listing(1), listing(2)]
+    newly_ingested = listing(3)
+    newly_ingested.graduation_year = 2027
+    now = worker.datetime.now(worker.timezone.utc)
+    for job in selected:
+        job.fit_selected_at = now
+    seen = []
+
+    def fake_evaluate(session, listings):
+        seen.extend(item.application_url for item in listings)
+        return 0
+
+    monkeypatch.setattr(worker, "evaluate_listings", fake_evaluate)
+
+    with Session() as session:
+        session.add_all(selected + [newly_ingested])
+        session.commit()
+        assert worker.evaluate_new_listings(session, [newly_ingested]) == 0
+
+    assert seen == [job.application_url for job in selected]
+    assert newly_ingested.fit_selected_at is None
+
+
 def test_failed_evaluation_is_persisted_and_remains_retryable(monkeypatch):
     engine = create_engine("sqlite://")
     Base.metadata.create_all(engine)
@@ -332,6 +413,7 @@ def test_create_tables_migrates_existing_listing_table(monkeypatch):
         "fit_confidence", "fit_reasoning", "resume_fit_confidence",
         "resume_fit_reasoning", "fit_selected_at", "fit_evaluated_at",
         "fit_evaluation_failed_at", "fit_evaluation_error", "fit_model",
+        "scope_decision", "timing_explicit", "exact_posted_date",
     } <= columns
     assert "subscribers" in inspect(engine).get_table_names()
     assert "source_runs" in inspect(engine).get_table_names()
