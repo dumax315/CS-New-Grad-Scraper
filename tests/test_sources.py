@@ -1,9 +1,13 @@
 from datetime import date
+from pathlib import Path
 
-from app.sources import Source, canonicalize_url, parse_posted_date, parse_source
+import httpx
+
+from app.sources import SOURCES, Source, canonicalize_url, fetch_candidates, parse_posted_date, parse_source
 
 
 TEST_SOURCE = Source("Test", "https://example.test/raw", "https://example.test")
+FIXTURES = Path(__file__).parent / "fixtures"
 
 
 def test_parser_extracts_swe_rows_and_excludes_quant_rows():
@@ -63,3 +67,34 @@ def test_parser_supports_application_link_and_date_posted_headers():
     jobs = parse_source(markdown, TEST_SOURCE)
     assert jobs[0].company == "Acme"
     assert jobs[0].source_age == "Jul 09"
+
+
+def test_two_source_baseline_preserves_counts_order_and_canonical_overlap():
+    bodies = {
+        SOURCES[0].raw_url: (FIXTURES / "speedyapply_new_grad.md").read_text(),
+        SOURCES[1].raw_url: (FIXTURES / "vansh_new_grad.md").read_text(),
+    }
+    requested_urls = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requested_urls.append(str(request.url))
+        return httpx.Response(200, text=bodies[str(request.url)])
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        candidates = fetch_candidates(client)
+
+    assert requested_urls == [source.raw_url for source in SOURCES]
+    assert [candidate.company for candidate in candidates] == [
+        "Acme",
+        "Beta",
+        "Acme Incorporated",
+        "Gamma",
+    ]
+    assert [candidate.source_name for candidate in candidates] == [
+        SOURCES[0].name,
+        SOURCES[0].name,
+        SOURCES[1].name,
+        SOURCES[1].name,
+    ]
+    assert candidates[0].application_url == candidates[2].application_url
+    assert candidates[0].application_url == "https://boards.greenhouse.io/acme/jobs/100"
