@@ -5,6 +5,7 @@ services:
     environment: &app-env
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DATABASE}
       APP_TIMEZONE: ${APP_TIMEZONE:-America/Los_Angeles}
+      APP_PUBLIC_URL: ${APP_PUBLIC_URL:-}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_USERNAME: ${SMTP_USERNAME:-}

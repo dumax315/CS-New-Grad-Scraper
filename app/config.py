@@ -6,6 +6,7 @@ import os
 class Settings:
     database_url: str = os.getenv("DATABASE_URL", "sqlite:///./jobs.db")
     timezone: str = os.getenv("APP_TIMEZONE", "America/Los_Angeles")
+    public_url: str = os.getenv("APP_PUBLIC_URL", "").rstrip("/")
     smtp_host: str = os.getenv("SMTP_HOST", "")
     smtp_port: int = int(os.getenv("SMTP_PORT", "587"))
     smtp_username: str = os.getenv("SMTP_USERNAME", "")

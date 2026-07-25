@@ -1,0 +1,97 @@
+from email.message import EmailMessage
+
+from app.config import Settings
+from app.emailer import render_digest, send_new_jobs_digest
+from app.models import Listing, ListingSource
+
+
+def listing(
+    company: str,
+    confidence: int | None,
+    *,
+    application_url: str = "https://jobs.example/apply?a=1&b=2",
+) -> Listing:
+    job = Listing(
+        company=company,
+        title="SWE <New Grad>",
+        location="Remote",
+        application_url=application_url,
+        graduation_year=2027,
+        fit_confidence=confidence,
+        fit_reasoning="Timing supported & technical fit is strong.",
+    )
+    job.sources = [
+        ListingSource(
+            source_name="GitHub & Friends",
+            source_url="https://github.com/example/list?a=1&b=2",
+        ),
+    ]
+    return job
+
+
+def test_render_digest_uses_shared_hierarchy_sorting_and_escaping():
+    digest = render_digest(
+        [listing("Unscored", None), listing("Top & <Choice>", 94)],
+        "https://board.example/",
+    )
+
+    assert digest.subject == "2 new roles for Spring 2027"
+    assert digest.text.index("Top & <Choice>") < digest.text.index("Unscored")
+    assert "94% MATCH" in digest.text
+    assert "NOT YET EVALUATED" in digest.text
+    assert "Browse all jobs: https://board.example" in digest.text
+    assert "Top &amp; &lt;Choice&gt;" in digest.html
+    assert "SWE &lt;New Grad&gt;" in digest.html
+    assert 'href="https://jobs.example/apply?a=1&amp;b=2"' in digest.html
+    assert "Remote &nbsp;·&nbsp; Class of 2027" in digest.html
+    assert "&amp;nbsp;" not in digest.html
+    assert "Browse all jobs" in digest.html
+
+
+def test_render_digest_omits_browse_button_without_public_url():
+    digest = render_digest([listing("Acme", 75)])
+
+    assert digest.subject == "1 new role for Spring 2027"
+    assert "Browse all jobs" not in digest.text
+    assert "Browse all jobs" not in digest.html
+
+
+def test_send_digest_builds_multipart_message(monkeypatch):
+    captured: dict[str, EmailMessage | bool] = {}
+
+    class FakeSMTP:
+        def __init__(self, host, port, timeout):
+            assert (host, port, timeout) == ("smtp.example", 587, 30)
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_):
+            return None
+
+        def starttls(self):
+            captured["tls"] = True
+
+        def login(self, username, password):
+            assert (username, password) == ("mailer", "secret")
+
+        def send_message(self, message):
+            captured["message"] = message
+
+    monkeypatch.setattr("app.emailer.smtplib.SMTP", FakeSMTP)
+    config = Settings(
+        smtp_host="smtp.example",
+        smtp_username="mailer",
+        smtp_password="secret",
+        smtp_from="Jobs <jobs@example.com>",
+        alert_recipient="reader@example.com",
+        public_url="https://board.example",
+    )
+
+    assert send_new_jobs_digest([listing("Acme", 88)], config) is True
+    message = captured["message"]
+    assert isinstance(message, EmailMessage)
+    assert message["Subject"] == "1 new role for Spring 2027"
+    assert message.is_multipart()
+    assert message.get_body(preferencelist=("html",)).get_content_type() == "text/html"
+    assert captured["tls"] is True

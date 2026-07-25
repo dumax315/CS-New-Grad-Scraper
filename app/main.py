@@ -3,12 +3,14 @@ from datetime import date, datetime, time, timedelta, timezone
 
 from fastapi import Depends, FastAPI, Query, Request
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import and_, or_, select
 from sqlalchemy.orm import Session, selectinload
 
 from app.database import SessionLocal, create_tables
 from app.models import Listing, ListingSource
+from app.presentation import present_listings
 
 
 def visible_listing_condition(today: date | None = None):
@@ -27,6 +29,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="New Grad SWE Jobs", lifespan=lifespan)
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 
@@ -58,6 +61,6 @@ def index(
     listings = session.scalars(statement).all()
     source_names = session.scalars(select(ListingSource.source_name).distinct().order_by(ListingSource.source_name)).all()
     return templates.TemplateResponse(request, "index.html", {
-        "listings": listings, "source_names": source_names,
+        "jobs": present_listings(listings), "source_names": source_names,
         "q": q, "selected_source": source,
     })

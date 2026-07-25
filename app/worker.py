@@ -12,7 +12,7 @@ from zoneinfo import ZoneInfo
 from apscheduler.schedulers.blocking import BlockingScheduler
 import httpx
 from sqlalchemy import func, select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.config import settings
 from app.database import SessionLocal, create_tables
@@ -351,7 +351,13 @@ def scrape_and_notify() -> None:
                 logger.info("Running scheduled scrape")
             new_listings = run_ingestion(session)
             evaluated = evaluate_new_listings(session, new_listings)
-        sent = send_new_jobs_digest(new_listings) if (settings.send_initial_digest or not is_initial_run) else False
+            new_listing_ids = [listing.id for listing in new_listings]
+            notification_listings = list(session.scalars(
+                select(Listing)
+                .where(Listing.id.in_(new_listing_ids))
+                .options(selectinload(Listing.sources))
+            ).all()) if new_listing_ids else []
+        sent = send_new_jobs_digest(notification_listings) if (settings.send_initial_digest or not is_initial_run) else False
         logger.info(
             "Ingestion completed: %s new listings; %s evaluated; digest sent=%s",
             len(new_listings),

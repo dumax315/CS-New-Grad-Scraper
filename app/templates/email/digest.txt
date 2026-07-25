@@ -1,0 +1,21 @@
+NEW GRAD SWE JOBS
+
+{{ jobs|length }} new role{{ '' if jobs|length == 1 else 's' }} for Spring 2027
+Curated openings with the strongest evaluated matches shown first.
+
+{% for job in jobs -%}
+{{ job.fit_label|upper }}
+{{ job.company }}
+{{ job.title }}
+{{ job.meta|join(' · ') }}
+{{ job.posted_label }}
+{% if job.fit_reasoning %}{{ job.fit_reasoning }}
+{% endif -%}
+Apply: {{ job.application_url }}
+{% if job.sources -%}
+Sources: {% for source in job.sources %}{{ source.name }} — {{ source.url }}{% if not loop.last %}; {% endif %}{% endfor %}
+{% endif %}
+{% endfor -%}
+{% if public_url %}
+Browse all jobs: {{ public_url }}
+{% endif %}
