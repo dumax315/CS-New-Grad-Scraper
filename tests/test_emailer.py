@@ -19,6 +19,11 @@ def listing(
         graduation_year=2027,
         fit_confidence=confidence,
         fit_reasoning="Timing supported & technical fit is strong.",
+        resume_fit_confidence=89 if confidence is not None else None,
+        resume_fit_reasoning=(
+            "Resume shows matching systems experience."
+            if confidence is not None else None
+        ),
     )
     job.sources = [
         ListingSource(
@@ -37,14 +42,17 @@ def test_render_digest_uses_shared_hierarchy_sorting_and_escaping():
 
     assert digest.subject == "2 new roles for Spring 2027"
     assert digest.text.index("Top & <Choice>") < digest.text.index("Unscored")
-    assert "94% MATCH" in digest.text
-    assert "NOT YET EVALUATED" in digest.text
+    assert "SPRING 2027 FIT: 94% MATCH" in digest.text
+    assert "RESUME FIT: 89% MATCH" in digest.text
+    assert "SPRING 2027 FIT: NOT YET EVALUATED" in digest.text
+    assert "RESUME FIT: NOT YET EVALUATED" in digest.text
     assert "Browse all jobs: https://board.example" in digest.text
     assert "Top &amp; &lt;Choice&gt;" in digest.html
     assert "SWE &lt;New Grad&gt;" in digest.html
     assert 'href="https://jobs.example/apply?a=1&amp;b=2"' in digest.html
     assert "Remote &nbsp;·&nbsp; Class of 2027" in digest.html
     assert "&amp;nbsp;" not in digest.html
+    assert "Resume fit (ignoring dates):" in digest.html
     assert "Browse all jobs" in digest.html
 
 

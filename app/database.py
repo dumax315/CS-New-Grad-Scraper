@@ -28,6 +28,8 @@ def create_tables() -> None:
             "posted_at": "DATE",
             "fit_confidence": "INTEGER",
             "fit_reasoning": "TEXT",
+            "resume_fit_confidence": "INTEGER",
+            "resume_fit_reasoning": "TEXT",
             "fit_selected_at": "TIMESTAMP WITH TIME ZONE" if engine.dialect.name == "postgresql" else "DATETIME",
             "fit_evaluated_at": "TIMESTAMP WITH TIME ZONE" if engine.dialect.name == "postgresql" else "DATETIME",
             "fit_model": "VARCHAR(100)",

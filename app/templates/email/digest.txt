@@ -4,12 +4,15 @@ NEW GRAD SWE JOBS
 Curated openings with the strongest evaluated matches shown first.
 
 {% for job in jobs -%}
-{{ job.fit_label|upper }}
+SPRING 2027 FIT: {{ job.fit_label|upper }}
+RESUME FIT: {{ job.resume_fit_label|upper }}
 {{ job.company }}
 {{ job.title }}
 {{ job.meta|join(' · ') }}
 {{ job.posted_label }}
-{% if job.fit_reasoning %}{{ job.fit_reasoning }}
+{% if job.fit_reasoning %}Spring 2027 fit: {{ job.fit_reasoning }}
+{% endif -%}
+{% if job.resume_fit_reasoning %}Resume fit (ignoring dates): {{ job.resume_fit_reasoning }}
 {% endif -%}
 Apply: {{ job.application_url }}
 {% if job.sources -%}

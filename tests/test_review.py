@@ -25,6 +25,8 @@ def listing(
         first_seen_at=first_seen_at,
         last_seen_at=first_seen_at,
         fit_evaluated_at=first_seen_at if reviewed else None,
+        resume_fit_confidence=85 if reviewed else None,
+        resume_fit_reasoning="Resume fit complete." if reviewed else None,
     )
 
 
@@ -90,6 +92,31 @@ def test_select_recent_listings_force_includes_reviewed_jobs():
         ]
 
 
+def test_select_recent_listings_includes_legacy_review_missing_resume_fit():
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine)
+    reviewed_at = datetime(2026, 7, 25, tzinfo=timezone.utc)
+
+    with Session() as session:
+        legacy = listing(
+            1,
+            date(2026, 7, 25),
+            reviewed_at,
+            reviewed=True,
+        )
+        legacy.resume_fit_confidence = None
+        legacy.resume_fit_reasoning = None
+        session.add(legacy)
+        session.commit()
+
+        selected = select_recent_listings(session, 1)
+
+        assert [item.application_url for item in selected] == [
+            "https://jobs.example/1",
+        ]
+
+
 def test_review_command_force_persists_new_result(monkeypatch, capsys):
     engine = create_engine("sqlite://")
     Base.metadata.create_all(engine)
@@ -103,7 +130,9 @@ def test_review_command_force_persists_new_result(monkeypatch, capsys):
     def fake_evaluate(session, listings):
         assert len(listings) == 1
         listings[0].fit_confidence = 92
-        listings[0].fit_reasoning = "Updated resume-based fit."
+        listings[0].fit_reasoning = "Updated Spring 2027 fit."
+        listings[0].resume_fit_confidence = 96
+        listings[0].resume_fit_reasoning = "Updated resume-based fit."
         session.commit()
         return 1
 
@@ -116,5 +145,7 @@ def test_review_command_force_persists_new_result(monkeypatch, capsys):
     with Session() as session:
         saved = session.query(Listing).one()
         assert saved.fit_confidence == 92
-        assert saved.fit_reasoning == "Updated resume-based fit."
+        assert saved.fit_reasoning == "Updated Spring 2027 fit."
+        assert saved.resume_fit_confidence == 96
+        assert saved.resume_fit_reasoning == "Updated resume-based fit."
     assert "attempted=1 evaluated=1 failed=0" in capsys.readouterr().out

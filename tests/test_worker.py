@@ -22,6 +22,15 @@ def listing(index: int = 0) -> Listing:
     )
 
 
+def assessment(index: int = 0) -> worker.FitAssessment:
+    return worker.FitAssessment(
+        confidence=80,
+        reasoning=f"Spring 2027 fit for Software Engineer {index}.",
+        resume_confidence=90,
+        resume_reasoning=f"Resume fit for Software Engineer {index}.",
+    )
+
+
 def test_extract_visible_text_ignores_scripts_and_styles():
     html = """
     <html><style>.hidden { display: none }</style><script>stealSecrets()</script>
@@ -78,9 +87,14 @@ def test_scrape_job_listing_uses_workday_structured_endpoint():
 
 
 def test_parse_fit_result_requires_requested_format():
-    assert worker.parse_fit_result("87% — Accepts Spring 2027 CS graduates.") == (
-        87,
-        "Accepts Spring 2027 CS graduates.",
+    assert worker.parse_fit_result(
+        "SPRING 2027 FIT: 87% — Accepts Spring 2027 CS graduates.\n"
+        "RESUME FIT: 93% — Resume shows the required backend experience.\n"
+    ) == worker.FitAssessment(
+        confidence=87,
+        reasoning="Accepts Spring 2027 CS graduates.",
+        resume_confidence=93,
+        resume_reasoning="Resume shows the required backend experience.",
     )
 
 
@@ -90,16 +104,28 @@ def test_run_codex_assessment_uses_noninteractive_sandbox_and_sanitized_env(monk
     def fake_run(command, **kwargs):
         captured["command"] = command
         captured.update(kwargs)
-        return subprocess.CompletedProcess(command, 0, stdout="91% — Strong new-grad fit.\n", stderr="")
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout=(
+                "SPRING 2027 FIT: 91% — Strong new-grad fit.\n"
+                "RESUME FIT: 86% — Resume shows relevant Python experience.\n"
+            ),
+            stderr="",
+        )
 
     monkeypatch.setenv("DATABASE_URL", "postgresql://secret")
     monkeypatch.setenv("CODEX_API_KEY", "codex-secret")
     monkeypatch.setenv("SUBSCRIPTION_TOKEN_SECRET", "subscription-secret")
     monkeypatch.setattr(worker.subprocess, "run", fake_run)
 
-    assert worker.run_codex_assessment(listing(), "Actual scraped listing") == (
-        91,
-        "Strong new-grad fit.",
+    assert worker.run_codex_assessment(
+        listing(), "Actual scraped listing",
+    ) == worker.FitAssessment(
+        confidence=91,
+        reasoning="Strong new-grad fit.",
+        resume_confidence=86,
+        resume_reasoning="Resume shows relevant Python experience.",
     )
     assert captured["command"][:3] == ["codex", "exec", "--ephemeral"]
     assert "read-only" in captured["command"]
@@ -118,7 +144,10 @@ def test_codex_prompt_makes_spring_2027_timing_a_gate(monkeypatch):
         return subprocess.CompletedProcess(
             command,
             0,
-            stdout="70% — Technical fit is strong, but spring 2027 timing is unstated.\n",
+            stdout=(
+                "SPRING 2027 FIT: 70% — Technical fit is strong, but spring 2027 timing is unstated.\n"
+                "RESUME FIT: 90% — Resume shows strong matching C skills.\n"
+            ),
             stderr="",
         )
 
@@ -127,11 +156,13 @@ def test_codex_prompt_makes_spring_2027_timing_a_gate(monkeypatch):
     assert worker.run_codex_assessment(
         listing(),
         "Bachelor's degree. Strong C skills; coursework and internships count.",
-    )[0] == 70
-    assert "hiring timing as a gating requirement" in captured["prompt"]
-    assert "must be 75% or below" in captured["prompt"]
-    assert "do not by themselves prove" in captured["prompt"]
-    assert "spring 2027 timing is" in captured["prompt"]
+    ).confidence == 70
+    prompt = " ".join(captured["prompt"].split())
+    assert "hiring timing as a gating requirement" in prompt
+    assert "must be 75% or below" in prompt
+    assert "do not by themselves prove" in prompt
+    assert "spring 2027 timing is" in prompt
+    assert "Do not use the candidate resume as evidence for this score" in prompt
 
 
 def test_codex_prompt_uses_resume_as_candidate_evidence(monkeypatch):
@@ -142,7 +173,10 @@ def test_codex_prompt_uses_resume_as_candidate_evidence(monkeypatch):
         return subprocess.CompletedProcess(
             command,
             0,
-            stdout="84% — Timing is supported and the resume shows matching C++ experience.\n",
+            stdout=(
+                "SPRING 2027 FIT: 84% — Spring 2027 timing is supported.\n"
+                "RESUME FIT: 91% — Resume shows matching C++ experience.\n"
+            ),
             stderr="",
         )
 
@@ -157,8 +191,9 @@ def test_codex_prompt_uses_resume_as_candidate_evidence(monkeypatch):
     prompt = " ".join(captured["prompt"].split())
     assert "<candidate_resume>" in prompt
     assert "Built embedded systems in C++." in prompt
-    assert "concrete evidence in the resume" in prompt
-    assert "most important resume-based match or gap" in prompt
+    assert "compare the role's responsibilities and requirements with concrete evidence in the resume" in prompt
+    assert "Ignore all graduation dates, hiring windows, start dates" in prompt
+    assert "must not discuss date eligibility" in prompt
 
 
 def test_load_candidate_resume_rejects_empty_file(tmp_path):
@@ -212,7 +247,11 @@ def test_evaluate_new_listings_caps_each_run_at_ten(monkeypatch):
         return "job text"
 
     monkeypatch.setattr(worker, "scrape_job_listing", fake_scrape)
-    monkeypatch.setattr(worker, "run_codex_assessment", lambda job, text: (80, f"Fit for {job.title}."))
+    monkeypatch.setattr(
+        worker,
+        "run_codex_assessment",
+        lambda job, text: assessment(int(job.title.rsplit(" ", 1)[1])),
+    )
 
     with Session() as session:
         session.add_all(jobs)
@@ -221,8 +260,10 @@ def test_evaluate_new_listings_caps_each_run_at_ten(monkeypatch):
 
     assert len(seen) == 10
     assert all(job.fit_confidence == 80 for job in jobs[:10])
+    assert all(job.resume_fit_confidence == 90 for job in jobs[:10])
     assert all(job.fit_selected_at is not None for job in jobs[:10])
     assert all(job.fit_confidence is None for job in jobs[10:])
+    assert all(job.resume_fit_confidence is None for job in jobs[10:])
     assert all(job.fit_selected_at is None for job in jobs[10:])
 
 
@@ -233,7 +274,7 @@ def test_selected_jobs_are_retried_after_worker_restart(monkeypatch):
     job = listing()
 
     monkeypatch.setattr(worker, "scrape_job_listing", lambda url: "job text")
-    monkeypatch.setattr(worker, "run_codex_assessment", lambda listing, text: (75, "Eligible new grad role."))
+    monkeypatch.setattr(worker, "run_codex_assessment", lambda listing, text: assessment())
 
     with Session() as session:
         session.add(job)
@@ -241,7 +282,8 @@ def test_selected_jobs_are_retried_after_worker_restart(monkeypatch):
         job.fit_selected_at = worker.datetime.now(worker.timezone.utc)
         session.commit()
         assert worker.evaluate_new_listings(session, []) == 1
-        assert job.fit_confidence == 75
+        assert job.fit_confidence == 80
+        assert job.resume_fit_confidence == 90
 
 
 def test_create_tables_migrates_existing_listing_table(monkeypatch):
@@ -254,7 +296,8 @@ def test_create_tables_migrates_existing_listing_table(monkeypatch):
 
     columns = {column["name"] for column in inspect(engine).get_columns("listings")}
     assert {
-        "fit_confidence", "fit_reasoning", "fit_selected_at", "fit_evaluated_at", "fit_model",
+        "fit_confidence", "fit_reasoning", "resume_fit_confidence",
+        "resume_fit_reasoning", "fit_selected_at", "fit_evaluated_at", "fit_model",
     } <= columns
     assert "subscribers" in inspect(engine).get_table_names()
 

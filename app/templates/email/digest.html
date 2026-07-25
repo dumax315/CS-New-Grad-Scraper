@@ -34,6 +34,7 @@
                         <tr>
                           <td valign="middle" style="padding:0 12px 8px 0;color:#087f5b;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">{{ job.company }}</td>
                           <td align="right" valign="middle" style="padding:0 0 8px;">
+                            <span style="color:#647069;font-size:10px;font-weight:700;">SPRING 2027&nbsp;</span>
                             {% if job.fit_tone == 'strong' %}
                             <span style="display:inline-block;border-radius:99px;background:#e7f5ef;color:#056246;font-size:10px;font-weight:700;letter-spacing:.4px;padding:5px 8px;text-transform:uppercase;">{{ job.fit_label }}</span>
                             {% elif job.fit_tone == 'promising' %}
@@ -50,10 +51,19 @@
                       <p style="margin:0;color:#647069;font-size:13px;line-height:1.55;">{% for item in job.meta %}{{ item }}{% if not loop.last %} &nbsp;·&nbsp; {% endif %}{% endfor %}</p>
                       <p style="margin:4px 0 0;color:#8a948e;font-size:11px;">{{ job.posted_label }}</p>
 
-                      {% if job.fit_reasoning %}
-                      <p style="margin:16px 0 0;padding:11px 12px;border-left:3px solid #75b99f;border-radius:0 7px 7px 0;background:#f5faf7;color:#425048;font-size:13px;line-height:1.5;">
-                        <span style="color:#087f5b;">✦</span>&nbsp; {{ job.fit_reasoning }}
-                      </p>
+                      {% if job.fit_reasoning or job.resume_fit_reasoning %}
+                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:16px;background:#f5faf7;border-left:3px solid #75b99f;">
+                        <tr>
+                          <td style="padding:11px 12px;color:#425048;font-size:13px;line-height:1.5;">
+                            {% if job.fit_reasoning %}
+                            <p style="margin:0;"><strong>Spring 2027 fit:</strong> {{ job.fit_reasoning }}</p>
+                            {% endif %}
+                            {% if job.resume_fit_reasoning %}
+                            <p style="margin:{% if job.fit_reasoning %}7px{% else %}0{% endif %} 0 0;"><strong>Resume fit (ignoring dates):</strong> {{ job.resume_fit_label }} — {{ job.resume_fit_reasoning }}</p>
+                            {% endif %}
+                          </td>
+                        </tr>
+                      </table>
                       {% endif %}
 
                       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:18px;border-top:1px solid #edf0ee;">

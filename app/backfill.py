@@ -45,7 +45,10 @@ def main() -> None:
         .order_by(Listing.posted_at, Listing.first_seen_at, Listing.id)
     )
     if not args.force:
-        statement = statement.where(Listing.fit_evaluated_at.is_(None))
+        statement = statement.where(or_(
+            Listing.fit_evaluated_at.is_(None),
+            Listing.resume_fit_confidence.is_(None),
+        ))
 
     with SessionLocal() as session:
         listings = list(session.scalars(statement))

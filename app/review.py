@@ -2,7 +2,7 @@ import argparse
 import logging
 from collections.abc import Sequence
 
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal, create_tables
@@ -25,7 +25,10 @@ def select_recent_listings(
         Listing.id.desc(),
     )
     if not force:
-        statement = statement.where(Listing.fit_evaluated_at.is_(None))
+        statement = statement.where(or_(
+            Listing.fit_evaluated_at.is_(None),
+            Listing.resume_fit_confidence.is_(None),
+        ))
     return list(session.scalars(statement.limit(count)))
 
 

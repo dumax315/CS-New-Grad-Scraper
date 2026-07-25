@@ -321,6 +321,14 @@ button:hover,
   justify-content: space-between;
 }
 
+.fit-badges {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
 .company {
   color: var(--accent);
   font-size: .78rem;
@@ -391,6 +399,12 @@ button:hover,
   margin: 7px 0 0;
 }
 
+.fit-notes {
+  display: grid;
+  gap: 7px;
+  margin-top: 18px;
+}
+
 .fit-note {
   align-items: flex-start;
   background: #f5faf7;
@@ -400,13 +414,7 @@ button:hover,
   display: flex;
   font-size: .86rem;
   gap: 9px;
-  margin-top: 18px;
   padding: 11px 13px;
-}
-
-.fit-note span {
-  color: var(--accent);
-  line-height: 1.45;
 }
 
 .fit-note p {
@@ -596,7 +604,8 @@ button:hover,
     gap: 9px;
   }
 
-  .fit-badge {
+  .fit-badges {
+    justify-content: flex-start;
     order: -1;
   }
 

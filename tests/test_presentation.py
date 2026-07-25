@@ -19,6 +19,8 @@ def listing(
         posted_at=posted_at,
         fit_confidence=confidence,
         fit_reasoning="Spring 2027 timing is explicitly supported.",
+        resume_fit_confidence=91 if confidence is not None else None,
+        resume_fit_reasoning="Resume shows matching backend experience.",
     )
     job.sources = [
         ListingSource(source_name="Curated List", source_url="https://github.com/example/list"),
@@ -34,6 +36,8 @@ def test_present_listing_formats_shared_job_card_content():
     assert job.posted_label == "Posted Jul 4, 2026"
     assert job.fit_label == "82% match"
     assert job.fit_tone == "strong"
+    assert job.resume_fit_label == "91% match"
+    assert job.resume_fit_tone == "strong"
     assert job.sources[0].name == "Curated List"
 
 
@@ -41,12 +45,15 @@ def test_present_listing_handles_unscored_and_source_age_without_awkward_ago():
     item = listing(confidence=None, posted_at=None)
     item.source_age = "Today"
     item.fit_reasoning = None
+    item.resume_fit_reasoning = None
 
     job = present_listing(item)
 
     assert job.posted_label == "Posted Today"
     assert job.fit_label == "Not yet evaluated"
     assert job.fit_tone == "pending"
+    assert job.resume_fit_label == "Not yet evaluated"
+    assert job.resume_fit_tone == "pending"
 
 
 def test_present_listings_places_highest_scores_first_and_unscored_last():

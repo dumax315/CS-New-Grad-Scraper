@@ -67,6 +67,8 @@ def test_index_renders_shared_job_card_and_static_brand_styles():
         job = listing("rendered", date(2026, 7, 24))
         job.fit_confidence = 88
         job.fit_reasoning = "Spring 2027 timing is supported."
+        job.resume_fit_confidence = 93
+        job.resume_fit_reasoning = "Resume shows strong Python experience."
         job.sources = [
             ListingSource(source_name="Curated List", source_url="https://github.com/example/list"),
         ]
@@ -79,6 +81,8 @@ def test_index_renders_shared_job_card_and_static_brand_styles():
     assert 'href="http://testserver/static/styles.css"' in html
     assert "88% match" in html
     assert "Spring 2027 timing is supported." in html
+    assert "93% match" in html
+    assert "Resume shows strong Python experience." in html
     assert "Apply now" in html
     assert "Curated List" in html
     assert 'id="email-signup"' in html

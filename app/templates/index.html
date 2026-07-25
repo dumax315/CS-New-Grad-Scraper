@@ -80,7 +80,10 @@
           <article class="job-card">
             <div class="job-card__topline">
               <p class="company">{{ job.company }}</p>
-              <p class="fit-badge fit-badge--{{ job.fit_tone }}">{{ job.fit_label }}</p>
+              <div class="fit-badges" aria-label="Job fit scores">
+                <p class="fit-badge fit-badge--{{ job.fit_tone }}">Spring 2027: {{ job.fit_label }}</p>
+                <p class="fit-badge fit-badge--{{ job.resume_fit_tone }}">Resume: {{ job.resume_fit_label }}</p>
+              </div>
             </div>
             <h3>{{ job.title }}</h3>
             <ul class="job-meta" aria-label="Job details">
@@ -88,10 +91,18 @@
             </ul>
             <p class="posted">{{ job.posted_label }}</p>
 
-            {% if job.fit_reasoning %}
-            <div class="fit-note">
-              <span aria-hidden="true">✦</span>
-              <p>{{ job.fit_reasoning }}</p>
+            {% if job.fit_reasoning or job.resume_fit_reasoning %}
+            <div class="fit-notes">
+              {% if job.fit_reasoning %}
+              <div class="fit-note">
+                <p><strong>Spring 2027 fit:</strong> {{ job.fit_reasoning }}</p>
+              </div>
+              {% endif %}
+              {% if job.resume_fit_reasoning %}
+              <div class="fit-note">
+                <p><strong>Resume fit (ignoring dates):</strong> {{ job.resume_fit_reasoning }}</p>
+              </div>
+              {% endif %}
             </div>
             {% endif %}
 
