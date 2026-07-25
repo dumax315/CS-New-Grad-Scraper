@@ -71,11 +71,29 @@ Create a Docker Compose resource from this repository, set its Compose file loca
 
 The worker is the only component that fetches GitHub and sends scheduled bulk alerts. The web service sends only user-initiated subscription confirmation messages. New subscribers must follow the confirmation link within 48 hours and every subscriber digest includes an unsubscribe link. The worker's initial import establishes a baseline without emailing every existing listing; later runs email only newly inserted, deduplicated application URLs. `ALERT_RECIPIENT` continues to receive an operator copy, while confirmed subscribers receive individualized messages. Set `SEND_INITIAL_DIGEST=true` if you want the initial full digest.
 
-After each ingestion, the worker scrapes the actual application pages for the first 10 new listings and runs the scraped text through `codex exec` in non-interactive, ephemeral, read-only mode. The resulting Spring 2027 CS-undergraduate fit percentage and short reasoning are stored with the listing and displayed on the board. `CODEX_MODEL` defaults to the cost-efficient `gpt-5.6-luna`; `CODEX_TIMEOUT_SECONDS` controls the per-listing timeout.
+After each ingestion, the worker scrapes the actual application pages for the first 10 new listings and runs the scraped text through `codex exec` in non-interactive, ephemeral, read-only mode. The assessment uses the trusted candidate profile in `TheoHalpernResume.md` to compare the role with concrete experience, skills, coursework, and projects while retaining Spring 2027 timing as a gating requirement. The resume's name and contact header are omitted from the model prompt because they are not relevant to fit. The resulting fit percentage and short reasoning are stored with the listing and displayed on the board. `CODEX_MODEL` defaults to the cost-efficient `gpt-5.6-luna`; `CODEX_TIMEOUT_SECONDS` controls the per-listing timeout.
 
 The scraper reads standard HTML and JobPosting JSON-LD, and uses Workday's structured
 job endpoint for client-rendered Workday listings. The board hides listings with a
 known posting date older than 365 days.
+
+### Refresh the candidate resume
+
+The repository keeps a Markdown snapshot of the resume so scheduled evaluations do not
+depend on the portfolio site being available. To regenerate it from the public PDF with
+[Microsoft MarkItDown](https://github.com/microsoft/markitdown), run:
+
+```sh
+curl --fail --location --silent --show-error \
+  https://www.theoh.dev/TheoHalpernResume.pdf \
+  --output /tmp/TheoHalpernResume.pdf
+uvx --from 'markitdown[pdf]==0.1.6' \
+  markitdown /tmp/TheoHalpernResume.pdf \
+  --output TheoHalpernResume.md
+```
+
+Review the resulting diff before committing it because PDF extraction can lose visual
+structure such as headings or multi-column ordering.
 
 To evaluate every unfinished listing posted in the last 10 days, bypassing the
 scheduled worker's 10-listing cap, run this inside the Coolify `worker` terminal:

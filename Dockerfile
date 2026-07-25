@@ -21,7 +21,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --locked --no-dev --no-install-project
 
 COPY app ./app
-COPY README.md ./
+COPY README.md TheoHalpernResume.md ./
 RUN uv sync --locked --no-dev --no-editable
 
 ENV PATH="/app/.venv/bin:$PATH"

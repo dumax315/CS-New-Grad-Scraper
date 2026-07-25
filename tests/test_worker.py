@@ -134,6 +134,56 @@ def test_codex_prompt_makes_spring_2027_timing_a_gate(monkeypatch):
     assert "spring 2027 timing is" in captured["prompt"]
 
 
+def test_codex_prompt_uses_resume_as_candidate_evidence(monkeypatch):
+    captured = {}
+
+    def fake_run(command, **kwargs):
+        captured["prompt"] = command[-1]
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout="84% — Timing is supported and the resume shows matching C++ experience.\n",
+            stderr="",
+        )
+
+    monkeypatch.setattr(worker.subprocess, "run", fake_run)
+
+    worker.run_codex_assessment(
+        listing(),
+        "Class of 2027. C++ experience preferred.",
+        candidate_resume="# Candidate\n\n- Built embedded systems in C++.",
+    )
+
+    prompt = " ".join(captured["prompt"].split())
+    assert "<candidate_resume>" in prompt
+    assert "Built embedded systems in C++." in prompt
+    assert "concrete evidence in the resume" in prompt
+    assert "most important resume-based match or gap" in prompt
+
+
+def test_load_candidate_resume_rejects_empty_file(tmp_path):
+    resume_path = tmp_path / "resume.md"
+    resume_path.write_text("\n", encoding="utf-8")
+
+    try:
+        worker.load_candidate_resume(resume_path)
+    except ValueError as error:
+        assert "candidate resume is empty" in str(error)
+    else:
+        raise AssertionError("empty resume should be rejected")
+
+
+def test_load_candidate_resume_omits_contact_header(tmp_path):
+    resume_path = tmp_path / "resume.md"
+    resume_path.write_text(
+        "# Candidate Name\n\n555-0100 | candidate@example.com\n\n"
+        "## Education\n\nComputer Science\n",
+        encoding="utf-8",
+    )
+
+    assert worker.load_candidate_resume(resume_path) == "## Education\n\nComputer Science"
+
+
 def test_codex_environment_uses_persistent_login_without_api_key(monkeypatch):
     monkeypatch.setenv("CODEX_API_KEY", "")
     environment = worker.codex_environment("/tmp/temporary-codex")

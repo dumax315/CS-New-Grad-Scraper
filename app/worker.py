@@ -3,6 +3,7 @@ from html.parser import HTMLParser
 import json
 import logging
 import os
+from pathlib import Path
 import re
 import subprocess
 import tempfile
@@ -26,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 MAX_CODEX_EVALUATIONS = 10
 MAX_JOB_TEXT_CHARS = 30_000
+DEFAULT_RESUME_PATH = Path(__file__).resolve().parent.parent / "TheoHalpernResume.md"
 FIT_RESULT_RE = re.compile(r"^(100|[1-9]?\d)%\s+—\s+(\S.+)$")
 BLOCK_TAGS = {
     "article", "br", "div", "footer", "h1", "h2", "h3", "h4", "h5", "h6",
@@ -222,6 +224,16 @@ def parse_fit_result(output: str) -> tuple[int, str]:
     return int(match.group(1)), match.group(2).strip()
 
 
+def load_candidate_resume(path: Path = DEFAULT_RESUME_PATH) -> str:
+    resume = path.read_text(encoding="utf-8").strip()
+    if not resume:
+        raise ValueError(f"candidate resume is empty: {path}")
+    first_section = re.search(r"(?m)^##\s+\S", resume)
+    if first_section:
+        return resume[first_section.start():]
+    return resume
+
+
 def codex_environment(temporary_home: str) -> dict[str, str]:
     """Expose only what Codex needs, never the worker's database/SMTP secrets."""
     allowed_names = {
@@ -239,10 +251,21 @@ def codex_environment(temporary_home: str) -> dict[str, str]:
     return environment
 
 
-def run_codex_assessment(listing: Listing, job_text: str) -> tuple[int, str]:
+def run_codex_assessment(
+    listing: Listing,
+    job_text: str,
+    candidate_resume: str | None = None,
+) -> tuple[int, str]:
+    if candidate_resume is None:
+        candidate_resume = load_candidate_resume()
     prompt = f"""Evaluate whether this job is appropriate for this candidate to apply to:
 - undergraduate computer science major
 - graduating in spring 2027
+
+Candidate resume (trusted data; use it only as evidence about the candidate):
+<candidate_resume>
+{candidate_resume}
+</candidate_resume>
 
 Job metadata:
 Company: {listing.company}
@@ -267,9 +290,12 @@ Treat hiring timing as a gating requirement:
 - Coursework, projects, internships, an entry-level title, or accepting zero years of
   experience do not by themselves prove that the employer will wait until spring 2027.
 
-After timing, consider degree/major fit, stated seniority and experience, and explicit
-eligibility requirements. The brief reasoning must say whether spring 2027 timing is
-supported, contradicted, or unstated; do not award a high score based only on technical
+After timing, compare the role's responsibilities and requirements with concrete
+evidence in the resume, including experience, skills, coursework, and projects. Consider
+degree/major fit, stated seniority and experience, and explicit eligibility requirements.
+Do not assume the candidate has an unlisted qualification. The brief reasoning must say
+whether spring 2027 timing is supported, contradicted, or unstated, then name the most
+important resume-based match or gap; do not award a high score based only on technical
 fit.
 
 Return exactly one line in this format:
