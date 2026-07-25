@@ -43,17 +43,20 @@ def test_render_digest_uses_shared_hierarchy_sorting_and_escaping():
 
     assert digest.subject == "2 new roles for Spring 2027"
     assert digest.text.index("Top & <Choice>") < digest.text.index("Unscored")
-    assert "SPRING 2027 FIT: 94% MATCH" in digest.text
-    assert "RESUME FIT: 89% MATCH" in digest.text
-    assert "SPRING 2027 FIT: NOT YET EVALUATED" in digest.text
-    assert "RESUME FIT: NOT YET EVALUATED" in digest.text
+    assert "IS SPRING 2027 NEW GRAD: 94% MATCH" in digest.text
+    assert "THEO'S RESUME FIT: 89% MATCH" in digest.text
+    assert "IS SPRING 2027 NEW GRAD: NOT YET EVALUATED" in digest.text
+    assert "THEO'S RESUME FIT: NOT YET EVALUATED" in digest.text
     assert "Browse all jobs: https://board.example" in digest.text
     assert "Top &amp; &lt;Choice&gt;" in digest.html
     assert "SWE &lt;New Grad&gt;" in digest.html
     assert 'href="https://jobs.example/apply?a=1&amp;b=2"' in digest.html
     assert "Remote &nbsp;·&nbsp; Class of 2027" in digest.html
     assert "&amp;nbsp;" not in digest.html
-    assert "Resume fit (ignoring dates):" in digest.html
+    assert "Is Spring 2027 New Grad:" in digest.html
+    assert "Theo's Resume fit:" in digest.html
+    assert "ignoring dates" not in digest.html
+    assert "ignoring dates" not in digest.text
     assert "Browse all jobs" in digest.html
 
 
@@ -72,8 +75,8 @@ def test_render_digest_distinguishes_failed_evaluation_from_pending():
 
     digest = render_digest([failed])
 
-    assert "SPRING 2027 FIT: EVALUATION FAILED" in digest.text
-    assert "RESUME FIT: EVALUATION FAILED" in digest.text
+    assert "IS SPRING 2027 NEW GRAD: EVALUATION FAILED" in digest.text
+    assert "THEO'S RESUME FIT: EVALUATION FAILED" in digest.text
     assert "Evaluation error: Codex review timed out." in digest.text
     assert "Evaluation failed" in digest.html
     assert "<strong>Evaluation error:</strong> Codex review timed out." in digest.html

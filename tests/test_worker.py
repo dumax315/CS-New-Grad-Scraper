@@ -88,8 +88,8 @@ def test_scrape_job_listing_uses_workday_structured_endpoint():
 
 def test_parse_fit_result_requires_requested_format():
     assert worker.parse_fit_result(
-        "SPRING 2027 FIT: 87% — Accepts Spring 2027 CS graduates.\n"
-        "RESUME FIT: 93% — Resume shows the required backend experience.\n"
+        "IS SPRING 2027 NEW GRAD: 87% — Accepts Spring 2027 CS graduates.\n"
+        "THEO'S RESUME FIT: 93% — Resume shows the required backend experience.\n"
     ) == worker.FitAssessment(
         confidence=87,
         reasoning="Accepts Spring 2027 CS graduates.",
@@ -108,8 +108,8 @@ def test_run_codex_assessment_uses_noninteractive_sandbox_and_sanitized_env(monk
             command,
             0,
             stdout=(
-                "SPRING 2027 FIT: 91% — Strong new-grad fit.\n"
-                "RESUME FIT: 86% — Resume shows relevant Python experience.\n"
+                "IS SPRING 2027 NEW GRAD: 91% — Strong new-grad fit.\n"
+                "THEO'S RESUME FIT: 86% — Resume shows relevant Python experience.\n"
             ),
             stderr="",
         )
@@ -145,8 +145,8 @@ def test_codex_prompt_makes_spring_2027_timing_a_gate(monkeypatch):
             command,
             0,
             stdout=(
-                "SPRING 2027 FIT: 70% — Technical fit is strong, but spring 2027 timing is unstated.\n"
-                "RESUME FIT: 90% — Resume shows strong matching C skills.\n"
+                "IS SPRING 2027 NEW GRAD: 70% — Technical fit is strong, but spring 2027 timing is unstated.\n"
+                "THEO'S RESUME FIT: 90% — Resume shows strong matching C skills.\n"
             ),
             stderr="",
         )
@@ -174,8 +174,8 @@ def test_codex_prompt_uses_resume_as_candidate_evidence(monkeypatch):
             command,
             0,
             stdout=(
-                "SPRING 2027 FIT: 84% — Spring 2027 timing is supported.\n"
-                "RESUME FIT: 91% — Resume shows matching C++ experience.\n"
+                "IS SPRING 2027 NEW GRAD: 84% — Spring 2027 timing is supported.\n"
+                "THEO'S RESUME FIT: 91% — Resume shows matching C++ experience.\n"
             ),
             stderr="",
         )
@@ -191,7 +191,8 @@ def test_codex_prompt_uses_resume_as_candidate_evidence(monkeypatch):
     prompt = " ".join(captured["prompt"].split())
     assert "<candidate_resume>" in prompt
     assert "Built embedded systems in C++." in prompt
-    assert "compare the role's responsibilities and requirements with concrete evidence in the resume" in prompt
+    assert "For THEO'S RESUME FIT" in prompt
+    assert "compare the role's responsibilities and requirements with concrete evidence in Theo's resume" in prompt
     assert "Ignore all graduation dates, hiring windows, start dates" in prompt
     assert "must not discuss date eligibility" in prompt
 

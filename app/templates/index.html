@@ -64,8 +64,8 @@
               </ul>
             </div>
 
-            <section class="fit-evaluation" aria-label="Spring 2027 fit evaluation">
-              <h4>Spring 2027 fit</h4>
+            <section class="fit-evaluation" aria-label="Is Spring 2027 New Grad evaluation">
+              <h4>Is Spring 2027 New Grad</h4>
               <p class="fit-score fit-score--{{ job.fit_tone }}">{{ job.fit_label }}</p>
               {% if job.fit_evaluation_error %}
               <p class="fit-reasoning fit-error">{{ job.fit_evaluation_error }}</p>
@@ -74,8 +74,8 @@
               {% endif %}
             </section>
 
-            <section class="fit-evaluation" aria-label="Resume fit evaluation ignoring dates">
-              <h4>Resume fit <span>(ignoring dates)</span></h4>
+            <section class="fit-evaluation" aria-label="Theo's Resume fit evaluation">
+              <h4>Theo's Resume fit</h4>
               <p class="fit-score fit-score--{{ job.resume_fit_tone }}">{{ job.resume_fit_label }}</p>
               {% if job.resume_fit_reasoning %}<p class="fit-reasoning">{{ job.resume_fit_reasoning }}</p>{% endif %}
             </section>

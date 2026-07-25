@@ -281,11 +281,6 @@ input:disabled {
   margin: 0 0 6px;
 }
 
-.fit-evaluation h4 span {
-  color: var(--muted);
-  font-weight: 500;
-}
-
 .fit-score {
   border-left: 3px solid currentColor;
   font-size: .76rem;

@@ -111,10 +111,11 @@ def test_index_renders_utility_controls_and_both_job_evaluations():
     assert 'class="filter-submit" type="submit">Filter</button>' in html
     assert "3 jobs" in html
     assert "Newest first" in html
-    assert "Spring 2027 fit" in html
+    assert "Is Spring 2027 New Grad" in html
     assert "88% match" in html
     assert "Spring 2027 timing is supported." in html
-    assert "Resume fit <span>(ignoring dates)</span>" in html
+    assert "Theo's Resume fit" in html
+    assert "ignoring dates" not in html
     assert "93% match" in html
     assert "Resume shows strong Python experience." in html
     assert "$120k–$140k" in html

@@ -34,7 +34,7 @@
                         <tr>
                           <td valign="middle" style="padding:0 12px 8px 0;color:#087f5b;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">{{ job.company }}</td>
                           <td align="right" valign="middle" style="padding:0 0 8px;">
-                            <span style="color:#647069;font-size:10px;font-weight:700;">SPRING 2027&nbsp;</span>
+                            <span style="color:#647069;font-size:10px;font-weight:700;">IS SPRING 2027 NEW GRAD&nbsp;</span>
                             {% if job.fit_tone == 'strong' %}
                             <span style="display:inline-block;border-radius:99px;background:#e7f5ef;color:#056246;font-size:10px;font-weight:700;letter-spacing:.4px;padding:5px 8px;text-transform:uppercase;">{{ job.fit_label }}</span>
                             {% elif job.fit_tone == 'promising' %}
@@ -60,10 +60,10 @@
                             {% if job.fit_evaluation_error %}
                             <p style="margin:0;color:#a44444;"><strong>Evaluation error:</strong> {{ job.fit_evaluation_error }}</p>
                             {% elif job.fit_reasoning %}
-                            <p style="margin:0;"><strong>Spring 2027 fit:</strong> {{ job.fit_reasoning }}</p>
+                            <p style="margin:0;"><strong>Is Spring 2027 New Grad:</strong> {{ job.fit_reasoning }}</p>
                             {% endif %}
                             {% if job.resume_fit_reasoning %}
-                            <p style="margin:{% if job.fit_reasoning %}7px{% else %}0{% endif %} 0 0;"><strong>Resume fit (ignoring dates):</strong> {{ job.resume_fit_label }} — {{ job.resume_fit_reasoning }}</p>
+                            <p style="margin:{% if job.fit_reasoning %}7px{% else %}0{% endif %} 0 0;"><strong>Theo's Resume fit:</strong> {{ job.resume_fit_label }} — {{ job.resume_fit_reasoning }}</p>
                             {% endif %}
                           </td>
                         </tr>
