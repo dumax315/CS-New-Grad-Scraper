@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from html.parser import HTMLParser
 import json
@@ -34,6 +35,14 @@ BLOCK_TAGS = {
     "header", "li", "main", "p", "section", "table", "td", "th", "tr",
 }
 SKIPPED_TAGS = {"script", "style", "noscript", "svg"}
+
+
+@dataclass(frozen=True, slots=True)
+class IngestionResult:
+    new_listings: int
+    evaluated: int
+    digest_sent: bool
+    initial_run: bool
 
 
 class VisibleTextParser(HTMLParser):
@@ -368,52 +377,68 @@ def evaluate_new_listings(session: Session, listings: list[Listing]) -> int:
     return evaluate_listings(session, list(selected))
 
 
+def run_ingestion_cycle(
+    *,
+    review_with_codex: bool = True,
+    force_digest: bool = False,
+) -> IngestionResult:
+    with SessionLocal() as session:
+        is_initial_run = session.scalar(select(func.count(Listing.id))) == 0
+        if is_initial_run:
+            logger.info("Initial load detected; running baseline scrape before scheduling begins")
+        else:
+            logger.info("Running scheduled scrape")
+        new_listings = run_ingestion(session)
+        evaluated = evaluate_new_listings(session, new_listings) if review_with_codex else 0
+        new_listing_ids = [listing.id for listing in new_listings]
+        notification_listings = list(session.scalars(
+            select(Listing)
+            .where(Listing.id.in_(new_listing_ids))
+            .options(selectinload(Listing.sources))
+        ).all()) if new_listing_ids else []
+        digest_recipients = []
+        if settings.public_url and settings.subscription_token_secret:
+            subscribers = session.scalars(
+                select(Subscriber).where(
+                    Subscriber.confirmed_at.is_not(None),
+                    Subscriber.unsubscribed_at.is_(None),
+                )
+            ).all()
+            digest_recipients = [
+                DigestRecipient(
+                    address=subscriber.email,
+                    unsubscribe_url=(
+                        f"{settings.public_url}/unsubscribe?token="
+                        f"{quote(unsubscribe_token(subscriber, settings.subscription_token_secret), safe='')}"
+                    ),
+                )
+                for subscriber in subscribers
+            ]
+    should_send_digest = force_digest or settings.send_initial_digest or not is_initial_run
+    sent = send_new_jobs_digest(
+        notification_listings,
+        recipients=digest_recipients,
+    ) if should_send_digest else False
+    result = IngestionResult(
+        new_listings=len(new_listings),
+        evaluated=evaluated,
+        digest_sent=sent,
+        initial_run=is_initial_run,
+    )
+    logger.info(
+        "Ingestion completed: %s new listings; %s evaluated; digest sent=%s",
+        result.new_listings,
+        result.evaluated,
+        result.digest_sent,
+    )
+    if is_initial_run and not new_listings:
+        logger.warning("Initial load produced no stored listings; check the fetch and parser logs above")
+    return result
+
+
 def scrape_and_notify() -> None:
     try:
-        with SessionLocal() as session:
-            is_initial_run = session.scalar(select(func.count(Listing.id))) == 0
-            if is_initial_run:
-                logger.info("Initial load detected; running baseline scrape before scheduling begins")
-            else:
-                logger.info("Running scheduled scrape")
-            new_listings = run_ingestion(session)
-            evaluated = evaluate_new_listings(session, new_listings)
-            new_listing_ids = [listing.id for listing in new_listings]
-            notification_listings = list(session.scalars(
-                select(Listing)
-                .where(Listing.id.in_(new_listing_ids))
-                .options(selectinload(Listing.sources))
-            ).all()) if new_listing_ids else []
-            digest_recipients = []
-            if settings.public_url and settings.subscription_token_secret:
-                subscribers = session.scalars(
-                    select(Subscriber).where(
-                        Subscriber.confirmed_at.is_not(None),
-                        Subscriber.unsubscribed_at.is_(None),
-                    )
-                ).all()
-                digest_recipients = [
-                    DigestRecipient(
-                        address=subscriber.email,
-                        unsubscribe_url=(
-                            f"{settings.public_url}/unsubscribe?token="
-                            f"{quote(unsubscribe_token(subscriber, settings.subscription_token_secret), safe='')}"
-                        ),
-                    )
-                    for subscriber in subscribers
-                ]
-        sent = send_new_jobs_digest(
-            notification_listings,
-            recipients=digest_recipients,
-        ) if (settings.send_initial_digest or not is_initial_run) else False
-        logger.info(
-            "Ingestion completed: %s new listings; %s evaluated; digest sent=%s",
-            len(new_listings),
-            evaluated,
-            sent,
-        )
-        if is_initial_run and not new_listings:
-            logger.warning("Initial load produced no stored listings; check the fetch and parser logs above")
+        run_ingestion_cycle()
     except Exception:
         logger.exception("Ingestion failed")
 

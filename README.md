@@ -95,6 +95,52 @@ uvx --from 'markitdown[pdf]==0.1.6' \
 Review the resulting diff before committing it because PDF extraction can lose visual
 structure such as headings or multi-column ordering.
 
+### Test refetching, email, and Codex locally
+
+Use the worker container so the commands share the same PostgreSQL database, SMTP
+settings, and persisted Codex login as the scheduled worker. Stop the long-running
+worker first so it cannot ingest concurrently with the test command:
+
+```sh
+docker compose stop worker
+```
+
+This command deletes the five most recently saved listings, refetches the live sources,
+reviews newly restored listings, saves their scores, and sends the resulting digest:
+
+```sh
+docker compose run --rm worker jobs-refetch 5
+```
+
+Skip Codex while still refetching and sending the digest with:
+
+```sh
+docker compose run --rm worker jobs-refetch 5 --no-codex
+```
+
+The command exits unsuccessfully if there was nothing to delete, no listing was
+refetched, or no digest was sent. Deletion is committed before source fetching, so use
+this only against a development database. Digest delivery requires valid SMTP settings
+and at least one `ALERT_RECIPIENT` or confirmed subscriber.
+
+To review and save fit results for the five newest listings that have not completed
+Codex review:
+
+```sh
+docker compose run --rm worker jobs-review 5
+```
+
+Include previously reviewed listings and overwrite their successful results with:
+
+```sh
+docker compose run --rm worker jobs-review 5 --force
+```
+
+The same entry points can be run as `uv run jobs-refetch ...` and
+`uv run jobs-review ...` when `DATABASE_URL`, SMTP, and Codex authentication are
+available in the shell environment. Restart the scheduled worker afterward with
+`docker compose start worker` when needed.
+
 To evaluate every unfinished listing posted in the last 10 days, bypassing the
 scheduled worker's 10-listing cap, run this inside the Coolify `worker` terminal:
 

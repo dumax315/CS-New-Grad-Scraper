@@ -311,3 +311,44 @@ def test_scrape_and_notify_sends_only_to_active_subscribers(monkeypatch):
     assert captured["recipients"][0].unsubscribe_url.startswith(
         "https://board.example/unsubscribe?token=",
     )
+
+
+def test_ingestion_cycle_can_skip_codex_and_force_initial_digest(monkeypatch):
+    engine = create_engine("sqlite://")
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
+    Base.metadata.create_all(engine)
+    captured = {}
+
+    def fake_ingestion(session):
+        new_listing = listing(101)
+        session.add(new_listing)
+        session.commit()
+        return [new_listing]
+
+    def unexpected_evaluation(session, listings):
+        raise AssertionError("Codex evaluation should be disabled")
+
+    def fake_send(listings, config=worker.settings, recipients=()):
+        captured["listings"] = listings
+        return True
+
+    monkeypatch.setattr(worker, "SessionLocal", Session)
+    monkeypatch.setattr(worker, "run_ingestion", fake_ingestion)
+    monkeypatch.setattr(worker, "evaluate_new_listings", unexpected_evaluation)
+    monkeypatch.setattr(worker, "send_new_jobs_digest", fake_send)
+    monkeypatch.setattr(worker, "settings", Settings(send_initial_digest=False))
+
+    result = worker.run_ingestion_cycle(
+        review_with_codex=False,
+        force_digest=True,
+    )
+
+    assert result == worker.IngestionResult(
+        new_listings=1,
+        evaluated=0,
+        digest_sent=True,
+        initial_run=True,
+    )
+    assert [item.application_url for item in captured["listings"]] == [
+        "https://jobs.example/101",
+    ]
