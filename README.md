@@ -5,7 +5,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 <!-- BEGIN GENERATED JOBS -->
 ## Current Openings
 
-924 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
+924 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev) (you can also sign up for email alerts).
 
 | Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |
 |---|---|---|---|---|---|
