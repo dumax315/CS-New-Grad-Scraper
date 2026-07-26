@@ -12,6 +12,15 @@ from app.source_types import Candidate, SourceFetchResult, SourceSpec
 from app.source_utils import canonicalize_url
 
 YEAR_RE = re.compile(r"\b(20(?:2[5-9]|[3-9]\d))\b")
+SWE_TITLE_RE = re.compile(
+    r"\b(?:software|swe|developer|programmer|backend|back[ -]?end|frontend|"
+    r"front[ -]?end|full[ -]?stack|web|mobile|ios|android|devops|devsecops|"
+    r"site reliability|sre|platform|infrastructure|cloud|data engineer(?:ing)?|"
+    r"machine learning|ml engineer(?:ing)?|ai engineer(?:ing)?|"
+    r"security engineer(?:ing)?|cybersecurity|embedded|firmware|sdet|"
+    r"quality assurance|qa engineer(?:ing)?|test automation)\b",
+    re.I,
+)
 
 
 def _salary_text(value: object) -> str:
@@ -50,6 +59,7 @@ def fetch(spec: SourceSpec, client: httpx.Client) -> SourceFetchResult:
     candidates: list[Candidate] = []
     malformed_count = 0
     closed_count = 0
+    non_swe_title_count = 0
     for record in records:
         if not isinstance(record, dict):
             malformed_count += 1
@@ -72,6 +82,9 @@ def fetch(spec: SourceSpec, client: httpx.Client) -> SourceFetchResult:
             or external_id is None
         ):
             malformed_count += 1
+            continue
+        if not SWE_TITLE_RE.search(title):
+            non_swe_title_count += 1
             continue
         category = record.get("category")
         category_name = category.get("name", "") if isinstance(category, dict) else ""
@@ -110,6 +123,8 @@ def fetch(spec: SourceSpec, client: httpx.Client) -> SourceFetchResult:
     exclusion_counts = Counter(dict(exclusions))
     if closed_count:
         exclusion_counts["exclude_closed"] += closed_count
+    if non_swe_title_count:
+        exclusion_counts["exclude_non_engineering"] += non_swe_title_count
     return SourceFetchResult(
         source_key=spec.key,
         source_name=spec.name,

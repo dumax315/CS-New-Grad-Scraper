@@ -57,6 +57,15 @@ def test_ambicuity_connector_normalizes_and_scopes_live_feed_shape():
                 "url": "https://jobs.example/closed",
                 "is_closed": True,
             },
+            {
+                "id": "acme-civil",
+                "company": "Acme",
+                "title": "Civil Engineer (Entry-Level)",
+                "location": "New York, NY",
+                "url": "https://jobs.example/civil",
+                "description": "University candidates with 0-1 years welcome.",
+                "is_closed": False,
+            },
             {"id": "broken", "company": "Acme", "title": "Software Engineer"},
         ]})
 
@@ -64,7 +73,7 @@ def test_ambicuity_connector_normalizes_and_scopes_live_feed_shape():
         result = fetch_source(spec("ambicuity"), client)
 
     assert result.succeeded is True
-    assert result.fetched_count == 4
+    assert result.fetched_count == 5
     assert len(result.candidates) == 1
     candidate = result.candidates[0]
     assert candidate.company == "Acme"
@@ -79,8 +88,68 @@ def test_ambicuity_connector_normalizes_and_scopes_live_feed_shape():
     assert dict(result.exclusion_counts) == {
         "exclude_closed": 1,
         "exclude_experience": 1,
+        "exclude_non_engineering": 1,
         "exclude_unknown": 1,
     }
+
+
+@pytest.mark.parametrize(
+    "title",
+    [
+        "Backend Developer, New Grad",
+        "Data Engineer, University Graduate",
+        "Machine Learning Engineer, New Grad",
+        "Site Reliability Engineer, Early Career",
+        "Embedded Software Engineer I",
+    ],
+)
+def test_ambicuity_connector_accepts_swe_title_keywords(title):
+    record = {
+        "id": title,
+        "company": "Acme",
+        "title": title,
+        "url": f"https://jobs.example/{title.replace(' ', '-')}",
+        "description": "Class of 2027 candidates are welcome.",
+        "is_closed": False,
+    }
+    with httpx.Client(
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(200, json={"jobs": [record]}),
+        ),
+    ) as client:
+        result = fetch_source(spec("ambicuity"), client)
+
+    assert [candidate.title for candidate in result.candidates] == [title]
+
+
+@pytest.mark.parametrize(
+    "title",
+    [
+        "Civil Engineer (Entry-Level)",
+        "New Graduate Engineer, Mechanical",
+        "Early Career Manufacturing Engineer",
+        "Associate, Systems Engineer",
+        "Technical Support Engineer - University Graduate",
+    ],
+)
+def test_ambicuity_connector_rejects_titles_without_swe_keywords(title):
+    record = {
+        "id": title,
+        "company": "Acme",
+        "title": title,
+        "url": f"https://jobs.example/{title.replace(' ', '-')}",
+        "description": "Class of 2027 candidates are welcome.",
+        "is_closed": False,
+    }
+    with httpx.Client(
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(200, json={"jobs": [record]}),
+        ),
+    ) as client:
+        result = fetch_source(spec("ambicuity"), client)
+
+    assert result.candidates == ()
+    assert dict(result.exclusion_counts) == {"exclude_non_engineering": 1}
 
 
 def test_greenhouse_connector_normalizes_and_scopes_records():
