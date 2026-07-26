@@ -27,11 +27,15 @@ def _markdown_url(url: str) -> str:
     return quote(url, safe=":/?#[]@!$&'*+,;=%-._~")
 
 
-def _fit_label(listing: Listing) -> str:
+def _fit_summary(listing: Listing) -> str:
     if listing.fit_evaluation_failed_at is not None:
+        if listing.fit_evaluation_error:
+            return f"Evaluation failed — {listing.fit_evaluation_error}"
         return "Evaluation failed"
     if listing.fit_confidence is None:
         return "Pending"
+    if listing.fit_reasoning:
+        return f"{listing.fit_confidence}% — {listing.fit_reasoning}"
     return f"{listing.fit_confidence}%"
 
 
@@ -64,16 +68,15 @@ def render_jobs_section(
         "",
         summary,
         "",
-        "| Company | Role | Location | Salary | Spring 2027 Fit | Posted | Application |",
-        "|---|---|---|---|---|---|---|",
+        "| Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |",
+        "|---|---|---|---|---|---|",
     ]
     for listing in jobs:
         values = (
             listing.company,
             listing.title,
             listing.location or "—",
-            listing.salary or "—",
-            _fit_label(listing),
+            _fit_summary(listing),
             _posted_label(listing),
         )
         cells = [_markdown_cell(value) for value in values]

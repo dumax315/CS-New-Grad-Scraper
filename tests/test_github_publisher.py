@@ -30,6 +30,7 @@ def listing(
         posted_at=posted_at,
         first_seen_at=datetime(2026, 7, 24, tzinfo=timezone.utc),
         fit_confidence=confidence,
+        fit_reasoning="Spring 2027 timing is explicitly supported.",
         resume_fit_confidence=99,
         resume_fit_reasoning="Private candidate-specific reasoning.",
     )
@@ -64,6 +65,7 @@ def test_render_jobs_section_escapes_values_and_omits_resume_fit():
     pending.salary = ""
     failed = listing("Failed", confidence=75)
     failed.fit_evaluation_failed_at = datetime(2026, 7, 26, tzinfo=timezone.utc)
+    failed.fit_evaluation_error = "Codex review timed out."
 
     section = render_jobs_section(
         [scored, pending, failed],
@@ -76,9 +78,11 @@ def test_render_jobs_section_escapes_values_and_omits_resume_fit():
     assert "&lt;script&gt;alert(1)&lt;/script&gt; &amp; Co." in section
     assert "<script>" not in section
     assert "Software \\| Engineer New Grad" in section
-    assert "| 82% | 2026-07-25 |" in section
+    assert "Salary" not in section
+    assert "Is Spring 2027 New Grad" in section
+    assert "| 82% — Spring 2027 timing is explicitly supported. | 2026-07-25 |" in section
     assert "| Pending | First seen 2026-07-24 |" in section
-    assert "| Evaluation failed | 2026-07-25 |" in section
+    assert "| Evaluation failed — Codex review timed out. | 2026-07-25 |" in section
     assert "[Apply](https://jobs.example/apply/%28new%20grad%29?a=1&b=2)" in section
     assert "99" not in section
     assert "Private candidate-specific reasoning." not in section

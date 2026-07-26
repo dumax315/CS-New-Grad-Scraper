@@ -613,6 +613,7 @@ def test_ingestion_cycle_publishes_evaluated_visible_snapshot(monkeypatch):
 
     def fake_evaluate(session, listings):
         listings[0].fit_confidence = 87
+        listings[0].fit_reasoning = "Spring 2027 timing is explicitly supported."
         session.commit()
         return 1
 
@@ -636,7 +637,10 @@ def test_ingestion_cycle_publishes_evaluated_visible_snapshot(monkeypatch):
     result = worker.run_ingestion_cycle()
 
     assert result.evaluated == 1
-    assert "| Acme | Software Engineer 102 | Remote | — | 87% |" in captured["section"]
+    assert (
+        "| Acme | Software Engineer 102 | Remote | "
+        "87% — Spring 2027 timing is explicitly supported. |"
+    ) in captured["section"]
     assert "[Browse the searchable job board](https://board.example)." in captured["section"]
     assert captured["config"] is configured
 
