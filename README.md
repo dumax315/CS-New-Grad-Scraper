@@ -5,19 +5,15 @@ A small, public job board that aggregates software-engineering new-grad listings
 <!-- BEGIN GENERATED JOBS -->
 ## Current Openings
 
-942 open roles currently listed. [Browse the searchable job board](https://localhost:8000).
+927 open roles currently listed. [Browse the searchable job board](https://localhost:8000).
 
 | Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |
 |---|---|---|---|---|---|
 | Vanderbilt University Medical Center | C# / Angular Associate Application Developer - Local / Hybrid | Nashville, TN | 65% — Spring 2027 timing is unstated; the associate level, bachelor’s requirement, and less-than-one-year experience fit a new graduate, but the posting appears geared toward a near-term hire. | 2026-07-26 | [Apply](https://vumc.wd1.myworkdayjobs.com/en-US/vumccareers/job/Nashville-TN/C----Angular-Associate-Application-Developer--Local---Hybrid-_R-63031-1) |
 | Iridium Satellite Communications | Engineer I - Software Engineer | Reston, VA +1 | 65% — Spring 2027 timing is unstated; the entry-level title supports general fit, but there is no evidence the role accepts candidates unavailable until after graduation. | 2026-07-26 | [Apply](https://careers-iridium.icims.com/jobs/5047/engineer-i%2c-software-engineer/job) |
-| NGV2020 | Civil Engineer (Entry-Level) | Laurel, MD, US | Pending | 2026-07-25 | [Apply](https://www.indeed.com/viewjob?jk=60b262d53c7003ea) |
 | Flock Safety | Associate Wireless Software Engineer | Atlanta, GA | 65% — Spring 2027 timing is unstated; the full-time posting appears geared toward a near-term start, though recent graduates are welcome. | 2026-07-25 | [Apply](https://jobs.ashbyhq.com/flock%20safety/b50cadaf-7eb1-4237-8e37-a1f6a1a359ee) |
 | Blissway | Embedded Systems Engineer - Recent Graduate | Denver, CO | 35% — Spring 2027 timing is unstated; the “Recent Graduate” full-time posting appears geared toward near-term availability. | 2026-07-25 | [Apply](https://jobs.ashbyhq.com/blissway/51d6d839-9801-4436-bfc2-918bae428ed8) |
 | Nexxen | Software Engineer 1 - DSP Runtime | New York City, NY +1 | 25% — Spring 2027 timing is unstated; the full-time posting gives no future start date and requires a bachelor's degree and 2+ years of experience, suggesting near-term hiring. | 2026-07-25 | [Apply](https://jobs.ashbyhq.com/nexxen/53cbef54-13b1-4539-9a18-bdd0c3431d32) |
-| L3Harris | Associate, Systems Engineer | Salt Lake City, UT, US | Pending | 2026-07-24 | [Apply](https://www.indeed.com/viewjob?jk=e7b84f04f44d6830) |
-| Hatch | Structural Engineer, Junior - Water and Wastewater | Mississauga, ON, CA | Pending | 2026-07-24 | [Apply](https://ca.indeed.com/viewjob?jk=eac40a241efaea82) |
-| Marmon Technologies India Private Limited | Graduate Engineer Trainee | KA, IN | Pending | 2026-07-24 | [Apply](https://in.indeed.com/viewjob?jk=754eb84037ee3757) |
 | Simpson Strong-Tie | Associate Software Engineer — Cloud Services &amp; API Platform - C#/Azure track | Plano, TX | 65% — Spring 2027 timing is unstated; the posting appears to target a near-term full-time hire, though it is entry-level and does not require immediate degree completion. | 2026-07-24 | [Apply](https://strongtie.wd1.myworkdayjobs.com/en-US/external/job/Plano-TX/Associate-Software-Engineer---Cloud-Services---API-Platform--C--Azure-track-_R7829) |
 | Radiance Technologies | Junior Software Engineer | Stennis Space Center, MS | 70% — Spring 2027 timing is unstated; the posting provides no graduation window or future start date, so near-term hiring is more likely. | 2026-07-24 | [Apply](https://radiancetech.wd12.myworkdayjobs.com/en-US/radiance_external/job/Stennis-Space-Center-MS/Junior-Software-Engineer_HR102316) |
 | Northrop Grumman | Associate Embedded Software Engineer / Embedded Software Engineer | Melbourne, FL | 35% — Spring 2027 timing is unstated; no future start date or graduation window supports waiting until then, and Secret/SAP clearance is required. | 2026-07-24 | [Apply](https://ngc.wd1.myworkdayjobs.com/en-US/northrop_grumman_external_site/job/United-States-Florida-Melbourne/Associate-Embedded-Software-Engineer---Embedded-Software-Engineer_R10241869) |
@@ -43,7 +39,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Tesla | Software Engineer, Optimus Inference Co Design | Palo Alto, CA | Evaluation failed — Job posting returned HTTP 403. | 2026-07-24 | [Apply](https://www.tesla.com/careers/search/job/246089) |
 | Tesla | Camera Software Engineer, AI Platforms | Palo Alto, CA | Evaluation failed — Job posting returned HTTP 403. | 2026-07-24 | [Apply](https://www.tesla.com/careers/search/job/246198) |
 | Tesla | Software Integration Engineer, AI Platforms | Palo Alto, CA | Evaluation failed — Job posting returned HTTP 403. | 2026-07-24 | [Apply](https://www.tesla.com/careers/search/job/246199) |
-| Boeing | Spacecraft Systems Engineer (Early Career) - Millennium Space Systems | USA - El Segundo, CA | Pending | 2026-07-23 | [Apply](https://boeing.wd1.myworkdayjobs.com/job/USA---El-Segundo-CA/Spacecraft-Systems-Engineer--Early-Career----Millennium-Space-Systems_JR2026519970-1) |
 | Raytheon | Software Engineer I - Onsite | Cedar Rapids, IA | Pending | 2026-07-23 | [Apply](https://globalhr.wd5.myworkdayjobs.com/en-US/rec_rtx_ext_gateway/job/US-IA-CEDAR-RAPIDS-193--1120-Collins-Rd-NE--BLDG193/Software-Engineer-I--Onsite-_01834725) |
 | Xfinity | Junior C++ Software Engineer- 2 Days Onsite - Reston - VA- FreeWheel | Reston, VA | 55% — Spring 2027 timing is unstated; the posting provides no future start date or graduation window and appears oriented toward a near-term hire, though it does not explicitly contradict a 2027 graduate. | 2026-07-23 | [Apply](https://comcast.wd5.myworkdayjobs.com/en-US/comcast_careers/job/VA---Reston-11951-Freedom-Dr-Ste-900/Junior-C---Software-Engineer--2-Days-Onsite---Reston--VA--FreeWheel_R441732) |
 | Rocket Lab | Software Engineer I/II | Pasadena, CA | 55% — Spring 2027 timing is unstated; the posting provides no future start date or graduation window and appears aimed at near-term hiring, though the Software Engineer I level and CS degree requirement are broadly compatible. | 2026-07-23 | [Apply](https://job-boards.greenhouse.io/rocketlab/jobs/7813360003) |
@@ -59,7 +54,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | NVIDIA | Developer Technology Engineer - AI - New College Grad 2026 | Santa Clara, CA +5 | Pending | 2026-07-23 | [Apply](https://nvidia.wd5.myworkdayjobs.com/en-US/nvidiaexternalcareersite/job/US-CA-Santa-Clara/Developer-Technology-Engineer--AI---New-College-Grad-2026_JR2014130-1) |
 | NVIDIA | AI and ML Infra Software Engineer - GPU Clusters - New College Grad 2026 | Santa Clara, CA +1 | Pending | 2026-07-23 | [Apply](https://nvidia.wd5.myworkdayjobs.com/en-US/nvidiaexternalcareersite/job/US-CA-Santa-Clara/AI-and-ML-Infra-Software-Engineer--GPU-Clusters---New-College-Grad-2026_JR2021591) |
 | Amazon | EFA Network Software Engineer I - Annapurna Labs | Seattle, WA | Pending | 2026-07-23 | [Apply](https://www.amazon.jobs/jobs/10481932/apply) |
-| Parsons | Associate Engineer - MTO | Markham, ON, CA | Pending | 2026-07-22 | [Apply](https://ca.indeed.com/viewjob?jk=8ac6b9eb13675b72) |
 | Cerebras Systems | DevOps Engineer - New Grad 2026 | Toronto, ON, CA | Pending | 2026-07-22 | [Apply](https://ca.indeed.com/viewjob?jk=bb314c558ceac52d) |
 | Cerebras Systems | Software Engineer - New Grad 2026 | Toronto, ON, CA | Pending | 2026-07-22 | [Apply](https://ca.indeed.com/viewjob?jk=90aa209c55e1b7af) |
 | U.S. Bank | Software Engineer 1 - React + API + Cloud Migration | Irving, TX +1 | Pending | 2026-07-22 | [Apply](https://usbank.wd1.myworkdayjobs.com/en-US/us_bank_careers/job/Irving-TX/Software-Engineer-1--React---API---Cloud-Migration-_2026-0021655) |
@@ -76,7 +70,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | BlueCross BlueShield of Tennessee | Associate Software Engineer II | Remote - Chattanooga, TN | Pending | 2026-07-22 | [Apply](https://bcbst.wd1.myworkdayjobs.com/en-US/external/job/USA-TN-Chattanooga-Remote/Associate-Software-Engineer-II_R-50763) |
 | NVIDIA | Developer Technology Engineer - Public Sector - New College Grad 2026 | Santa Clara, CA | Pending | 2026-07-22 | [Apply](https://nvidia.wd5.myworkdayjobs.com/en-US/nvidiaexternalcareersite/job/US-CA-Santa-Clara/Developer-Technology-Engineer--Public-Sector---New-College-Grad-2026_JR2008990) |
 | NVIDIA | Deep Learning Software Engineer - Inference - New College Grad 2026 | Remote - California, USA +4 | Pending | 2026-07-22 | [Apply](https://nvidia.wd5.myworkdayjobs.com/en-US/nvidiaexternalcareersite/job/US-CA-Remote/Deep-Learning-Software-Engineer--Inference---New-College-Grad-2026_JR2021742) |
-| GE HealthCare | Graduate Engineer Trainee | KA, IN | Pending | 2026-07-21 | [Apply](https://in.indeed.com/viewjob?jk=62efac7c85f66725) |
 | Texas A&amp;M Transportation Institute | Software Engineer I | Bryan, TX | Pending | 2026-07-21 | [Apply](https://tamus.wd1.myworkdayjobs.com/en-US/tti_external/job/Bryan-TX/Software-Engineer-I_R-095393) |
 | Rocket Companies | Software Developer I | Seattle, WA | Pending | 2026-07-21 | [Apply](https://quickenloans.wd5.myworkdayjobs.com/en-US/rocket_careers/job/Seattle-WA/Software-Developer-I_R-083083) |
 | Radiance Technologies | Junior Software Engineer | Stennis Space Center, MS | Pending | 2026-07-21 | [Apply](https://radiancetech.wd12.myworkdayjobs.com/en-US/radiance_external/job/Stennis-Space-Center-MS/Junior-Software-Engineer_HR102305) |
@@ -88,8 +81,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | General Motors | Software Engineer - Autonomous Vehicles Software Systems - Early Career | Sunnyvale, CA +1 | Pending | 2026-07-21 | [Apply](https://generalmotors.wd5.myworkdayjobs.com/en-US/careers_gm/job/Sunnyvale-California-United-States-of-America/Software-Engineer--Autonomous-Vehicles-Software-Systems---Early-Career_JR-202604759) |
 | Boeing | Advanced Information Technologist - Associate Cloud Engineer | Hazelwood, MO | Pending | 2026-07-21 | [Apply](https://boeing.wd1.myworkdayjobs.com/en-US/external_subsidiary/job/USA---Hazelwood-MO/Advanced-Information-Technologist---Associate-Cloud-Engineer_JR2026494282-1) |
 | Boeing | Advanced Information Technologist - Associate Cloud Engineer | Hazelwood, MO | Pending | 2026-07-21 | [Apply](https://boeing.wd1.myworkdayjobs.com/en-US/external_careers/job/USA---Hazelwood-MO/Advanced-Information-Technologist---Associate-Cloud-Engineer_JR2026494282) |
-| Sandia National Laboratories | Early Career R&amp;D Electrical Engineer - Weapon Response &amp; Analysis, Onsite | Albuquerque, NM, US | Pending | 2026-07-20 | [Apply](https://www.indeed.com/viewjob?jk=80f5927f72a87b2b) |
-| Sandia National Laboratories | Early Career R&amp;D Mechanical Engineer - Weapon Response &amp; Analysis, Onsite | Albuquerque, NM, US | Pending | 2026-07-20 | [Apply](https://www.indeed.com/viewjob?jk=bd28a24aca9e2339) |
 | Capital One | Associate, Software Engineer, New Grad Card Expansion | Toronto, ON, CA | Pending | 2026-07-20 | [Apply](https://ca.indeed.com/viewjob?jk=9779fd5d94bfef6d) |
 | Qualcomm Technologies, Inc. | GPU Software Engineer | San Diego, CA | Pending | 2026-07-20 | [Apply](https://careers.qualcomm.com/careers/job/446706913920) |
 | The Hartford | Associate Software Engineer - Java | Charlotte, NC +1 | Pending | 2026-07-20 | [Apply](https://thehartford.wd5.myworkdayjobs.com/en-US/careers_external/job/Charlotte-NC/Associate-Software-Engineer---Java_R2626130) |
@@ -123,8 +114,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Antares | Reactor Software Engineer I-II | Los Angeles, CA | Pending | 2026-07-17 | [Apply](https://jobs.ashbyhq.com/antares/78234003-fa70-41ab-b3c8-a2e703687f42) |
 | NVIDIA | Systems Software Engineer - Accelerated Kubernetes Performance and Scale - New College Grad 2026 | Santa Clara, CA +1 | Pending | 2026-07-17 | [Apply](https://nvidia.wd5.myworkdayjobs.com/en-US/nvidiaexternalcareersite/job/US-CA-Santa-Clara/Systems-Software-Engineer--Accelerated-Kubernetes-Performance-and-Scale---New-College-Grad-2026_JR2020957) |
 | Nuro | Software Engineer, AI Platform - New Grad | Mountain View, California (HQ) | Pending | 2026-07-16 | [Apply](https://nuro.ai/careersitem?gh_jid=7351066) |
-| Verkada | Technical Support Engineer - University Graduate 2026 | San Mateo, CA United States | Pending | 2026-07-16 | [Apply](https://job-boards.greenhouse.io/verkada/jobs/4715534007) |
-| Verkada | Technical Support Engineer - University Graduate 2026 | New York City, NY United States | Pending | 2026-07-16 | [Apply](https://job-boards.greenhouse.io/verkada/jobs/5172974007) |
 | SBT Global | Junior Full Stack Developer - Bilingual in Korean | Plano, TX | Pending | 2026-07-16 | [Apply](https://jobs.smartrecruiters.com/SBTGlobalInc/3743990014116306-junior-full-stack-developer-bilingual-in-korean?oga=true) |
 | SBT Global | Junior Full Stack Developer - Bilingual in Korean | Plano, TX | Pending | 2026-07-16 | [Apply](https://jobs.smartrecruiters.com/SBTGlobalInc/3743990014115606-junior-full-stack-developer-bilingual-in-korean?oga=true) |
 | Revolutional | Associate Full Stack Engineer | McLean, VA | Pending | 2026-07-16 | [Apply](https://revolutional.com/job-openings?gh_jid=7801406003) |
@@ -175,8 +164,8 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Old Mission Capital | Software Engineer - 2027 Graduate Program - August Start | Chicago, IL | Pending | 2026-07-14 | [Apply](https://www.oldmissioncapital.com/careers?gh_jid=7796048003) |
 | i3 Corps | Entry Level Software Engineer | Huntsville, AL | Pending | 2026-07-14 | [Apply](https://careers-i3-corps.icims.com/jobs/5175/entry-level-software-engineer/job) |
 | Amentum | C or C++ Junior Developer | Dahlgren, VA | Pending | 2026-07-14 | [Apply](https://pae.wd1.myworkdayjobs.com/en-US/amentum_careers/job/US-VA-Dahlgren/C-or-C---Junior-Developer_R0165501) |
-| Anduril Industries | 2026 Early Career Test &amp; Evaluation Engineer | Costa Mesa, California, United States | Pending | 2026-07-13 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5185888007?gh_jid=5185888007) |
-| Anduril Industries | 2026 Early Career Flight Test Engineer, Mission Autonomy | Costa Mesa, California, United States | Pending | 2026-07-13 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5185089007?gh_jid=5185089007) |
+| Anduril | 2026 Early Career Test &amp; Evaluation Engineer | Costa Mesa, California, United States | Pending | 2026-07-13 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5185888007?gh_jid=5185888007) |
+| Anduril | 2026 Early Career Flight Test Engineer, Mission Autonomy | Costa Mesa, California, United States | Pending | 2026-07-13 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5185089007?gh_jid=5185089007) |
 | The Cadmus Group | Junior Full Stack Developer | USA | Pending | 2026-07-13 | [Apply](https://careers-cadmusgroup.icims.com/jobs/3199/junior-full-stack-developer/job) |
 | REPAY - Realtime Electronic Payments | Associate Cloud Infrastructure Engineer | Remote - Atlanta, GA +2 | Pending | 2026-07-13 | [Apply](https://repay.wd1.myworkdayjobs.com/en-US/repaycareers/job/Atlanta-Headquarters/Associate-Cloud-Infrastructure-Engineer_JR634) |
 | Aurora | Software Engineer I - Data Eng infra | Mountain View, CA | Pending | 2026-07-13 | [Apply](https://aurora.tech/jobs/8628066002?gh_jid=8628066002) |
@@ -186,7 +175,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | NVIDIA | System Software Engineer - Dynamo-Triton Inference Server - New College Grad 2026 | Remote - Santa Clara, CA | Pending | 2026-07-13 | [Apply](https://nvidia.wd5.myworkdayjobs.com/en-US/nvidiaexternalcareersite/job/US-CA-Santa-Clara/System-Software-Engineer--Dynamo-Triton-Inference-Server---New-College-Grad-2026_JR2020767) |
 | NVIDIA | Backend Compiler Engineer - New College Grad 2026 | Santa Clara, CA | Pending | 2026-07-13 | [Apply](https://nvidia.wd5.myworkdayjobs.com/en-US/nvidiaexternalcareersite/job/US-CA-Santa-Clara/Backend-Compiler-Engineer---New-College-Grad-2026_JR2021242) |
 | GDIT | UiPath Robotic Process Automation Developer Associate | USA | Pending | 2026-07-12 | [Apply](https://gdit.wd5.myworkdayjobs.com/en-US/external_career_site/job/USA-LA-Home-Office-LAHOME/UiPath-Robotic-Process-Automation-Developer-Associate_RQ223293-1) |
-| northwoodspace | Electronics Test Engineer (Early Career) | Torrance, CA | Pending | 2026-07-11 | [Apply](https://jobs.ashbyhq.com/northwoodspace/e153b809-8535-4d9d-b48c-c25acdeadae7) |
 | Sandisk | New College Grad - SSD Firmware Engineer | Milpitas, CA | Pending | 2026-07-11 | [Apply](https://jobs.smartrecruiters.com/Sandisk/744000137191590-new-college-grad-ssd-firmware-engineer?oga=true) |
 | Eulerity | Associate Backend Engineer | New York City, NY | Pending | 2026-07-11 | [Apply](https://job-boards.greenhouse.io/eulerity/jobs/4695682006) |
 | Airtable | Software Engineer, Infrastructure (4-8 YOE) | San Francisco, CA; New York, NY; Seattle, WA | Pending | 2026-07-10 | [Apply](https://job-boards.greenhouse.io/airtable/jobs/8400373002) |
@@ -217,7 +205,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Handshake | iOS Engineer I | San Francisco, CA | Pending | 2026-07-08 | [Apply](https://jobs.ashbyhq.com/handshake/823c6e64-714e-4098-8b16-cf1819fc090d) |
 | CACI | Junior Software Engineer | Denver, CO +3 | Pending | 2026-07-08 | [Apply](https://caci.wd1.myworkdayjobs.com/en-US/external/job/Denver-CO-US/Junior-Software-Engineer_327867) |
 | Akumen | Junior Software Developer | Washington, DC | Pending | 2026-07-08 | [Apply](https://akumeninc.com/career?gh_jid=4308114009) |
-| Built Technologies | Software Engineer I - Internal Tooling | Nashville (Hybrid) | Pending | 2026-07-08 | [Apply](https://job-boards.greenhouse.io/getbuilt/jobs/4713164005) |
+| Built Technologies | Software Engineer I - Internal Tooling | Nashville, TN | Pending | 2026-07-08 | [Apply](https://job-boards.greenhouse.io/getbuilt/jobs/4713164005) |
 | Amazon | Software Engineer I - Discovery | San Francisco, CA | Pending | 2026-07-08 | [Apply](https://www.amazon.jobs/jobs/10468973/apply) |
 | SpaceX | New Graduate Engineer, Mechanical (Cape Canaveral) | Cape Canaveral, FL | Pending | 2026-07-07 | [Apply](https://boards.greenhouse.io/spacex/jobs/8622574002?gh_jid=8622574002) |
 | Waymark | Junior Software Engineer | Remote - USA | Pending | 2026-07-07 | [Apply](https://job-boards.greenhouse.io/waymark/jobs/4711827005) |
@@ -230,9 +218,9 @@ A small, public job board that aggregates software-engineering new-grad listings
 | General Dynamics Mission Systems | Junior Software Engineer | Middletown, RI | Pending | 2026-07-06 | [Apply](https://careers-gdms.icims.com/jobs/73392/junior-software-engineer/job) |
 | Bizowie | Junior Software Developer | Pittsburgh, PA | Pending | 2026-07-06 | [Apply](http://bizowie.applytojob.com/apply/la7p2onXSl/Junior-Software-Developer) |
 | Applied Systems | Associate Software Engineer / Software Engineer | Chicago, IL +2 | Pending | 2026-07-06 | [Apply](https://careers-appliedsystems.icims.com/jobs/7318/associate-software-engineer---software-engineer/job) |
-| Sprinter Health | Engagement Platform Team - Software Engineer (Early Career / Mid-Level) | Menlo Park, CA | Pending | 2026-07-06 | [Apply](https://jobs.ashbyhq.com/sprinter-health/4e3244ca-93e1-4300-a14a-131f49e5db91) |
-| Notion | Software Engineer, Early Career (AI) | San Francisco, California, United States | Pending | 2026-07-06 | [Apply](https://jobs.ashbyhq.com/notion/85947779-6b87-466a-98bc-30a640448c28) |
-| Notion | Software Engineer, Early Career | San Francisco, California, United States | Pending | 2026-07-06 | [Apply](https://jobs.ashbyhq.com/notion/297b4ece-765f-4eea-b1b8-46057cb6501f) |
+| Sprinter Health | Engagement Platform Team - Software Engineer - Early Career / Mid-Level | Menlo Park, CA | Pending | 2026-07-06 | [Apply](https://jobs.ashbyhq.com/sprinter-health/4e3244ca-93e1-4300-a14a-131f49e5db91) |
+| Notion | Software Engineer, Early Career (AI) | San Francisco, California | Pending | 2026-07-06 | [Apply](https://jobs.ashbyhq.com/notion/85947779-6b87-466a-98bc-30a640448c28) |
+| Notion | Software Engineer, Early Career | San Francisco, California | Pending | 2026-07-06 | [Apply](https://jobs.ashbyhq.com/notion/297b4ece-765f-4eea-b1b8-46057cb6501f) |
 | Amazon | Hardware Simulator SDE I, AWS Machine Learning Accelerators, Annapurna Labs | Cupertino, CA | Pending | 2026-07-05 | [Apply](https://www.amazon.jobs/en/jobs/2940695/hardware-simulator-sde-i-aws-machine-learning-accelerators-annapurna-labs) |
 | Apple | Software Engineer, IS&amp;T | Austin, TX | Pending | 2026-07-05 | [Apply](https://jobs.apple.com/en-us/details/200611793/software-engineer-is-t-early-career?team=SFTWR) |
 | Apple | Software Engineer, IS&amp;T | Sunnyvale, CA | Pending | 2026-07-05 | [Apply](https://jobs.apple.com/en-us/details/200611794/software-engineer-is-t-early-career?team=SFTWR) |
@@ -247,7 +235,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 | NetSage | Analytic Developer-Junior | Maryland City, MD | Pending | 2026-07-03 | [Apply](https://netsage.com/careers/current-openings/job?gh_jid=7793281003) |
 | IXL Learning | Software Engineer - New Grad | San Mateo, CA | Pending | 2026-07-03 | [Apply](https://www.ixl.com/company/jobs?gh_jid=8615710002) |
 | IXL Learning | Software Engineer - New Grad | Raleigh-Durham, NC +1 | Pending | 2026-07-03 | [Apply](https://www.ixl.com/company/jobs?gh_jid=8615717002) |
-| Anduril Industries | 2026 Early Career Manufacturing Engineer | Costa Mesa, California, United States; Irvine, California, United States; Santa Ana, California, United States | Pending | 2026-07-02 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5176254007?gh_jid=5176254007) |
+| Anduril | 2026 Early Career Manufacturing Engineer | Costa Mesa, California, United States; Irvine, California, United States; Santa Ana, California, United States | Pending | 2026-07-02 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5176254007?gh_jid=5176254007) |
 | WHOOP | Software Engineer I - Backend | Boston, MA | Pending | 2026-07-02 | [Apply](https://jobs.ashbyhq.com/whoop/0623a9e9-d7bb-4ee5-8100-51c68df81133) |
 | Verisign | Junior Software Engineer | Reston, VA | Pending | 2026-07-02 | [Apply](https://job-boards.greenhouse.io/verisign/jobs/7766899003) |
 | Varsity Brands | Software Engineer - Early Career | Farmers Branch, TX | Pending | 2026-07-02 | [Apply](https://varsitybrands.wd503.myworkdayjobs.com/en-US/ExternalCareerSite/job/TX---Farmers-Branch/Software-Engineer---Early-Career_JR113366-1) |
@@ -257,7 +245,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Amazon | Software Development Engineer I - ML Infra Services - Annapurna Labs | Cupertino, CA | Pending | 2026-07-02 | [Apply](https://www.amazon.jobs/jobs/10464055/apply) |
 | Amazon | Software Development Engineer I - ML Infra Services - Annapurna Labs | Seattle, WA | Pending | 2026-07-02 | [Apply](https://www.amazon.jobs/jobs/10464043/apply) |
 | Amazon | Software Development Engineer I - ML Infra Services - Annapurna Labs | Seattle, WA | Pending | 2026-07-02 | [Apply](https://www.amazon.jobs/jobs/10464040/apply) |
-| northwoodspace | Electrical Engineer (Early Career) | Torrance, CA | Pending | 2026-07-01 | [Apply](https://jobs.ashbyhq.com/northwoodspace/af609880-1e6c-4f89-8594-3c593f6eba0f) |
 | Nightwing | Junior Software Developer | Annapolis Junction, MD | Pending | 2026-07-01 | [Apply](https://nwis.wd12.myworkdayjobs.com/en-US/nw/job/Annapolis-Junction-MD/Junior-Software-Developer_JR101838) |
 | Andrews Cooper | Associate Software Controls Engineer | Corvallis, OR | Pending | 2026-07-01 | [Apply](http://andrewscooper.applytojob.com/apply/z5YlC87LkK/Associate-Software-Controls-Engineer) |
 | Adtran | Software Engineer I | Atlanta, GA | Pending | 2026-07-01 | [Apply](https://adtran.wd3.myworkdayjobs.com/en-US/adtran/job/Atlanta-GA/Software-Engineer-I_R005699) |
@@ -297,7 +284,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 | WHOOP | Software Engineer I - Frontend - Growth | Boston, MA | Pending | 2026-06-26 | [Apply](https://jobs.ashbyhq.com/whoop/ede8ba03-c763-49a1-9e6c-4a296fefd087) |
 | Peraton | Junior Software Data Engineer | Fort Meade, MD | Pending | 2026-06-26 | [Apply](https://careers-peraton.icims.com/jobs/168069/junior-software-data-engineer/job) |
 | CACI | DevOps Engineer - Junior | Denver, CO +2 | Pending | 2026-06-26 | [Apply](https://caci.wd1.myworkdayjobs.com/en-US/external/job/Denver-CO-US/DevOps-Engineer---Junior_327971) |
-| Anduril Industries | Mission Engineer, Air Dominance &amp; Strike, Early Career | Costa Mesa, California, United States | Pending | 2026-06-25 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5174562007?gh_jid=5174562007) |
+| Anduril | Mission Engineer, Air Dominance &amp; Strike, Early Career | Costa Mesa, California, United States | Pending | 2026-06-25 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5174562007?gh_jid=5174562007) |
 | Palantir | Privacy &amp; Civil Liberties Engineer - New Grad | New York, NY | Pending | 2026-06-25 | [Apply](https://jobs.lever.co/palantir/95e0d2b0-437a-4096-a5c6-0f247f426c90) |
 | AST SpaceMobile | ATE Associate Software Engineer | Asti, Italy +1 | Pending | 2026-06-25 | [Apply](https://ast-science.com/company/careers?gh_jid=4708549005) |
 | Wyetech | Software Engineer 1 | Laurel, MD | Pending | 2026-06-25 | [Apply](https://jobs.lever.co/wyetechllc/afdaaf60-9a49-4930-beb8-c68be4fd5f16) |
@@ -305,6 +292,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Litify | Junior Salesforce Developer | Remote - USA | Pending | 2026-06-25 | [Apply](https://job-boards.greenhouse.io/litify/jobs/8027446) |
 | Esri | Software Development Engineer I | St. Louis, MO +1 | Pending | 2026-06-25 | [Apply](https://www.esri.com/careers/5173239007?gh_jid=5173239007) |
 | Astranis Space Technologies | Hardware Design Associate - Software Defined Radio Team - Fall 2026 | San Francisco, CA | Pending | 2026-06-25 | [Apply](https://job-boards.greenhouse.io/astranis/jobs/4691172006) |
+| Roblox | Developer Engagement Representative - ANZ (Australia / New Zealand) (Part-Time Contract) | Remote | Pending | 2026-06-24 | [Apply](https://careers.roblox.com/jobs/8020695?gh_jid=8020695) |
 | ThreatLocker | Junior DevOps Engineer | Orlando, FL | Pending | 2026-06-24 | [Apply](https://job-boards.greenhouse.io/threatlocker/jobs/6100007004) |
 | Saalex | Junior Data Integrity Engineer - Avionics Software &amp; Data Analysis | Lexington Park, MD | Pending | 2026-06-24 | [Apply](https://apply.workable.com/saalex/j/2D1B9D4A3C) |
 | KBR | Junior Software Engineer | Beavercreek, OH | Pending | 2026-06-24 | [Apply](https://kbr.wd5.myworkdayjobs.com/en-US/kbr_careers/job/Beavercreek-Ohio/Junior-Software-Engineer_R2125556) |
@@ -354,14 +342,15 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Savan Group | DOT Junior Software Developer | Vienna, VA | Pending | 2026-06-13 | [Apply](http://savangroup.applytojob.com/apply/lunpwPu4FI/DOT-Junior-Software-Developer) |
 | Blue Cross Blue Shield of Arizona | Business Intelligence Developer-Medicaid - Level I - Remote AZ | AZ Blue Phoenix, AZ | Pending | 2026-06-12 | [Apply](https://bcbsaz.wd1.myworkdayjobs.com/en-US/bcbsazcareers/job/AZ-Blue-Phoenix-AZ-85021/Business-Intelligence-Developer-Medicaid---Level-I--Remote-AZ-_R6047) |
 | Sonos | Junior Embedded Software Development Engineer | Boston, MA +1 | Pending | 2026-06-11 | [Apply](https://sonos.wd1.myworkdayjobs.com/en-US/sonos/job/Boston-MA/Junior-Embedded-Software-Development-Engineer_R2728) |
-| Anduril Industries | 2027 Early Career Software Engineer | Atlanta, Georgia, United States; Boston, Massachusetts, United States; Costa Mesa, California, United States; Irvine, California, United States; Reston, Virginia, United States; Seattle, Washington, United States | Pending | 2026-06-11 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5162263007?gh_jid=5162263007) |
+| Anduril | 2027 Early Career Software Engineer | Atlanta, Georgia, United States; Boston, Massachusetts, United States; Costa Mesa, California, United States; Irvine, California, United States; Reston, Virginia, United States; Seattle, Washington, United States | Pending | 2026-06-11 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5162263007?gh_jid=5162263007) |
+| Roblox | Developer Engagement Representative - Thailand (Part-Time Contract) | Remote | Pending | 2026-06-10 | [Apply](https://careers.roblox.com/jobs/7992558?gh_jid=7992558) |
 | DRS | Software Engineer I | San Diego, CA | Pending | 2026-06-10 | [Apply](https://careers.leonardodrs.com/job/San-Diego-Software-Engineer-CA-92127/1298209000) |
 | Freedom Technology Solutions Group | Junior Software Developer 682 | Annapolis Junction, MD | Pending | 2026-06-10 | [Apply](https://job-boards.greenhouse.io/freedomconsulting/jobs/5160107007) |
 | ENFOS | Software Engineer - 2026 | Durham, NC | Pending | 2026-06-10 | [Apply](https://apply.workable.com/enfos-inc/j/7198DEBEB6) |
 | Amentum | Software Engineer 1 | Fort Meade, MD | Pending | 2026-06-10 | [Apply](https://pae.wd1.myworkdayjobs.com/en-US/amentum_careers/job/US-MD-Fort-Meade/Software-Engineer-1_R0154171) |
 | Amentum | Software Engineer 1 | Fort Meade, MD | Pending | 2026-06-10 | [Apply](https://pae.wd1.myworkdayjobs.com/en-US/amentum_careers/job/US-MD-Fort-Meade/Software-Engineer-1_R0154157) |
 | AAPC | Junior Salesforce Developer | Salt Lake City, UT | Pending | 2026-06-10 | [Apply](http://aapc.applytojob.com/apply/Bwioas9wbW/Junior-Salesforce-Developer) |
-| Collective | Software Engineer (New Grad) | San Francisco | Pending | 2026-06-10 | [Apply](https://jobs.ashbyhq.com/collective/40516856-b29c-4b38-b434-68be5241bacf) |
+| Collective | Software Engineer - New Grad | San Francisco, CA | Pending | 2026-06-10 | [Apply](https://jobs.ashbyhq.com/collective/40516856-b29c-4b38-b434-68be5241bacf) |
 | SpaceX | New Graduate Engineer, Launch &amp; Test (Starship) | Starbase, TX | Pending | 2026-06-09 | [Apply](https://boards.greenhouse.io/spacex/jobs/8578087002?gh_jid=8578087002) |
 | Tesla | Wireless Bluetooth Software Engineer | Palo Alto, CA | Pending | 2026-06-09 | [Apply](https://www.tesla.com/careers/search/job/243519) |
 | Tesla | Software Engineer, AI Systems Performance Modeling, Dojo | Palo Alto, CA | Pending | 2026-06-09 | [Apply](https://www.tesla.com/careers/search/job/244263) |
@@ -379,6 +368,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 | N1 | Software Engineer (Full Stack) | New York City | Pending | 2026-06-06 | [Apply](https://jobs.ashbyhq.com/n1/2213cef6-fbcd-42f7-8e0e-c6a23bfc1119) |
 | N1 | Software Engineer (Backend Rust) | New York City | Pending | 2026-06-06 | [Apply](https://jobs.ashbyhq.com/n1/99a78724-a7eb-4801-9e75-cf4465950567) |
 | Omnicell | Software Engineer I | Cranberry Township, PA | Pending | 2026-06-06 | [Apply](https://elrj.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/search/job/4131) |
+| Roblox | Developer Engagement Representative - Malaysia (Part-Time Contract) | Remote | Pending | 2026-06-05 | [Apply](https://careers.roblox.com/jobs/7978940?gh_jid=7978940) |
 | Torc Robotics | Software Engineer - I - Mission Control | Ann Arbor, MI | Pending | 2026-06-05 | [Apply](https://job-boards.greenhouse.io/torcrobotics/jobs/8566427002) |
 | METECS | Junior Simulation Software Engineer | Houston, TX | Pending | 2026-06-05 | [Apply](http://metecs.applytojob.com/apply/WykvenszhG/Junior-Simulation-Software-Engineer) |
 | KBR | Junior Cloud DevOps Engineer | Sioux Falls, SD | Pending | 2026-06-04 | [Apply](https://kbr.wd5.myworkdayjobs.com/en-US/kbr_careers/job/Sioux-Falls-South-Dakota/Junior-Cloud-DevOps-Engineer_R2124667) |
@@ -450,8 +440,8 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Microchip | Engineer I-Software | Houston, TX | Pending | 2026-05-14 | [Apply](https://microchiphr.wd5.myworkdayjobs.com/en-US/external/job/TX---Houston---Compaq-Center-Dr/Engineer-I-Software_R2074-26-1) |
 | Integrity | Software Engineer I | Urbandale, IA | Pending | 2026-05-14 | [Apply](https://integritymarketing.wd1.myworkdayjobs.com/en-US/integrity/job/Urbandale-IA/Software-Engineer-I_JR4072) |
 | CSCU System Office | Systems Software &amp; Integration Engineer 2026 | Hartford, CT | Pending | 2026-05-14 | [Apply](http://cscusystemoffice.applytojob.com/apply/0hfT9CfgaF/Systems-Software-Integration-Engineer-2026) |
-| Anduril Industries | 2027 Early Career Manufacturing Engineer | Atlanta, Georgia, United States; Boston, Massachusetts, United States; Costa Mesa, California, United States; Irvine, California, United States; Seattle, Washington, United States | Pending | 2026-05-13 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5136970007?gh_jid=5136970007) |
-| Anduril Industries | 2027 Early Career Electrical Engineer | Atlanta, Georgia, United States; Boston, Massachusetts, United States; Costa Mesa, California, United States; Irvine, California, United States; Reston, Virginia, United States; Seattle, Washington, United States | Pending | 2026-05-13 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5136925007?gh_jid=5136925007) |
+| Anduril | 2027 Early Career Manufacturing Engineer | Atlanta, Georgia, United States; Boston, Massachusetts, United States; Costa Mesa, California, United States; Irvine, California, United States; Seattle, Washington, United States | Pending | 2026-05-13 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5136970007?gh_jid=5136970007) |
+| Anduril | 2027 Early Career Electrical Engineer | Atlanta, Georgia, United States; Boston, Massachusetts, United States; Costa Mesa, California, United States; Irvine, California, United States; Reston, Virginia, United States; Seattle, Washington, United States | Pending | 2026-05-13 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5136925007?gh_jid=5136925007) |
 | Technology Service Corporation | Software Engineer I | Silver Spring, MD | Pending | 2026-05-13 | [Apply](https://tsc.wd12.myworkdayjobs.com/en-US/tsc-careers/job/Silver-Spring-MD/Software-Engineer-I_JR2567-1) |
 | PTC | Junior Software Engineer | USA-San Mateo, CA | Pending | 2026-05-13 | [Apply](https://ptc.wd1.myworkdayjobs.com/en-US/ptc/job/USA-San-Mateo-CA/Junior-Software-Engineer_JR112167) |
 | Ellie | Associate Product Developer | Beverly Hills, CA | Pending | 2026-05-13 | [Apply](https://job-boards.greenhouse.io/fambrands/jobs/5218217008) |
@@ -492,7 +482,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Tatitlek | Junior Software Developer | USA | Pending | 2026-04-24 | [Apply](https://careers-tatitlek.icims.com/jobs/2577/junior-software-developer/job) |
 | Intelliforce-IT Solutions Group | Associate Software Engineer | Annapolis Junction, MD | Pending | 2026-04-24 | [Apply](http://intelliforceitsolutionsgroup.applytojob.com/apply/Jwd6IkJeWT/Associate-Software-Engineer) |
 | Wyetech | Software Engineer 1 - Potential Telework | Maryland, USA | Pending | 2026-04-23 | [Apply](https://jobs.lever.co/wyetechllc/00e1c676-92b4-400f-a44d-9a60a9fb88e2) |
-| northwoodspace | Infrastructure Engineer - Early Career | Torrance, CA | Pending | 2026-04-22 | [Apply](https://jobs.ashbyhq.com/northwoodspace/d81a9f1e-002e-4c1a-8b09-8dbac575279c) |
 | Amazon | Software Engineer I - Ad Supply | San Francisco, CA | Pending | 2026-04-21 | [Apply](https://www.amazon.jobs/jobs/10403353/apply) |
 | SBT Global | Junior Web Developer - Bilingual in Korean | Englewood Cliffs, NJ | Pending | 2026-04-16 | [Apply](https://jobs.smartrecruiters.com/SBTGlobalInc/3743990012627536--junior-web-developer-bilingual-in-korean-?oga=true) |
 | ROKT | Junior Software Engineer | New York City, NY | Pending | 2026-04-16 | [Apply](https://apply.workable.com/rokt/j/783A754DDB) |
@@ -518,10 +507,9 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Tesla | Linux Site Reliability Engineer, IT Manufacturing Site Reliability Engineering | Fremont, CA | Pending | 2026-04-12 | [Apply](https://www.tesla.com/careers/search/job/241276) |
 | Intelliforce-IT Solutions Group | Junior Software Developer | Annapolis Junction, MD | Pending | 2026-04-11 | [Apply](http://intelliforceitsolutionsgroup.applytojob.com/apply/sKU9DLXL7x/Junior-Software-Developer) |
 | Acclaim Technical Services | Software Engineer - 2026-0079 | Chantilly, VA | Pending | 2026-04-11 | [Apply](http://acclaimtechnicalservices.applytojob.com/apply/t4iNr7ALfs/Software-Engineer-20260079) |
-| PlayStation | Graduate Engineer | Ireland, Dublin | Pending | 2026-04-10 | [Apply](https://job-boards.greenhouse.io/sonyinteractiveentertainmentglobal/jobs/5889406004) |
 | Credit Genie | New Grad: Software Engineer | New York, NY | Pending | 2026-04-09 | [Apply](https://jobs.ashbyhq.com/creditgenie/016056e0-61cd-4a19-9d42-5f3cd88fed02) |
 | Unlimited | Software Engineer - Junior | San Francisco, CA | Pending | 2026-04-09 | [Apply](https://jobs.ashbyhq.com/unlimitedindustries/5c5706fe-26ae-46d6-8423-e4721a5a98fc) |
-| Zettabyte | Software Engineer (New Grad) | United States | Pending | 2026-04-08 | [Apply](https://jobs.ashbyhq.com/zettabyte-space/50a9c6dc-7225-4ff0-a914-69d1dd325d6a) |
+| Zettabyte | Software Engineer - New Grad | USA | Pending | 2026-04-08 | [Apply](https://jobs.ashbyhq.com/zettabyte-space/50a9c6dc-7225-4ff0-a914-69d1dd325d6a) |
 | SpaceX | New Graduate Engineer, Propulsion (Starship) | Starbase, TX | Pending | 2026-04-07 | [Apply](https://boards.greenhouse.io/spacex/jobs/8497447002?gh_jid=8497447002) |
 | SpaceX | New Graduate Engineer, Mechanical | McGregor, TX | Pending | 2026-04-07 | [Apply](https://boards.greenhouse.io/spacex/jobs/8497524002?gh_jid=8497524002) |
 | LetsGetChecked | Graduate Software Engineer | Remote - USA | Pending | 2026-04-07 | [Apply](https://job-boards.eu.greenhouse.io/letsgetchecked/jobs/4833407101) |
@@ -536,7 +524,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | SOSi | Entry-Level PeopleSoft Software Developer | Charleston, SC | Pending | 2026-04-04 | [Apply](https://jobs.smartrecruiters.com/SOSi1/3743990012453536-entry-level-peoplesoft-software-developer-?oga=true) |
 | Realm | Software Engineer - New Grad | Remote | Pending | 2026-04-04 | [Apply](https://jobs.ashbyhq.com/realmalliance/56d8b433-31ad-43a2-997e-b8538f5f2c9f) |
 | SpaceX | New Graduate Engineer, Software | Hawthorne, CA | Pending | 2026-04-03 | [Apply](https://boards.greenhouse.io/spacex/jobs/8493079002?gh_jid=8493079002) |
-| SpaceX | New Graduate Engineer, Electrical (Starshield) | Hawthorne, CA | Pending | 2026-04-01 | [Apply](https://boards.greenhouse.io/spacex/jobs/8483305002?gh_jid=8483305002) |
 | Aquatic Capital Management | Software Engineer, Early Career | Chicago; New York | Pending | 2026-04-01 | [Apply](https://job-boards.greenhouse.io/aquaticcapitalmanagement/jobs/8489226002) |
 | Qualcomm | Embedded DSP Software Engineer | San Diego, CA | 45% — Spring 2027 timing is unstated; no graduation window or future start date supports eligibility, so the posting appears aimed at a near-term start. | 2026-03-31 | [Apply](https://careers.qualcomm.com/careers/job/446704474013) |
 | T-Rex | Sustainment Software Engineer 1 | Fort Meade, MD | Pending | 2026-03-31 | [Apply](https://www.trexsolutionsllc.com/current-opportunities-at-trex?gh_jid=8486869002) |
@@ -549,7 +536,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Ultra Intelligence &amp; Communications | Software Engineer 1 🇺🇸 | Tampa, FL | Pending | 2026-03-25 | [Apply](https://ultra.wd3.myworkdayjobs.com/en-GB/ultra-careers/job/Tampa-FL-United-States/Software-Engineer-1_REQ-11707-1) |
 | Twitch | Software Engineer I, Commerce Engineering | Seattle, WASan Francisco, CA | Pending | 2026-03-25 | [Apply](https://job-boards.greenhouse.io/twitch/jobs/8459320002) |
 | Twitch | Software Engineer I, Commerce Engineering | San Francisco, CASeattle, WA | Pending | 2026-03-25 | [Apply](https://job-boards.greenhouse.io/twitch/jobs/8457711002) |
-| WHOOP | Software Engineer II (Backend, Business Systems) | Boston, MA | Pending | 2026-03-22 | [Apply](https://jobs.ashbyhq.com/whoop/1f132c91-c960-4d5d-9c9a-fc6d85fe0ed2) |
 | Google | Software Engineer II, Early Career | 12 locationsMountain View, CAKirkland, WALos Angeles, CAMadison, WINew York, NYPalo Alto, CAPittsburgh, PARaleigh, NCDurham, NCSan Bruno, CASeattle, WASunnyvale, CA | Pending | 2026-03-19 | [Apply](https://www.google.com/about/careers/applications/jobs/results/143333237156913862-software-engineer-ii) |
 | northwoodspace | RF Hardware Engineer (Early Career) | Torrance, CA | Pending | 2026-03-04 | [Apply](https://jobs.ashbyhq.com/northwoodspace/5d76a025-bb64-4ddd-8b97-8649c41d89ed) |
 | SpaceX | New Graduate Engineer, Software (Starlink) | Bastrop, TX | Pending | 2026-02-27 | [Apply](https://boards.greenhouse.io/spacex/jobs/8399140002?gh_jid=8399140002) |
@@ -562,7 +548,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Tesla | Software QA Engineer, Document Systems | Fremont, CA | Pending | 2026-02-15 | [Apply](https://www.tesla.com/careers/search/job/262815) |
 | Tesla | Software QA Engineer, Update Systems Validation, Vehicle Software | Palo Alto, CA | Pending | 2026-02-15 | [Apply](https://www.tesla.com/careers/search/job/262739) |
 | Tesla | Software Integration Engineer, Cell Manufacturing | Austin, TX | Pending | 2026-02-15 | [Apply](https://www.tesla.com/careers/search/job/262209) |
-| Freedom Technology Solutions Group | Junior Software Engineer 602 | Annapolis Junction, MD | Pending | 2026-02-11 | [Apply](https://job-boards.greenhouse.io/freedomconsulting/jobs/5049687007) |
 | Amazon | Systems Development Engineer | Seattle, WA | Pending | 2026-02-01 | [Apply](https://www.amazon.jobs/en/jobs/3168547/systems-development-engineer-amazon-foundational-security-services-afss) |
 | Amazon | Systems Development Engineer | Seattle, WA | Pending | 2026-02-01 | [Apply](https://www.amazon.jobs/en/jobs/3168189/systems-development-engineer-amazon-enterprise-engineering-enterprise-engineering) |
 | Amazon | Security Engineer I, Security Incident Response Team (SIRT) | Seattle, WA | Pending | 2026-02-01 | [Apply](https://www.amazon.jobs/en/jobs/3171130/security-engineer-i-security-incident-response-team-sirt-security-incident-response-team-sirt) |
