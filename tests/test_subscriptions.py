@@ -144,6 +144,7 @@ def test_signup_route_sends_confirmation_then_activates(monkeypatch):
         assert confirmation.status_code == 200
         assert "Email alerts confirmed" in confirmation.text
         assert f"/static/styles.css?v={main.STYLES_VERSION}" in confirmation.text
+        assert 'href="http://testserver/static/favicon.svg"' in confirmation.text
         assert 'class="subscription-card"' in confirmation.text
         assert '<a class="button-link" href="/">Back to the job board</a>' in confirmation.text
 

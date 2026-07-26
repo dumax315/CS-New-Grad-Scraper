@@ -137,6 +137,7 @@ def test_index_hides_resume_fit_and_resume_page_shows_both_evaluations():
     assert response.status_code == 200
     assert f'href="http://testserver/static/styles.css?v={main.STYLES_VERSION}"' in html
     assert f'src="http://testserver/static/filters.js?v={main.FILTERS_VERSION}"' in html
+    assert 'href="http://testserver/static/favicon.svg"' in html
     assert "<h1>New Grad SWE Jobs</h1>" in html
     assert "Updated twice daily" in html
     assert 'aria-label="Filter job listings"' in html
