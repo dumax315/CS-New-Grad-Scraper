@@ -34,15 +34,15 @@ CURATED_SOURCES = (
 )
 
 DIRECT_SOURCES = (
-    # Reviewed pilot definitions remain disabled until live fetching is
-    # explicitly authorized for deployment.
+    # Initial reviewed pilot, validated against public board endpoints before
+    # scheduled activation.
     SourceSpec(
         key="greenhouse:figma",
         name="Figma Careers",
         kind="greenhouse",
         public_url="https://boards.greenhouse.io/figma",
         parameters={"tenant": "figma", "employer": "Figma"},
-        enabled=False,
+        enabled=True,
     ),
     SourceSpec(
         key="lever:palantir",
@@ -50,7 +50,7 @@ DIRECT_SOURCES = (
         kind="lever",
         public_url="https://jobs.lever.co/palantir",
         parameters={"tenant": "palantir", "employer": "Palantir"},
-        enabled=False,
+        enabled=True,
     ),
     SourceSpec(
         key="ashby:ramp",
@@ -58,7 +58,7 @@ DIRECT_SOURCES = (
         kind="ashby",
         public_url="https://jobs.ashbyhq.com/ramp",
         parameters={"tenant": "ramp", "employer": "Ramp"},
-        enabled=False,
+        enabled=True,
     ),
 )
 SOURCE_REGISTRY = CURATED_SOURCES + DIRECT_SOURCES

@@ -86,12 +86,18 @@ def test_two_source_baseline_preserves_counts_order_and_canonical_overlap():
 
     def handler(request: httpx.Request) -> httpx.Response:
         requested_urls.append(str(request.url))
-        return httpx.Response(200, text=bodies[str(request.url)])
+        url = str(request.url)
+        if url in bodies:
+            return httpx.Response(200, text=bodies[url])
+        if request.url.host == "api.lever.co":
+            return httpx.Response(200, json=[])
+        return httpx.Response(200, json={"jobs": []})
 
     with httpx.Client(transport=httpx.MockTransport(handler)) as client:
         candidates = fetch_candidates(client)
 
-    assert requested_urls == [source.raw_url for source in SOURCES]
+    assert requested_urls[:2] == [source.raw_url for source in SOURCES]
+    assert len(requested_urls) == 5
     assert [candidate.company for candidate in candidates] == [
         "Acme",
         "Beta",
@@ -116,7 +122,7 @@ def fetch_batch_with_statuses(statuses):
         return httpx.Response(status, text=valid_markdown)
 
     with httpx.Client(transport=httpx.MockTransport(handler)) as client:
-        return fetch_source_batch(client)
+        return fetch_source_batch(client, SOURCES)
 
 
 def test_first_source_failure_does_not_block_second_source():

@@ -11,7 +11,7 @@ from app.ingestion import record_source_result, run_ingestion, store_candidates
 from app.main import visible_listing_condition
 from app.models import Listing, ListingSource, SourceRun
 from app.source_types import SourceBatch, SourceFetchResult
-from app.sources import SOURCES, Candidate, fetch_candidates
+from app.sources import SOURCES, Candidate, fetch_source_batch
 
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -86,7 +86,7 @@ def test_curated_source_overlap_is_one_listing_with_two_provenance_rows():
         return httpx.Response(200, text=bodies[str(request.url)])
 
     with httpx.Client(transport=httpx.MockTransport(handler)) as client:
-        candidates = fetch_candidates(client)
+        candidates = fetch_source_batch(client, SOURCES).candidates
 
     engine = create_engine("sqlite://")
     Base.metadata.create_all(engine)
