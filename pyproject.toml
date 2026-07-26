@@ -31,6 +31,7 @@ include = ["app*"]
 
 [tool.setuptools.package-data]
 app = [
+  "approved_direct_sources.json",
   "static/*.css",
   "templates/*.html",
   "templates/email/*.html",

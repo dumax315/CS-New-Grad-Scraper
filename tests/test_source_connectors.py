@@ -172,18 +172,21 @@ def test_connector_timeout_and_board_schema_failure_are_isolated():
     assert malformed.error_category == "parser"
 
 
-def test_direct_pilot_contains_only_the_reviewed_enabled_boards():
-    assert 1 <= len(DIRECT_SOURCES) <= 25
+def test_direct_registry_contains_all_reviewed_discovered_boards():
+    assert len(DIRECT_SOURCES) == 100
     assert {source.kind for source in DIRECT_SOURCES} == {
         "ashby",
         "greenhouse",
         "lever",
     }
-    assert {source.key for source in DIRECT_SOURCES if source.enabled} == {
+    assert {
+        "ashby:notion",
         "ashby:ramp",
         "greenhouse:figma",
         "lever:palantir",
-    }
+    } <= {source.key for source in DIRECT_SOURCES if source.enabled}
+    assert len({source.key for source in DIRECT_SOURCES}) == len(DIRECT_SOURCES)
+    assert all(source.enabled for source in DIRECT_SOURCES)
     assert [source.key for source in CURATED_SOURCES] == [
         "markdown:speedyapply-2027-swe",
         "markdown:vansh-new-grad-2027",
