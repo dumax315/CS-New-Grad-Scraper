@@ -597,3 +597,78 @@ def test_ingestion_cycle_can_skip_codex_and_force_initial_digest(monkeypatch):
     assert [item.application_url for item in captured["listings"]] == [
         "https://jobs.example/101",
     ]
+
+
+def test_ingestion_cycle_publishes_evaluated_visible_snapshot(monkeypatch):
+    engine = create_engine("sqlite://")
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
+    Base.metadata.create_all(engine)
+    captured = {}
+
+    def fake_ingestion(session):
+        new_listing = listing(102)
+        session.add(new_listing)
+        session.commit()
+        return [new_listing]
+
+    def fake_evaluate(session, listings):
+        listings[0].fit_confidence = 87
+        session.commit()
+        return 1
+
+    def fake_publish(section, *, config):
+        captured["section"] = section
+        captured["config"] = config
+        return "published"
+
+    monkeypatch.setattr(worker, "SessionLocal", Session)
+    monkeypatch.setattr(worker, "run_ingestion", fake_ingestion)
+    monkeypatch.setattr(worker, "evaluate_new_listings", fake_evaluate)
+    monkeypatch.setattr(worker, "publish_jobs_section", fake_publish)
+    monkeypatch.setattr(worker, "send_new_jobs_digest", lambda *args, **kwargs: False)
+    configured = Settings(
+        public_url="https://board.example",
+        github_publish_token="secret-token",
+        github_publish_repository="owner/repository",
+    )
+    monkeypatch.setattr(worker, "settings", configured)
+
+    result = worker.run_ingestion_cycle()
+
+    assert result.evaluated == 1
+    assert "| Acme | Software Engineer 102 | Remote | — | 87% |" in captured["section"]
+    assert "[Browse the searchable job board](https://board.example)." in captured["section"]
+    assert captured["config"] is configured
+
+
+def test_ingestion_cycle_continues_digest_when_readme_publish_raises(monkeypatch):
+    engine = create_engine("sqlite://")
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
+    Base.metadata.create_all(engine)
+    digest_called = False
+
+    def fake_ingestion(session):
+        new_listing = listing(103)
+        session.add(new_listing)
+        session.commit()
+        return [new_listing]
+
+    def failed_publish(*args, **kwargs):
+        raise RuntimeError("simulated GitHub failure")
+
+    def fake_send(*args, **kwargs):
+        nonlocal digest_called
+        digest_called = True
+        return True
+
+    monkeypatch.setattr(worker, "SessionLocal", Session)
+    monkeypatch.setattr(worker, "run_ingestion", fake_ingestion)
+    monkeypatch.setattr(worker, "evaluate_new_listings", lambda session, listings: 0)
+    monkeypatch.setattr(worker, "publish_jobs_section", failed_publish)
+    monkeypatch.setattr(worker, "send_new_jobs_digest", fake_send)
+    monkeypatch.setattr(worker, "settings", Settings(send_initial_digest=True))
+
+    result = worker.run_ingestion_cycle()
+
+    assert digest_called is True
+    assert result.digest_sent is True

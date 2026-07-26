@@ -24,6 +24,9 @@ class Settings:
     codex_timeout_seconds: int = int(os.getenv("CODEX_TIMEOUT_SECONDS", "120"))
     codex_max_evaluations: int = int(os.getenv("CODEX_MAX_EVALUATIONS", "10"))
     codex_home: str = os.getenv("CODEX_HOME", "/var/lib/codex")
+    github_publish_token: str = os.getenv("GITHUB_PUBLISH_TOKEN", "")
+    github_publish_repository: str = os.getenv("GITHUB_PUBLISH_REPOSITORY", "")
+    github_publish_branch: str = os.getenv("GITHUB_PUBLISH_BRANCH", "main")
 
 
 settings = Settings()

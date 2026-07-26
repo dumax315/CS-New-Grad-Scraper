@@ -2,6 +2,12 @@
 
 A small, public job board that aggregates software-engineering new-grad listings from two curated GitHub repositories and emails a digest when new roles appear.
 
+<!-- BEGIN GENERATED JOBS -->
+## Current Openings
+
+The scheduled worker will publish the current openings here after deployment.
+<!-- END GENERATED JOBS -->
+
 ## Prerequisites
 
 Docker Compose is the primary local and production workflow. Python development
@@ -114,6 +120,17 @@ When intentionally changing dependencies, update `pyproject.toml`, run
 Create a Docker Compose resource from this repository, set its Compose file location to `/docker-compose.yml`, add the variables in `.env.example` as Coolify secrets, attach a public domain to `web` on port `8000`, and deploy. Keep the generated Postgres volume persistent. The `worker` is internal and does not need a domain. The main Compose file intentionally has no host-port mapping: Coolify's proxy routes traffic to the internal `web:8000` service. `docker-compose.override.yml` adds `localhost:8000` automatically for local development.
 
 The worker is the only component that fetches GitHub and sends scheduled bulk alerts. The web service sends only user-initiated subscription confirmation messages. New subscribers must follow the confirmation link within 48 hours and every subscriber digest includes an unsubscribe link. The worker's initial import establishes a baseline without emailing every existing listing; later runs email only newly inserted, deduplicated application URLs. `ALERT_RECIPIENT` continues to receive an operator copy, while confirmed subscribers receive individualized messages. Set `SEND_INITIAL_DIGEST=true` if you want the initial full digest.
+
+To publish the current visible listings in the generated section at the top of this
+README, create a fine-grained GitHub personal access token restricted to this repository
+with **Contents: Read and write** permission. Add it to the worker's Coolify environment
+as `GITHUB_PUBLISH_TOKEN`, set
+`GITHUB_PUBLISH_REPOSITORY=dumax315/CS-New-Grad-Scraper`, and leave
+`GITHUB_PUBLISH_BRANCH=main`. Publishing is disabled when the token or repository is
+blank. The worker preserves all README content outside the generated markers and skips
+the commit when the table has not changed. A changed table creates a commit on `main`
+and therefore triggers the repository's normal Coolify redeployment; the restarted
+worker sees identical content and does not create another commit.
 
 After each ingestion, the worker scrapes the actual application pages for up to `CODEX_MAX_EVALUATIONS` new listings (10 by default) and runs the scraped text through `codex exec` in non-interactive, ephemeral, read-only mode. Set `CODEX_MAX_EVALUATIONS=50` in production to review up to 50 new listings per run. Codex returns two assessments: the original Spring 2027 application fit, where hiring timing remains a gate, and a separate resume fit that compares the trusted candidate profile in `TheoHalpernResume.md` with the role while ignoring graduation and start-date timing. The resume's name and contact header are omitted from the model prompt because they are not relevant to fit. Both percentages and their short reasoning are stored with the listing and displayed on the board and in email digests. `CODEX_MODEL` defaults to the cost-efficient `gpt-5.6-luna`; `CODEX_TIMEOUT_SECONDS` controls the per-listing timeout.
 

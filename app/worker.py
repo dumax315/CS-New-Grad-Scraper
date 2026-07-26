@@ -20,7 +20,9 @@ from sqlalchemy.orm import Session, selectinload
 from app.config import settings
 from app.database import SessionLocal, create_tables
 from app.emailer import DigestRecipient, send_new_jobs_digest
+from app.github_publisher import publish_jobs_section, render_jobs_section
 from app.ingestion import run_ingestion
+from app.listing_queries import visible_listing_condition, visible_listing_order
 from app.models import Listing, Subscriber
 from app.subscriptions import unsubscribe_token
 
@@ -530,6 +532,16 @@ def run_ingestion_cycle(
             logger.info("Running scheduled scrape")
         new_listings = run_ingestion(session)
         evaluated = evaluate_new_listings(session, new_listings) if review_with_codex else 0
+        readme_section = render_jobs_section(
+            session.scalars(
+                select(Listing)
+                .where(visible_listing_condition(
+                    lifecycle_visibility=settings.lifecycle_visibility,
+                ))
+                .order_by(*visible_listing_order())
+            ).all(),
+            public_url=settings.public_url,
+        )
         new_listing_ids = [listing.id for listing in new_listings]
         notification_listings = list(session.scalars(
             select(Listing)
@@ -554,6 +566,11 @@ def run_ingestion_cycle(
                 )
                 for subscriber in subscribers
             ]
+    try:
+        publish_status = publish_jobs_section(readme_section, config=settings)
+    except Exception:
+        logger.exception("Could not publish GitHub README jobs table")
+        publish_status = "failed"
     should_send_digest = force_digest or settings.send_initial_digest or not is_initial_run
     sent = send_new_jobs_digest(
         notification_listings,
@@ -566,9 +583,11 @@ def run_ingestion_cycle(
         initial_run=is_initial_run,
     )
     logger.info(
-        "Ingestion completed: %s new listings; %s evaluated; digest sent=%s",
+        "Ingestion completed: %s new listings; %s evaluated; "
+        "README publish=%s; digest sent=%s",
         result.new_listings,
         result.evaluated,
+        publish_status,
         result.digest_sent,
     )
     if is_initial_run and not new_listings:

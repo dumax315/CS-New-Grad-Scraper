@@ -33,7 +33,11 @@ services:
     build: .
     restart: unless-stopped
     command: ["python", "-m", "app.worker"]
-    environment: *app-env
+    environment:
+      <<: *app-env
+      GITHUB_PUBLISH_TOKEN: ${GITHUB_PUBLISH_TOKEN:-}
+      GITHUB_PUBLISH_REPOSITORY: ${GITHUB_PUBLISH_REPOSITORY:-}
+      GITHUB_PUBLISH_BRANCH: ${GITHUB_PUBLISH_BRANCH:-main}
     volumes:
       - codex_data:/var/lib/codex
     depends_on:

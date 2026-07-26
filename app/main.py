@@ -1,6 +1,6 @@
 from collections.abc import Iterable
 from contextlib import asynccontextmanager
-from datetime import date, datetime, time, timedelta, timezone
+from datetime import date
 import hashlib
 from pathlib import Path
 import smtplib
@@ -10,13 +10,17 @@ from fastapi import Depends, FastAPI, Form, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import and_, or_, select
+from sqlalchemy import or_, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, selectinload
 
 from app.config import settings
 from app.database import SessionLocal, create_tables
 from app.emailer import send_confirmation_email
+from app.listing_queries import (
+    visible_listing_condition as shared_visible_listing_condition,
+    visible_listing_order,
+)
 from app.models import Listing, ListingSource
 from app.presentation import present_listings
 from app.subscriptions import (
@@ -29,15 +33,10 @@ from app.subscriptions import (
 
 
 def visible_listing_condition(today: date | None = None):
-    cutoff_date = (today or date.today()) - timedelta(days=365)
-    cutoff_time = datetime.combine(cutoff_date, time.min, tzinfo=timezone.utc)
-    freshness_condition = or_(
-        Listing.posted_at >= cutoff_date,
-        and_(Listing.posted_at.is_(None), Listing.first_seen_at >= cutoff_time),
+    return shared_visible_listing_condition(
+        today,
+        lifecycle_visibility=settings.lifecycle_visibility,
     )
-    if not settings.lifecycle_visibility:
-        return freshness_condition
-    return and_(Listing.is_open.is_(True), freshness_condition)
 
 
 @asynccontextmanager
@@ -132,8 +131,11 @@ def _render_job_board(
     show_resume_fit: bool,
     board_path: str,
 ) -> HTMLResponse:
-    statement = select(Listing).where(visible_listing_condition()).options(selectinload(Listing.sources)).order_by(
-        Listing.posted_at.desc().nulls_last(), Listing.first_seen_at.desc(),
+    statement = (
+        select(Listing)
+        .where(visible_listing_condition())
+        .options(selectinload(Listing.sources))
+        .order_by(*visible_listing_order())
     )
     if q:
         term = f"%{q.strip()}%"
