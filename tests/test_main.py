@@ -164,6 +164,11 @@ def test_index_hides_resume_fit_and_resume_page_shows_both_evaluations():
     assert "Acme &amp; &lt;Partners&gt;" in html
     assert "Curated &amp; &lt;List&gt;" in html
     assert "Company site" in html
+    github_group = html.index('<optgroup label="GitHub lists">')
+    job_board_group = html.index('<optgroup label="Company job boards">')
+    assert github_group < job_board_group
+    assert github_group < html.index('value="Curated &amp; &lt;List&gt;"') < job_board_group
+    assert job_board_group < html.index('value="Company site"')
     assert 'href="https://jobs.example/apply?a=1&amp;b=2" target="_blank" rel="noopener">Apply' in html
     assert 'href="https://github.com/example/list?a=1&amp;b=2" target="_blank" rel="noopener">Curated &amp; &lt;List&gt;</a>' in html
     assert 'id="email-signup"' in html

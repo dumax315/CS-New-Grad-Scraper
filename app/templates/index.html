@@ -26,9 +26,20 @@
             <span>Source</span>
             <select name="source">
               <option value="">All sources</option>
-              {% for name in source_names %}
-              <option value="{{ name }}" {% if selected_source == name %}selected{% endif %}>{{ name }}</option>
-              {% endfor %}
+              {% if github_source_names %}
+              <optgroup label="GitHub lists">
+                {% for name in github_source_names %}
+                <option value="{{ name }}" {% if selected_source == name %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+              </optgroup>
+              {% endif %}
+              {% if job_board_source_names %}
+              <optgroup label="Company job boards">
+                {% for name in job_board_source_names %}
+                <option value="{{ name }}" {% if selected_source == name %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+              </optgroup>
+              {% endif %}
             </select>
           </label>
           <button class="filter-submit" type="submit">Filter</button>

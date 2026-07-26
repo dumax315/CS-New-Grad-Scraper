@@ -1,9 +1,10 @@
+from collections.abc import Iterable
 from contextlib import asynccontextmanager
 from datetime import date, datetime, time, timedelta, timezone
 import hashlib
 from pathlib import Path
 import smtplib
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit
 
 from fastapi import Depends, FastAPI, Form, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -60,6 +61,27 @@ templates = Jinja2Templates(directory="app/templates")
 def get_session():
     with SessionLocal() as session:
         yield session
+
+
+def _group_source_names(
+    source_rows: Iterable[tuple[str, str | None, str]],
+) -> tuple[list[str], list[str]]:
+    github_source_names: set[str] = set()
+    job_board_source_names: set[str] = set()
+
+    for source_name, source_key, source_url in source_rows:
+        source_hostname = (urlsplit(source_url).hostname or "").lower()
+        is_github_source = (source_key or "").startswith("markdown:") or source_hostname in {
+            "github.com",
+            "raw.githubusercontent.com",
+        }
+        if is_github_source:
+            github_source_names.add(source_name)
+        else:
+            job_board_source_names.add(source_name)
+
+    job_board_source_names -= github_source_names
+    return sorted(github_source_names), sorted(job_board_source_names)
 
 
 @app.get("/health")
@@ -119,7 +141,14 @@ def _render_job_board(
     if source:
         statement = statement.where(Listing.sources.any(source_name=source))
     listings = session.scalars(statement).all()
-    source_names = session.scalars(select(ListingSource.source_name).distinct().order_by(ListingSource.source_name)).all()
+    source_rows = session.execute(
+        select(
+            ListingSource.source_name,
+            ListingSource.source_key,
+            ListingSource.source_url,
+        ).distinct()
+    ).all()
+    github_source_names, job_board_source_names = _group_source_names(source_rows)
     subscription_notices = {
         "check-email": (
             "success",
@@ -130,7 +159,9 @@ def _render_job_board(
         "unavailable": ("error", "Email signup is temporarily unavailable."),
     }
     return templates.TemplateResponse(request, "index.html", {
-        "jobs": present_listings(listings), "source_names": source_names,
+        "jobs": present_listings(listings),
+        "github_source_names": github_source_names,
+        "job_board_source_names": job_board_source_names,
         "q": q, "selected_source": source,
         "styles_version": STYLES_VERSION,
         "filters_version": FILTERS_VERSION,
