@@ -115,7 +115,7 @@ Create a Docker Compose resource from this repository, set its Compose file loca
 
 The worker is the only component that fetches GitHub and sends scheduled bulk alerts. The web service sends only user-initiated subscription confirmation messages. New subscribers must follow the confirmation link within 48 hours and every subscriber digest includes an unsubscribe link. The worker's initial import establishes a baseline without emailing every existing listing; later runs email only newly inserted, deduplicated application URLs. `ALERT_RECIPIENT` continues to receive an operator copy, while confirmed subscribers receive individualized messages. Set `SEND_INITIAL_DIGEST=true` if you want the initial full digest.
 
-After each ingestion, the worker scrapes the actual application pages for the first 10 new listings and runs the scraped text through `codex exec` in non-interactive, ephemeral, read-only mode. Codex returns two assessments: the original Spring 2027 application fit, where hiring timing remains a gate, and a separate resume fit that compares the trusted candidate profile in `TheoHalpernResume.md` with the role while ignoring graduation and start-date timing. The resume's name and contact header are omitted from the model prompt because they are not relevant to fit. Both percentages and their short reasoning are stored with the listing and displayed on the board and in email digests. `CODEX_MODEL` defaults to the cost-efficient `gpt-5.6-luna`; `CODEX_TIMEOUT_SECONDS` controls the per-listing timeout.
+After each ingestion, the worker scrapes the actual application pages for up to `CODEX_MAX_EVALUATIONS` new listings (10 by default) and runs the scraped text through `codex exec` in non-interactive, ephemeral, read-only mode. Set `CODEX_MAX_EVALUATIONS=50` in production to review up to 50 new listings per run. Codex returns two assessments: the original Spring 2027 application fit, where hiring timing remains a gate, and a separate resume fit that compares the trusted candidate profile in `TheoHalpernResume.md` with the role while ignoring graduation and start-date timing. The resume's name and contact header are omitted from the model prompt because they are not relevant to fit. Both percentages and their short reasoning are stored with the listing and displayed on the board and in email digests. `CODEX_MODEL` defaults to the cost-efficient `gpt-5.6-luna`; `CODEX_TIMEOUT_SECONDS` controls the per-listing timeout.
 
 The scraper reads standard HTML and JobPosting JSON-LD, and uses Workday's structured
 job endpoint for client-rendered Workday listings. The board hides listings with a
@@ -140,7 +140,7 @@ Review the resulting diff before committing it because PDF extraction can lose v
 structure such as headings or multi-column ordering.
 
 To evaluate every unfinished listing posted in the last 10 days, bypassing the
-scheduled worker's 10-listing cap, run this inside the Coolify `worker` terminal:
+scheduled worker's configured per-run cap, run this inside the Coolify `worker` terminal:
 
 ```sh
 python -m app.backfill --days 10
@@ -161,4 +161,4 @@ To use a ChatGPT/Codex account instead, leave `CODEX_API_KEY` blank, deploy once
 codex login --device-auth
 ```
 
-Open the URL printed by Codex on your own computer, enter the displayed code, verify the container with `codex login status`, and restart the worker service once. The initial batch selection is persisted, so the restart retries the same first 10 jobs if the first evaluation ran before login was ready. The `codex_data` volume persists and refreshes the login stored under `/var/lib/codex` across later worker redeployments. Treat that volume as a secret: anyone who can read it can use the signed-in account.
+Open the URL printed by Codex on your own computer, enter the displayed code, verify the container with `codex login status`, and restart the worker service once. The initial batch selection is persisted, so the restart retries the same selected batch if the first evaluation ran before login was ready. The `codex_data` volume persists and refreshes the login stored under `/var/lib/codex` across later worker redeployments. Treat that volume as a secret: anyone who can read it can use the signed-in account.

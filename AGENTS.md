@@ -88,9 +88,9 @@ unless the user asks for that external effect.
   all other notification delivery out of web requests.
 - `Listing.application_url` is the listing deduplication key. Preserve that
   behavior unless a schema and migration change intentionally replaces it.
-- Scheduled runs evaluate at most 10 newly selected listings. Selection is
-  persisted so a failed or unauthenticated worker restart retries the same
-  batch.
+- Scheduled runs evaluate at most `CODEX_MAX_EVALUATIONS` newly selected
+  listings (10 by default). Selection is persisted so a failed or
+  unauthenticated worker restart retries the same batch.
 - Fit evaluation treats Spring 2027 timing as a gating requirement. Do not
   weaken that prompt or silently reinterpret the score as offer probability.
 - The web board hides known postings older than 365 days. Unknown posting

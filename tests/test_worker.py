@@ -247,6 +247,7 @@ def test_evaluate_new_listings_caps_each_run_at_ten(monkeypatch):
         seen.append(url)
         return "job text"
 
+    monkeypatch.setattr(worker, "settings", Settings(codex_max_evaluations=10))
     monkeypatch.setattr(worker, "scrape_job_listing", fake_scrape)
     monkeypatch.setattr(
         worker,
@@ -266,6 +267,31 @@ def test_evaluate_new_listings_caps_each_run_at_ten(monkeypatch):
     assert all(job.fit_confidence is None for job in jobs[10:])
     assert all(job.resume_fit_confidence is None for job in jobs[10:])
     assert all(job.fit_selected_at is None for job in jobs[10:])
+
+
+def test_evaluate_new_listings_uses_configured_cap(monkeypatch):
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
+    jobs = [listing(index) for index in range(4)]
+    seen = []
+
+    monkeypatch.setattr(worker, "settings", Settings(codex_max_evaluations=3))
+    monkeypatch.setattr(worker, "scrape_job_listing", lambda url: "job text")
+
+    def fake_assessment(job, text):
+        seen.append(job.application_url)
+        return assessment()
+
+    monkeypatch.setattr(worker, "run_codex_assessment", fake_assessment)
+
+    with Session() as session:
+        session.add_all(jobs)
+        session.commit()
+        assert worker.evaluate_new_listings(session, jobs) == 3
+
+    assert len(seen) == 3
+    assert sum(job.fit_selected_at is not None for job in jobs) == 3
 
 
 def test_selected_jobs_are_retried_after_worker_restart(monkeypatch):

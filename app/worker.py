@@ -27,7 +27,6 @@ from app.subscriptions import unsubscribe_token
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
 
-MAX_CODEX_EVALUATIONS = 10
 MAX_JOB_TEXT_CHARS = 30_000
 DEFAULT_RESUME_FILENAME = "TheoHalpernResume.md"
 FIT_RESULT_RE = re.compile(r"^(100|[1-9]?\d)%\s+—\s+(\S.+)$")
@@ -458,17 +457,17 @@ def evaluate_new_listings(session: Session, listings: list[Listing]) -> int:
         select(Listing)
         .where(Listing.fit_selected_at.is_not(None), Listing.fit_evaluated_at.is_(None))
         .order_by(Listing.fit_selected_at, Listing.id)
-        .limit(MAX_CODEX_EVALUATIONS)
+        .limit(settings.codex_max_evaluations)
     ).all()
     if selected:
         return evaluate_listings(session, list(selected))
 
     ranked = rank_new_listings(listings)
-    newly_selected = ranked[:MAX_CODEX_EVALUATIONS]
+    newly_selected = ranked[:settings.codex_max_evaluations]
     if len(ranked) > len(newly_selected):
         logger.info(
             "Capping Codex evaluations at the highest-priority %s of %s new listings",
-            MAX_CODEX_EVALUATIONS,
+            settings.codex_max_evaluations,
             len(ranked),
         )
     selected_at = datetime.now(timezone.utc)
@@ -477,13 +476,13 @@ def evaluate_new_listings(session: Session, listings: list[Listing]) -> int:
     session.commit()
 
     # A deployment may ingest before the operator completes device login.
-    # Persisting selection lets a worker restart retry only the same first 10
+    # Persisting selection lets a worker restart retry only the same batch
     # rather than silently losing or expanding that batch.
     selected = session.scalars(
         select(Listing)
         .where(Listing.fit_selected_at.is_not(None), Listing.fit_evaluated_at.is_(None))
         .order_by(Listing.fit_selected_at, Listing.id)
-        .limit(MAX_CODEX_EVALUATIONS)
+        .limit(settings.codex_max_evaluations)
     ).all()
     return evaluate_listings(session, list(selected))
 

@@ -22,6 +22,7 @@ class Settings:
     ).lower() == "true"
     codex_model: str = os.getenv("CODEX_MODEL", "gpt-5.6-luna")
     codex_timeout_seconds: int = int(os.getenv("CODEX_TIMEOUT_SECONDS", "120"))
+    codex_max_evaluations: int = int(os.getenv("CODEX_MAX_EVALUATIONS", "10"))
     codex_home: str = os.getenv("CODEX_HOME", "/var/lib/codex")
 
 
