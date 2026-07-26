@@ -7,9 +7,9 @@ from sqlalchemy.orm import sessionmaker
 
 from app import ingestion
 from app.database import Base
-from app.ingestion import run_ingestion, store_candidates
+from app.ingestion import record_source_result, run_ingestion, store_candidates
 from app.main import visible_listing_condition
-from app.models import Listing, SourceRun
+from app.models import Listing, ListingSource, SourceRun
 from app.source_types import SourceBatch, SourceFetchResult
 from app.sources import SOURCES, Candidate, fetch_candidates
 
@@ -175,3 +175,109 @@ def test_failed_source_run_does_not_modify_existing_listings(monkeypatch):
 
         assert listing.last_seen_at == before
         assert session.query(SourceRun).one().status == "failed"
+
+
+def lifecycle_candidate(
+    source_key: str,
+    source_name: str,
+    url: str = "https://jobs.example/lifecycle",
+) -> Candidate:
+    return Candidate(
+        "Acme",
+        "New Graduate Software Engineer",
+        "Remote",
+        url,
+        source_name,
+        f"https://sources.example/{source_key}",
+        source_key=source_key,
+        scope_decision="include_explicit",
+    )
+
+
+def test_lifecycle_requires_two_successful_misses_and_all_sources_inactive():
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
+    source_a = lifecycle_candidate("markdown:a", "Source A")
+    source_b = lifecycle_candidate("markdown:b", "Source B")
+
+    with Session() as session:
+        assert len(record_source_result(
+            session,
+            source_result("markdown:a", candidates=(source_a,), fetched_count=1),
+        )) == 1
+        assert record_source_result(
+            session,
+            source_result("markdown:b", candidates=(source_b,), fetched_count=1),
+        ) == []
+
+        record_source_result(session, source_result("markdown:a"))
+        source_a_row = session.scalar(select(ListingSource).where(
+            ListingSource.source_key == "markdown:a",
+        ))
+        listing = session.query(Listing).one()
+        assert source_a_row.consecutive_misses == 1
+        assert source_a_row.is_active is True
+        assert listing.is_open is True
+
+        record_source_result(session, source_result("markdown:a"))
+        session.refresh(source_a_row)
+        session.refresh(listing)
+        assert source_a_row.consecutive_misses == 2
+        assert source_a_row.is_active is False
+        assert listing.is_open is True
+
+        record_source_result(
+            session,
+            source_result("markdown:b", succeeded=False),
+        )
+        source_b_row = session.scalar(select(ListingSource).where(
+            ListingSource.source_key == "markdown:b",
+        ))
+        assert source_b_row.consecutive_misses == 0
+        assert source_b_row.is_active is True
+        assert listing.is_open is True
+
+        record_source_result(session, source_result("markdown:b"))
+        record_source_result(session, source_result("markdown:b"))
+        session.refresh(source_b_row)
+        session.refresh(listing)
+        assert source_b_row.is_active is False
+        assert listing.is_open is False
+        assert listing.closed_at is not None
+        assert session.scalar(
+            select(func.count(Listing.id)).where(
+                visible_listing_condition(date(2026, 7, 25)),
+            ),
+        ) == 0
+
+
+def test_reappearing_listing_reopens_without_becoming_new_again():
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
+    candidate = lifecycle_candidate("greenhouse:acme", "Acme Careers")
+
+    with Session() as session:
+        assert len(record_source_result(
+            session,
+            source_result("greenhouse:acme", candidates=(candidate,), fetched_count=1),
+        )) == 1
+        record_source_result(session, source_result("greenhouse:acme"))
+        record_source_result(session, source_result("greenhouse:acme"))
+        listing = session.query(Listing).one()
+        assert listing.is_open is False
+
+        reopened = record_source_result(
+            session,
+            source_result("greenhouse:acme", candidates=(candidate,), fetched_count=1),
+        )
+        source = session.query(ListingSource).one()
+        session.refresh(listing)
+
+        assert reopened == []
+        assert listing.is_open is True
+        assert listing.closed_at is None
+        assert source.is_active is True
+        assert source.consecutive_misses == 0
+        assert source.closed_at is None

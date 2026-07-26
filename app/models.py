@@ -22,6 +22,8 @@ class Listing(Base):
     scope_decision: Mapped[str | None] = mapped_column(String(30), nullable=True)
     timing_explicit: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
     exact_posted_date: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    is_open: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
+    closed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     first_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     fit_confidence: Mapped[int | None] = mapped_column(Integer, nullable=True)
@@ -41,12 +43,26 @@ class Listing(Base):
 
 class ListingSource(Base):
     __tablename__ = "listing_sources"
-    __table_args__ = (UniqueConstraint("listing_id", "source_name", name="uq_listing_source"),)
+    __table_args__ = (
+        UniqueConstraint(
+            "listing_id",
+            "source_key",
+            name="uq_listing_source_key",
+        ),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     listing_id: Mapped[int] = mapped_column(ForeignKey("listings.id", ondelete="CASCADE"))
     source_name: Mapped[str] = mapped_column(String(100))
     source_url: Mapped[str] = mapped_column(Text)
+    source_key: Mapped[str | None] = mapped_column(String(150), nullable=True, index=True)
+    source_external_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    source_posted_at: Mapped[date | None] = mapped_column(Date, nullable=True)
+    first_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    consecutive_misses: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
+    closed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     listing: Mapped[Listing] = relationship(back_populates="sources")
 
 

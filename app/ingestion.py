@@ -1,7 +1,8 @@
 from datetime import datetime, timezone
 import logging
+import re
 
-from sqlalchemy import select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from app.models import Listing, ListingSource, SourceRun
@@ -9,6 +10,13 @@ from app.source_types import Candidate, SourceFetchResult
 from app.sources import fetch_source_batch
 
 logger = logging.getLogger(__name__)
+
+
+def stable_source_key(candidate: Candidate) -> str:
+    if candidate.source_key:
+        return candidate.source_key
+    slug = re.sub(r"[^a-z0-9]+", "-", candidate.source_name.lower()).strip("-")
+    return f"legacy:{slug or 'unknown'}"
 
 
 def _store_candidates(session: Session, candidates: list[Candidate]) -> list[Listing]:
@@ -25,6 +33,7 @@ def _store_candidates(session: Session, candidates: list[Candidate]) -> list[Lis
                 scope_decision=candidate.scope_decision,
                 timing_explicit=candidate.timing_explicit,
                 exact_posted_date=candidate.exact_posted_date,
+                is_open=True,
             )
             session.add(listing)
             session.flush()
@@ -56,10 +65,46 @@ def _store_candidates(session: Session, candidates: list[Candidate]) -> list[Lis
                 ):
                     listing.posted_at = candidate.posted_at
         source_exists = session.scalar(select(ListingSource).where(
-            ListingSource.listing_id == listing.id, ListingSource.source_name == candidate.source_name,
+            ListingSource.listing_id == listing.id,
+            or_(
+                ListingSource.source_key == stable_source_key(candidate),
+                (
+                    ListingSource.source_key.is_(None)
+                    & (ListingSource.source_name == candidate.source_name)
+                ),
+            ),
         ))
         if source_exists is None:
-            session.add(ListingSource(listing_id=listing.id, source_name=candidate.source_name, source_url=candidate.source_url))
+            session.add(ListingSource(
+                listing_id=listing.id,
+                source_name=candidate.source_name,
+                source_url=candidate.source_url,
+                source_key=stable_source_key(candidate),
+                source_external_id=candidate.source_external_id,
+                source_posted_at=candidate.posted_at,
+                first_seen_at=now,
+                last_seen_at=now,
+                consecutive_misses=0,
+                is_active=True,
+            ))
+        else:
+            source_exists.source_key = stable_source_key(candidate)
+            source_exists.source_name = candidate.source_name
+            source_exists.source_url = candidate.source_url
+            source_exists.source_external_id = (
+                candidate.source_external_id or source_exists.source_external_id
+            )
+            if candidate.posted_at and (
+                source_exists.source_posted_at is None
+                or candidate.posted_at < source_exists.source_posted_at
+            ):
+                source_exists.source_posted_at = candidate.posted_at
+            source_exists.last_seen_at = now
+            source_exists.consecutive_misses = 0
+            source_exists.is_active = True
+            source_exists.closed_at = None
+        listing.is_open = True
+        listing.closed_at = None
     return new_listings
 
 
@@ -75,6 +120,8 @@ def record_source_result(
 ) -> list[Listing]:
     now = datetime.now(timezone.utc)
     new_listings = _store_candidates(session, list(result.candidates)) if result.succeeded else []
+    if result.succeeded:
+        apply_successful_source_observations(session, result, now)
     session.add(SourceRun(
         source_key=result.source_key,
         started_at=result.started_at or now,
@@ -89,6 +136,49 @@ def record_source_result(
     ))
     session.commit()
     return new_listings
+
+
+def apply_successful_source_observations(
+    session: Session,
+    result: SourceFetchResult,
+    observed_at: datetime,
+) -> None:
+    observed_urls = {
+        candidate.application_url
+        for candidate in result.candidates
+    }
+    source_rows = session.scalars(
+        select(ListingSource)
+        .join(Listing)
+        .where(ListingSource.source_key == result.source_key)
+    ).all()
+    affected_listing_ids: set[int] = set()
+    for source_row in source_rows:
+        affected_listing_ids.add(source_row.listing_id)
+        if source_row.listing.application_url in observed_urls:
+            continue
+        if not source_row.is_active:
+            continue
+        source_row.consecutive_misses += 1
+        if source_row.consecutive_misses >= 2:
+            source_row.is_active = False
+            source_row.closed_at = observed_at
+    session.flush()
+
+    for listing_id in affected_listing_ids:
+        active_sources = session.scalar(
+            select(func.count(ListingSource.id)).where(
+                ListingSource.listing_id == listing_id,
+                ListingSource.is_active.is_(True),
+            ),
+        )
+        listing = session.get(Listing, listing_id)
+        if active_sources:
+            listing.is_open = True
+            listing.closed_at = None
+        elif listing.is_open:
+            listing.is_open = False
+            listing.closed_at = observed_at
 
 
 def run_ingestion(session: Session) -> list[Listing]:

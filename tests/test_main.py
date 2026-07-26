@@ -63,6 +63,33 @@ def test_visible_listing_condition_hides_only_known_dates_older_than_one_year():
     assert {item.title for item in visible} == {"boundary", "recent", "recent-unknown"}
 
 
+def test_visible_listing_condition_hides_closed_listings(monkeypatch):
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine)
+
+    with Session() as session:
+        open_listing = listing("open", date(2026, 7, 24))
+        closed_listing = listing("closed", date(2026, 7, 24))
+        closed_listing.is_open = False
+        closed_listing.closed_at = datetime(2026, 7, 25, tzinfo=timezone.utc)
+        session.add_all([open_listing, closed_listing])
+        session.commit()
+
+        visible = session.scalars(
+            select(Listing).where(visible_listing_condition(date(2026, 7, 24)))
+        ).all()
+
+    assert [item.title for item in visible] == ["open"]
+
+    monkeypatch.setattr(main, "settings", Settings(lifecycle_visibility=False))
+    with Session() as session:
+        visible_without_lifecycle = session.scalars(
+            select(Listing).where(visible_listing_condition(date(2026, 7, 24)))
+        ).all()
+    assert {item.title for item in visible_without_lifecycle} == {"open", "closed"}
+
+
 def test_index_hides_resume_fit_and_resume_page_shows_both_evaluations():
     engine = create_engine("sqlite://")
     Base.metadata.create_all(engine)

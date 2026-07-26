@@ -29,6 +29,12 @@ def create_tables() -> None:
             "scope_decision": "VARCHAR(30)",
             "timing_explicit": "BOOLEAN",
             "exact_posted_date": "BOOLEAN",
+            "is_open": (
+                "BOOLEAN NOT NULL DEFAULT TRUE"
+                if engine.dialect.name == "postgresql"
+                else "BOOLEAN NOT NULL DEFAULT 1"
+            ),
+            "closed_at": "TIMESTAMP WITH TIME ZONE" if engine.dialect.name == "postgresql" else "DATETIME",
             "fit_confidence": "INTEGER",
             "fit_reasoning": "TEXT",
             "resume_fit_confidence": "INTEGER",
@@ -51,3 +57,73 @@ def create_tables() -> None:
             else:
                 statement = f"ALTER TABLE listings ADD COLUMN {column_name} {column_type}"
             connection.execute(text(statement))
+
+        source_columns = {
+            column["name"]
+            for column in inspect(connection).get_columns("listing_sources")
+        }
+        source_missing_columns = {
+            "source_key": "VARCHAR(150)",
+            "source_external_id": "VARCHAR(255)",
+            "source_posted_at": "DATE",
+            "first_seen_at": (
+                "TIMESTAMP WITH TIME ZONE"
+                if engine.dialect.name == "postgresql"
+                else "DATETIME"
+            ),
+            "last_seen_at": (
+                "TIMESTAMP WITH TIME ZONE"
+                if engine.dialect.name == "postgresql"
+                else "DATETIME"
+            ),
+            "consecutive_misses": "INTEGER NOT NULL DEFAULT 0",
+            "is_active": (
+                "BOOLEAN NOT NULL DEFAULT TRUE"
+                if engine.dialect.name == "postgresql"
+                else "BOOLEAN NOT NULL DEFAULT 1"
+            ),
+            "closed_at": (
+                "TIMESTAMP WITH TIME ZONE"
+                if engine.dialect.name == "postgresql"
+                else "DATETIME"
+            ),
+        }
+        for column_name, column_type in source_missing_columns.items():
+            if column_name in source_columns:
+                continue
+            if engine.dialect.name == "postgresql":
+                statement = (
+                    "ALTER TABLE listing_sources "
+                    f"ADD COLUMN IF NOT EXISTS {column_name} {column_type}"
+                )
+            else:
+                statement = (
+                    f"ALTER TABLE listing_sources ADD COLUMN {column_name} {column_type}"
+                )
+            connection.execute(text(statement))
+
+        connection.execute(text(
+            "UPDATE listing_sources "
+            "SET source_key = :source_key "
+            "WHERE source_key IS NULL AND source_name = :source_name"
+        ), {
+            "source_key": "markdown:speedyapply-2027-swe",
+            "source_name": "SpeedyApply 2027 SWE",
+        })
+        connection.execute(text(
+            "UPDATE listing_sources "
+            "SET source_key = :source_key "
+            "WHERE source_key IS NULL AND source_name = :source_name"
+        ), {
+            "source_key": "markdown:vansh-new-grad-2027",
+            "source_name": "Vansh New Grad 2027",
+        })
+        connection.execute(text(
+            "UPDATE listing_sources "
+            "SET first_seen_at = COALESCE(first_seen_at, CURRENT_TIMESTAMP), "
+            "last_seen_at = COALESCE(last_seen_at, CURRENT_TIMESTAMP)"
+        ))
+        connection.execute(text(
+            "CREATE UNIQUE INDEX IF NOT EXISTS uq_listing_source_key "
+            "ON listing_sources (listing_id, source_key)"
+        ))

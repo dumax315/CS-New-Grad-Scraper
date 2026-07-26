@@ -414,12 +414,60 @@ def test_create_tables_migrates_existing_listing_table(monkeypatch):
         "resume_fit_reasoning", "fit_selected_at", "fit_evaluated_at",
         "fit_evaluation_failed_at", "fit_evaluation_error", "fit_model",
         "scope_decision", "timing_explicit", "exact_posted_date",
+        "is_open", "closed_at",
     } <= columns
     assert "subscribers" in inspect(engine).get_table_names()
     assert "source_runs" in inspect(engine).get_table_names()
 
     database.create_tables()
     assert "source_runs" in inspect(engine).get_table_names()
+
+
+def test_create_tables_migrates_existing_source_observations(monkeypatch):
+    engine = create_engine("sqlite://")
+    with engine.begin() as connection:
+        connection.exec_driver_sql(
+            "CREATE TABLE listings (id INTEGER PRIMARY KEY, is_open BOOLEAN)"
+        )
+        connection.exec_driver_sql(
+            "CREATE TABLE listing_sources ("
+            "id INTEGER PRIMARY KEY, listing_id INTEGER, "
+            "source_name VARCHAR(100), source_url TEXT)"
+        )
+        connection.exec_driver_sql(
+            "INSERT INTO listing_sources "
+            "(id, listing_id, source_name, source_url) VALUES "
+            "(1, 1, 'SpeedyApply 2027 SWE', 'https://github.com/example')"
+        )
+
+    monkeypatch.setattr(database, "engine", engine)
+    database.create_tables()
+    database.create_tables()
+
+    columns = {
+        column["name"]
+        for column in inspect(engine).get_columns("listing_sources")
+    }
+    assert {
+        "source_key",
+        "source_external_id",
+        "source_posted_at",
+        "first_seen_at",
+        "last_seen_at",
+        "consecutive_misses",
+        "is_active",
+        "closed_at",
+    } <= columns
+    with engine.connect() as connection:
+        row = connection.exec_driver_sql(
+            "SELECT source_key, consecutive_misses, is_active, "
+            "first_seen_at, last_seen_at FROM listing_sources WHERE id = 1"
+        ).one()
+    assert row[0] == "markdown:speedyapply-2027-swe"
+    assert row[1] == 0
+    assert bool(row[2]) is True
+    assert row[3] is not None
+    assert row[4] is not None
 
 
 def test_scrape_and_notify_sends_only_to_active_subscribers(monkeypatch):

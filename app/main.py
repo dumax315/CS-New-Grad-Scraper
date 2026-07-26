@@ -30,10 +30,13 @@ from app.subscriptions import (
 def visible_listing_condition(today: date | None = None):
     cutoff_date = (today or date.today()) - timedelta(days=365)
     cutoff_time = datetime.combine(cutoff_date, time.min, tzinfo=timezone.utc)
-    return or_(
+    freshness_condition = or_(
         Listing.posted_at >= cutoff_date,
         and_(Listing.posted_at.is_(None), Listing.first_seen_at >= cutoff_time),
     )
+    if not settings.lifecycle_visibility:
+        return freshness_condition
+    return and_(Listing.is_open.is_(True), freshness_condition)
 
 
 @asynccontextmanager

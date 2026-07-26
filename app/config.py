@@ -16,6 +16,10 @@ class Settings:
     smtp_use_tls: bool = os.getenv("SMTP_USE_TLS", "true").lower() == "true"
     subscription_token_secret: str = os.getenv("SUBSCRIPTION_TOKEN_SECRET", "")
     send_initial_digest: bool = os.getenv("SEND_INITIAL_DIGEST", "false").lower() == "true"
+    lifecycle_visibility: bool = os.getenv(
+        "APPLY_LIFECYCLE_VISIBILITY",
+        "true",
+    ).lower() == "true"
     codex_model: str = os.getenv("CODEX_MODEL", "gpt-5.6-luna")
     codex_timeout_seconds: int = int(os.getenv("CODEX_TIMEOUT_SECONDS", "120"))
     codex_home: str = os.getenv("CODEX_HOME", "/var/lib/codex")
