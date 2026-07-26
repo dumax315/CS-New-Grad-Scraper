@@ -53,7 +53,11 @@ def legacy_source(spec: SourceSpec) -> Source:
     )
 
 
-SOURCES = tuple(legacy_source(spec) for spec in CURATED_SOURCES)
+SOURCES = tuple(
+    legacy_source(spec)
+    for spec in CURATED_SOURCES
+    if spec.kind == "markdown"
+)
 
 
 def parse_source(markdown: str, source: Source | SourceSpec) -> list[Candidate]:

@@ -29,6 +29,11 @@ from app.source_scope import classify_direct_candidate
             "exclude_experience",
         ),
         (
+            "Platform Engineer",
+            "Candidates need 4+ years of professional experience.",
+            "exclude_experience",
+        ),
+        (
             "Software Engineer, Class of 2026",
             "New graduate role.",
             "exclude_timing",

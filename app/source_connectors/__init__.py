@@ -2,12 +2,13 @@
 
 import httpx
 
-from app.source_connectors import ashby, greenhouse, lever, markdown
+from app.source_connectors import ambicuity, ashby, greenhouse, lever, markdown
 from app.source_types import SourceFetchResult, SourceSpec
 
 
 def fetch_source(spec: SourceSpec, client: httpx.Client) -> SourceFetchResult:
     connectors = {
+        "ambicuity": ambicuity.fetch,
         "ashby": ashby.fetch,
         "greenhouse": greenhouse.fetch,
         "lever": lever.fetch,

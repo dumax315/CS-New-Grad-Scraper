@@ -9,13 +9,78 @@ from app.source_types import SourceSpec
 
 
 def spec(kind: str) -> SourceSpec:
+    parameters = (
+        {"feed_url": "https://raw.githubusercontent.com/example/jobs.json"}
+        if kind == "ambicuity"
+        else {"tenant": "acme", "employer": "Acme"}
+    )
     return SourceSpec(
         key=f"{kind}:acme",
         name=f"Acme Careers ({kind})",
         kind=kind,
         public_url=f"https://jobs.example/{kind}/acme",
-        parameters={"tenant": "acme", "employer": "Acme"},
+        parameters=parameters,
     )
+
+
+def test_ambicuity_connector_normalizes_and_scopes_live_feed_shape():
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/example/jobs.json"
+        return httpx.Response(200, json={"jobs": [
+            {
+                "id": "acme-new-grad",
+                "company": "Acme",
+                "title": "Software Engineer, New Grad 2027",
+                "location": "New York, NY",
+                "url": "https://jobs.example/new-grad?utm_source=ambicuity",
+                "posted_at": "2026-07-26T12:30:00+00:00",
+                "posted_display": "Today",
+                "category": {"id": "software_engineering", "name": "Software Engineering"},
+                "comp": {"min": 120000, "max": 150000, "currency": "USD"},
+                "full_description": "Class of 2027 candidates are welcome.",
+                "is_closed": False,
+            },
+            {
+                "id": "acme-experienced",
+                "company": "Acme",
+                "title": "Platform Software Engineer",
+                "location": "Remote",
+                "url": "https://jobs.example/experienced",
+                "description": "Candidates need 4+ years of professional experience.",
+                "is_closed": False,
+            },
+            {
+                "id": "acme-closed",
+                "company": "Acme",
+                "title": "New Grad Software Engineer",
+                "location": "Remote",
+                "url": "https://jobs.example/closed",
+                "is_closed": True,
+            },
+            {"id": "broken", "company": "Acme", "title": "Software Engineer"},
+        ]})
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        result = fetch_source(spec("ambicuity"), client)
+
+    assert result.succeeded is True
+    assert result.fetched_count == 4
+    assert len(result.candidates) == 1
+    candidate = result.candidates[0]
+    assert candidate.company == "Acme"
+    assert candidate.application_url == "https://jobs.example/new-grad"
+    assert candidate.posted_at == date(2026, 7, 26)
+    assert candidate.graduation_year == 2027
+    assert candidate.salary == "$120,000–$150,000"
+    assert candidate.category == "Software Engineering"
+    assert candidate.scope_decision == "include_explicit"
+    assert candidate.timing_explicit is True
+    assert candidate.exact_posted_date is True
+    assert dict(result.exclusion_counts) == {
+        "exclude_closed": 1,
+        "exclude_experience": 1,
+        "exclude_unknown": 1,
+    }
 
 
 def test_greenhouse_connector_normalizes_and_scopes_records():
@@ -135,7 +200,7 @@ def test_ashby_connector_handles_optional_fields_and_scope_exclusions():
     }
 
 
-@pytest.mark.parametrize("kind", ["greenhouse", "lever", "ashby"])
+@pytest.mark.parametrize("kind", ["ambicuity", "greenhouse", "lever", "ashby"])
 def test_connector_http_failure_returns_sanitized_result(kind):
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(
@@ -153,7 +218,7 @@ def test_connector_http_failure_returns_sanitized_result(kind):
     assert "secret" not in result.error_summary
 
 
-def test_connector_timeout_and_board_schema_failure_are_isolated():
+def test_connector_timeout_is_isolated():
     def timeout_handler(request: httpx.Request) -> httpx.Response:
         raise httpx.ReadTimeout("tenant-secret", request=request)
 
@@ -162,12 +227,15 @@ def test_connector_timeout_and_board_schema_failure_are_isolated():
     assert timed_out.error_category == "timeout"
     assert timed_out.error_summary == "Source request timed out."
 
+
+@pytest.mark.parametrize("kind", ["ambicuity", "greenhouse"])
+def test_connector_schema_failure_is_isolated(kind):
     with httpx.Client(
         transport=httpx.MockTransport(
             lambda request: httpx.Response(200, json={"unexpected": []}),
         ),
     ) as client:
-        malformed = fetch_source(spec("greenhouse"), client)
+        malformed = fetch_source(spec(kind), client)
     assert malformed.succeeded is False
     assert malformed.error_category == "parser"
 
@@ -190,5 +258,6 @@ def test_direct_registry_contains_all_reviewed_discovered_boards():
     assert [source.key for source in CURATED_SOURCES] == [
         "markdown:speedyapply-2027-swe",
         "markdown:vansh-new-grad-2027",
+        "json:ambicuity-new-grad-jobs",
     ]
     assert all(source.enabled is True for source in CURATED_SOURCES)

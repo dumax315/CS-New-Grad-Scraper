@@ -34,6 +34,18 @@ CURATED_SOURCES = (
             ),
         },
     ),
+    SourceSpec(
+        key="json:ambicuity-new-grad-jobs",
+        name="Ambicuity New Grad Jobs",
+        kind="ambicuity",
+        public_url="https://github.com/ambicuity/New-Grad-Jobs",
+        parameters={
+            "feed_url": (
+                "https://raw.githubusercontent.com/ambicuity/"
+                "New-Grad-Jobs/main/docs/jobs.json"
+            ),
+        },
+    ),
 )
 
 DIRECT_REGISTRY_PATH = Path(__file__).with_name("approved_direct_sources.json")

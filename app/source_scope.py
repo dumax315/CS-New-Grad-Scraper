@@ -43,8 +43,10 @@ EARLIER_TIMING_RE = re.compile(
     re.I,
 )
 MULTI_YEAR_REQUIREMENT_RE = re.compile(
-    r"\b(?:minimum(?: of)?|at least|requires?|must have)\s+"
-    r"(?:[2-9]|\d{2,})(?:\+|-[0-9]+)?\s+years?\b",
+    r"\b(?:(?:minimum(?: of)?|at least|requires?|must have)\s+"
+    r"(?:[2-9]|\d{2,})(?:\+|-[0-9]+)?\s+years?\b|"
+    r"(?:[2-9]|\d{2,})(?:\+|-[0-9]+)?\s+years?\s+(?:of\s+)?"
+    r"(?:relevant\s+|professional\s+|work\s+)?experience\b)",
     re.I,
 )
 ZERO_ONE_YEAR_RE = re.compile(
