@@ -5,7 +5,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 <!-- BEGIN GENERATED JOBS -->
 ## Current Openings
 
-929 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
+926 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
 
 | Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |
 |---|---|---|---|---|---|
@@ -42,10 +42,8 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Tesla | Camera Software Engineer, AI Platforms | Palo Alto, CA | Pending | 2026-07-24 | [Apply](https://www.tesla.com/careers/search/job/246198) |
 | Tesla | Software Integration Engineer, AI Platforms | Palo Alto, CA | Pending | 2026-07-24 | [Apply](https://www.tesla.com/careers/search/job/246199) |
 | Raytheon | 2026 Raytheon Full Time- Software Engineer I -- Onsite | FT WAYNE, IN | Pending | 2026-07-23 | [Apply](https://globalhr.wd5.myworkdayjobs.com/en-US/rec_rtx_ext_gateway/job/US-IN-FT-WAYNE-150A--1010-Production-Rd--BLDG-150A/XMLNAME-2026-Raytheon-Full-Time--Software-Engineer-I---Onsite-_01844595) |
-| Raytheon | Software Engineer I - Onsite | Cedar Rapids, IA | 55% — Spring 2027 timing is unstated; the posting describes a new-grad role but gives no graduation window or future start date, so it appears aimed at a near-term hire. | 2026-07-23 | [Apply](https://globalhr.wd5.myworkdayjobs.com/en-US/rec_rtx_ext_gateway/job/US-IA-CEDAR-RAPIDS-193--1120-Collins-Rd-NE--BLDG193/Software-Engineer-I--Onsite-_01834725) |
 | Xfinity | Junior C++ Software Engineer- 2 Days Onsite - Reston - VA- FreeWheel | Reston, VA | Pending | 2026-07-23 | [Apply](https://comcast.wd5.myworkdayjobs.com/en-US/comcast_careers/job/VA---Reston-11951-Freedom-Dr-Ste-900/Junior-C---Software-Engineer--2-Days-Onsite---Reston--VA--FreeWheel_R441732) |
 | Rocket Lab | Software Engineer I/II | Pasadena, CA | Pending | 2026-07-23 | [Apply](https://job-boards.greenhouse.io/rocketlab/jobs/7813360003) |
-| Raytheon | Software Engineer I - Onsite | Cedar Rapids, IA | Pending | 2026-07-23 | [Apply](https://globalhr.wd5.myworkdayjobs.com/en-US/rec_rtx_ext_gateway/job/US-IA-CEDAR-RAPIDS-105--400-Collins-Rd-NE--BLDG-105/Software-Engineer-I--Onsite-_01861196) |
 | Raytheon | Software Engineer I - Onsite | Marlborough, MA | Pending | 2026-07-23 | [Apply](https://globalhr.wd5.myworkdayjobs.com/en-US/rec_rtx_ext_gateway/job/US-MA-MARLBOROUGH-MA2--1001-Boston-Post-Rd--BLDG-2/Software-Engineer-I--Onsite-_01861525) |
 | Raytheon | Software Engineer I - Onsite | Tewksbury, MA | Pending | 2026-07-23 | [Apply](https://globalhr.wd5.myworkdayjobs.com/en-US/rec_rtx_ext_gateway/job/US-MA-TEWKSBURY-TB3--50-Apple-Hill-Dr--CONCORD-BLDG-Tewksbury-Tb3-300-Concord/Software-Engineer-I--Onsite-_01861526) |
 | Raytheon | 2026 Raytheon Full Time- Software Engineer I -- Onsite | Tewksbury, MA | Pending | 2026-07-23 | [Apply](https://globalhr.wd5.myworkdayjobs.com/en-US/rec_rtx_ext_gateway/job/US-MA-TEWKSBURY-TB3--50-Apple-Hill-Dr--CONCORD-BLDG-Tewksbury-Tb3-300-Concord/XMLNAME-2026-Raytheon-Full-Time--Software-Engineer-I---Onsite-_01861434) |
@@ -132,7 +130,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Acrisure | Software Engineer I | Uniondale, NY +3 | Pending | 2026-07-16 | [Apply](https://acrisure.wd1.myworkdayjobs.com/en-US/acrisure/job/333-Earle-Ovington-Blvd---Uniondale-NY/Software-Engineer-I_JR113871) |
 | Nuro | Software Engineer, Performance - New Grad | Mountain View, California (HQ) | Pending | 2026-07-16 | [Apply](https://nuro.ai/careersitem?gh_jid=6972272) |
 | Netic | Forward Deployed Engineer (FDE) - New Grad - 2026-2027 | San Francisco | Pending | 2026-07-15 | [Apply](https://jobs.ashbyhq.com/netic/f2d170eb-c4c3-4715-9d2e-84dd4fe857c8) |
-| Boeing | Associate Software Engineer | Maryland Heights, MO | Pending | 2026-07-15 | [Apply](https://boeing.wd1.myworkdayjobs.com/en-US/external_careers/job/USA---Maryland-Heights-MO/Associate-Software-Engineer_JR2026513142-1) |
 | Optiver | New Grad 2026: FPGA Engineer | Chicago, IL | 90% — Spring 2027 timing is supported by the page’s Chicago FPGA role labeled “2027 Start”; computer science and graduate-level fit are strong, despite the conflicting “2026” title. | 2026-07-15 | [Apply](https://optiver.com/working-at-optiver/career-opportunities/8033327002) |
 | Optiver | New Grad 2026: FPGA Engineer | Austin, TX | 78% — Spring 2027 timing is supported by Optiver’s Austin Graduate FPGA Engineer listing marked “2027 Start,” though the metadata says New Grad 2026; computer science is a relevant major, with FPGA-specific fit unstated. | 2026-07-15 | [Apply](https://optiver.com/working-at-optiver/career-opportunities/7973721002) |
 | Porter | Full Stack Engineer | New York, NY | 35% — Spring 2027 timing is unstated; this full-time, in-person startup role appears intended for near-term availability, despite strong potential CS and technical fit. | 2026-07-15 | [Apply](https://www.ycombinator.com/companies/porter/jobs/6QhplSz-full-stack-engineer) |
