@@ -5,7 +5,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 <!-- BEGIN GENERATED JOBS -->
 ## Current Openings
 
-929 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
+928 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
 
 | Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |
 |---|---|---|---|---|---|
@@ -174,7 +174,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Old Mission Capital | Software Engineer - 2027 Graduate Program - August Start | Chicago, IL | 95% — Spring 2027 timing is strongly supported by the explicit “2027 Graduate Program” title and August start; an undergraduate computer science major is an appropriate degree fit. | 2026-07-14 | [Apply](https://www.oldmissioncapital.com/careers?gh_jid=7796048003) |
 | i3 Corps | Entry Level Software Engineer | Huntsville, AL | 45% — Spring 2027 timing is unstated; the entry-level software engineering role and computer science major fit, but the posting provides no evidence the employer will wait until after graduation. | 2026-07-14 | [Apply](https://careers-i3-corps.icims.com/jobs/5175/entry-level-software-engineer/job) |
 | Amentum | C or C++ Junior Developer | Dahlgren, VA | 65% — Degree and entry-level C/C++ fit are strong, but spring 2027 hiring timing is unstated; the active “until filled” opening likely targets a near-term start. | 2026-07-14 | [Apply](https://pae.wd1.myworkdayjobs.com/en-US/amentum_careers/job/US-VA-Dahlgren/C-or-C---Junior-Developer_R0165501) |
-| Anduril | 2026 Early Career Test &amp; Evaluation Engineer | Costa Mesa, California, United States | Pending | 2026-07-13 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5185888007?gh_jid=5185888007) |
 | Anduril | 2026 Early Career Flight Test Engineer, Mission Autonomy | Costa Mesa, California, United States | Pending | 2026-07-13 | [Apply](https://boards.greenhouse.io/andurilindustries/jobs/5185089007?gh_jid=5185089007) |
 | The Cadmus Group | Junior Full Stack Developer | USA | Pending | 2026-07-13 | [Apply](https://careers-cadmusgroup.icims.com/jobs/3199/junior-full-stack-developer/job) |
 | REPAY - Realtime Electronic Payments | Associate Cloud Infrastructure Engineer | Remote - Atlanta, GA +2 | 60% — Strong CS and entry-level infrastructure fit, but spring 2027 timing is unstated; the active opening likely expects a near-term full-time start. | 2026-07-13 | [Apply](https://repay.wd1.myworkdayjobs.com/en-US/repaycareers/job/Atlanta-Headquarters/Associate-Cloud-Infrastructure-Engineer_JR634) |
