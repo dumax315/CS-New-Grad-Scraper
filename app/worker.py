@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 MAX_JOB_TEXT_CHARS = 30_000
 DEFAULT_RESUME_FILENAME = "TheoHalpernResume.md"
-FIT_RESULT_RE = re.compile(r"^(100|[1-9]?\d)%\s+—\s+(\S.+)$")
+FIT_RESULT_RE = re.compile(r"^(\S.+)\s+—\s+(100|[1-9]?\d)%$")
 SPRING_2027_RESULT_LABEL = "IS SPRING 2027 NEW GRAD"
 RESUME_FIT_RESULT_LABEL = "THEO'S RESUME FIT"
 BLOCK_TAGS = {
@@ -244,7 +244,7 @@ def _parse_labeled_fit_line(line: str, label: str) -> tuple[int, str]:
     match = FIT_RESULT_RE.fullmatch(line.removeprefix(prefix))
     if not match:
         raise ValueError(f"invalid {label} result")
-    return int(match.group(1)), match.group(2).strip()
+    return int(match.group(2)), match.group(1).strip()
 
 
 def parse_fit_result(output: str) -> FitAssessment:
@@ -359,8 +359,8 @@ Do not assume Theo has an unlisted qualification. The brief reasoning must name 
 important resume-based match or gap and must not discuss date eligibility.
 
 Return exactly two lines in this format and order:
-IS SPRING 2027 NEW GRAD: XX% — brief timing-aware reasoning
-THEO'S RESUME FIT: YY% — brief resume-based reasoning
+IS SPRING 2027 NEW GRAD: brief timing-aware reasoning — XX%
+THEO'S RESUME FIT: brief resume-based reasoning — YY%
 
 XX and YY must be integers from 0 through 100. Do not add any other text."""
     with tempfile.TemporaryDirectory(prefix="job-fit-codex-") as temporary_directory:
@@ -369,7 +369,7 @@ XX and YY must be integers from 0 through 100. Do not add any other text."""
                 "codex", "exec", "--ephemeral", "--skip-git-repo-check",
                 "--sandbox", "read-only", "--ignore-user-config", "--ignore-rules",
                 "--color", "never", "--model", settings.codex_model,
-                "-c", 'model_reasoning_effort="low"',
+                "-c", 'model_reasoning_effort="medium"',
                 "-c", 'shell_environment_policy.inherit="none"', prompt,
             ],
             cwd=temporary_directory,

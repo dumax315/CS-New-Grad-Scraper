@@ -88,8 +88,8 @@ def test_scrape_job_listing_uses_workday_structured_endpoint():
 
 def test_parse_fit_result_requires_requested_format():
     assert worker.parse_fit_result(
-        "IS SPRING 2027 NEW GRAD: 87% — Accepts Spring 2027 CS graduates.\n"
-        "THEO'S RESUME FIT: 93% — Resume shows the required backend experience.\n"
+        "IS SPRING 2027 NEW GRAD: Accepts Spring 2027 CS graduates. — 87%\n"
+        "THEO'S RESUME FIT: Resume shows the required backend experience. — 93%\n"
     ) == worker.FitAssessment(
         confidence=87,
         reasoning="Accepts Spring 2027 CS graduates.",
@@ -108,8 +108,8 @@ def test_run_codex_assessment_uses_noninteractive_sandbox_and_sanitized_env(monk
             command,
             0,
             stdout=(
-                "IS SPRING 2027 NEW GRAD: 91% — Strong new-grad fit.\n"
-                "THEO'S RESUME FIT: 86% — Resume shows relevant Python experience.\n"
+                "IS SPRING 2027 NEW GRAD: Strong new-grad fit. — 91%\n"
+                "THEO'S RESUME FIT: Resume shows relevant Python experience. — 86%\n"
             ),
             stderr="",
         )
@@ -129,6 +129,7 @@ def test_run_codex_assessment_uses_noninteractive_sandbox_and_sanitized_env(monk
     )
     assert captured["command"][:3] == ["codex", "exec", "--ephemeral"]
     assert "read-only" in captured["command"]
+    assert 'model_reasoning_effort="medium"' in captured["command"]
     assert captured["input"] == "Actual scraped listing"
     assert captured["env"]["CODEX_API_KEY"] == "codex-secret"
     assert captured["env"]["CODEX_HOME"] == captured["cwd"]
@@ -145,8 +146,8 @@ def test_codex_prompt_makes_spring_2027_timing_a_gate(monkeypatch):
             command,
             0,
             stdout=(
-                "IS SPRING 2027 NEW GRAD: 70% — Technical fit is strong, but spring 2027 timing is unstated.\n"
-                "THEO'S RESUME FIT: 90% — Resume shows strong matching C skills.\n"
+                "IS SPRING 2027 NEW GRAD: Technical fit is strong, but spring 2027 timing is unstated. — 70%\n"
+                "THEO'S RESUME FIT: Resume shows strong matching C skills. — 90%\n"
             ),
             stderr="",
         )
@@ -163,6 +164,10 @@ def test_codex_prompt_makes_spring_2027_timing_a_gate(monkeypatch):
     assert "do not by themselves prove" in prompt
     assert "spring 2027 timing is" in prompt
     assert "Do not use the candidate resume as evidence for this score" in prompt
+    assert (
+        "IS SPRING 2027 NEW GRAD: brief timing-aware reasoning — XX%"
+        in captured["prompt"]
+    )
 
 
 def test_codex_prompt_uses_resume_as_candidate_evidence(monkeypatch):
@@ -174,8 +179,8 @@ def test_codex_prompt_uses_resume_as_candidate_evidence(monkeypatch):
             command,
             0,
             stdout=(
-                "IS SPRING 2027 NEW GRAD: 84% — Spring 2027 timing is supported.\n"
-                "THEO'S RESUME FIT: 91% — Resume shows matching C++ experience.\n"
+                "IS SPRING 2027 NEW GRAD: Spring 2027 timing is supported. — 84%\n"
+                "THEO'S RESUME FIT: Resume shows matching C++ experience. — 91%\n"
             ),
             stderr="",
         )
