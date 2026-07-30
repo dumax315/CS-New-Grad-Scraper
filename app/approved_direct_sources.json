@@ -1100,6 +1100,141 @@
     "tenant": "zone5technologies"
   },
   {
+    "discovered_from_url": "https://job-boards.greenhouse.io/airbnb",
+    "employer": "Airbnb",
+    "key": "greenhouse:airbnb",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "airbnb"
+  },
+  {
+    "discovered_from_url": "https://job-boards.greenhouse.io/cloudflare",
+    "employer": "Cloudflare",
+    "key": "greenhouse:cloudflare",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "cloudflare"
+  },
+  {
+    "discovered_from_url": "https://job-boards.greenhouse.io/coinbase",
+    "employer": "Coinbase",
+    "key": "greenhouse:coinbase",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "coinbase"
+  },
+  {
+    "discovered_from_url": "https://job-boards.greenhouse.io/datadog",
+    "employer": "Datadog",
+    "key": "greenhouse:datadog",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "datadog"
+  },
+  {
+    "discovered_from_url": "https://job-boards.greenhouse.io/discord",
+    "employer": "Discord",
+    "key": "greenhouse:discord",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "discord"
+  },
+  {
+    "discovered_from_url": "https://job-boards.greenhouse.io/dropbox",
+    "employer": "Dropbox",
+    "key": "greenhouse:dropbox",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "dropbox"
+  },
+  {
+    "discovered_from_url": "https://job-boards.greenhouse.io/duolingo",
+    "employer": "Duolingo",
+    "key": "greenhouse:duolingo",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "duolingo"
+  },
+  {
+    "discovered_from_url": "https://job-boards.greenhouse.io/gitlab",
+    "employer": "GitLab",
+    "key": "greenhouse:gitlab",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "gitlab"
+  },
+  {
+    "discovered_from_url": "https://job-boards.greenhouse.io/lyft",
+    "employer": "Lyft",
+    "key": "greenhouse:lyft",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "lyft"
+  },
+  {
+    "discovered_from_url": "https://job-boards.greenhouse.io/mongodb",
+    "employer": "MongoDB",
+    "key": "greenhouse:mongodb",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "mongodb"
+  },
+  {
+    "discovered_from_url": "https://job-boards.greenhouse.io/pinterest",
+    "employer": "Pinterest",
+    "key": "greenhouse:pinterest",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "pinterest"
+  },
+  {
+    "discovered_from_url": "https://job-boards.greenhouse.io/reddit",
+    "employer": "Reddit",
+    "key": "greenhouse:reddit",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "reddit"
+  },
+  {
+    "discovered_from_url": "https://job-boards.greenhouse.io/robinhood",
+    "employer": "Robinhood",
+    "key": "greenhouse:robinhood",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "robinhood"
+  },
+  {
+    "discovered_from_url": "https://job-boards.greenhouse.io/roblox",
+    "employer": "Roblox",
+    "key": "greenhouse:roblox",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "roblox"
+  },
+  {
+    "discovered_from_url": "https://job-boards.greenhouse.io/samsara",
+    "employer": "Samsara",
+    "key": "greenhouse:samsara",
+    "kind": "greenhouse",
+    "reason": "public Greenhouse board verified directly on 2026-07-26",
+    "source_names": [],
+    "tenant": "samsara"
+  },
+  {
     "discovered_from_listing_id": 333,
     "discovered_from_url": "https://jobs.lever.co/agatesoftware/c32e40b4-1df1-43f9-aee8-eff3ce85f0c1",
     "employer": "Agate Software",

@@ -309,14 +309,29 @@ def test_connector_schema_failure_is_isolated(kind):
     assert malformed.error_category == "parser"
 
 
-def test_direct_registry_contains_all_reviewed_discovered_boards():
-    assert len(DIRECT_SOURCES) == 100
+def test_direct_registry_contains_all_reviewed_boards():
+    assert len(DIRECT_SOURCES) == 115
     assert {source.kind for source in DIRECT_SOURCES} == {
         "ashby",
         "greenhouse",
         "lever",
     }
     assert {
+        "greenhouse:airbnb",
+        "greenhouse:cloudflare",
+        "greenhouse:coinbase",
+        "greenhouse:datadog",
+        "greenhouse:discord",
+        "greenhouse:dropbox",
+        "greenhouse:duolingo",
+        "greenhouse:gitlab",
+        "greenhouse:lyft",
+        "greenhouse:mongodb",
+        "greenhouse:pinterest",
+        "greenhouse:reddit",
+        "greenhouse:robinhood",
+        "greenhouse:roblox",
+        "greenhouse:samsara",
         "ashby:notion",
         "ashby:ramp",
         "greenhouse:figma",
