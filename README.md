@@ -9,6 +9,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 
 | Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |
 |---|---|---|---|---|---|
+| Chicago Trading Company | New Grad 2027: Associate Engineer | Chicago, ILNew York, NY | Pending | 2026-08-01 | [Apply](https://job-boards.greenhouse.io/ctccampusboard/jobs/4709991005) |
 | Werner Enterprises | Team Capacity Developer | Omaha, NE | Pending | 2026-07-31 | [Apply](https://werner.wd501.myworkdayjobs.com/en-US/Werner/job/Omaha-NE/Team-Capacity-Developer_JR23364) |
 | Syncreon Consulting | Full Stack Developer - ONLY GC/Citizens - Overall 5yrs also okay | Fremont, CA | Pending | 2026-07-31 | [Apply](https://jobs.smartrecruiters.com/SyncreonConsulting/744000140728034-full-stack-developer-only-gc-citizens-overall-5yrs-also-okay?oga=true) |
 | Syncreon Consulting | Python Developer with Risk Modelling | New York City, NY | Pending | 2026-07-31 | [Apply](https://jobs.smartrecruiters.com/SyncreonConsulting/744000140730074-python-developer-with-risk-modelling?oga=true) |
@@ -1007,7 +1008,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | TikTok | New Grad 2026: Software Engineer Graduate - Data-Search | San Jose, CA | Pending | 2025-08-07 | [Apply](https://lifeattiktok.com/search/7533719102990190866?spread=5MWH5CQ) |
 | Ramp | New Grad 2026: Software Engineer - Backend | New York, NY | Pending | 2025-08-03 | [Apply](https://jobs.ashbyhq.com/ramp/83075cf0-9c22-4475-9c6b-e21923a96df8) |
 | Ramp | New Grad 2026: Software Engineer - Frontend | New York, NY | Pending | 2025-08-03 | [Apply](https://jobs.ashbyhq.com/ramp/a1229aec-1105-4c47-8533-b912e732ed89) |
-| Palantir | Forward Deployed Software Engineer, New Grad - Commercial | London, United Kingdom | Pending | 2025-08-01 | [Apply](https://jobs.lever.co/palantir/2aa14e4f-d406-486e-9aa8-6ff3358d70a0) |
 <!-- END GENERATED JOBS -->
 
 ## Prerequisites
