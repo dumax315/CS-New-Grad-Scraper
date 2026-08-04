@@ -5,10 +5,28 @@ A small, public job board that aggregates software-engineering new-grad listings
 <!-- BEGIN GENERATED JOBS -->
 ## Current Openings
 
-1041 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
+1048 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
 
 | Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |
 |---|---|---|---|---|---|
+| TikTok | Backend Software Engineer Graduate (Global E-commerce) - 2027 Start | Seattle, WA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=420050ee372a3290) |
+| TikTok | Software Engineer Graduate (Ads Interface) - 2027 Start | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=b53e9f40236ddc1b) |
+| TikTok | Machine Learning Engineer Graduate (TikTok Content Ecology) - 2027 Start (PhD) | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=09a451ec86b2b11d) |
+| TikTok | Machine Learning Engineer Graduate (Commercial AI-CRM and Transaction) - 2027 Start | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=e09ae67c0464955f) |
+| TikTok | Machine Learning Engineer Graduate (TikTok-Data-Search-Recommendation-Global E-Commerce) - 2027 Start | Seattle, WA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=18d7d230b8ef350c) |
+| TikTok | (General Hire) Machine Learning Engineer Graduate (Performance Monetization) - 2027 Start (PhD) | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=c4a0d3a2fff09209) |
+| TikTok | Backend Software Engineer Graduate (Global E-commerce) - 2027 Start | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=f56cd6f926bf27c0) |
+| TikTok | Mobile Software Engineer Graduate (Global E-commerce) - 2027 Start | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=78ff59f107e7a2e6) |
+| TikTok | Software Engineer Graduate(Ads Infrastructure) - 2027 Start | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=da4843203e269ae5) |
+| TikTok | Software Engineer Graduate (Global SRE) - 2027 Start | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=84a4b56507a4ce3e) |
+| TikTok | Machine Learning Engineer Graduate (Search Ads) - 2027 Start | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=093ddf2a1d79fa22) |
+| TikTok | Backend Software Engineer Graduate (TikTok-PGC-Digital Content Center) - 2027 Start | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=4d22af308ad0bf59) |
+| TikTok | Software Engineer Graduate (TikTok Global Live) - 2027 Start | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=e738e27f8a76abfa) |
+| TikTok | Frontend Software Engineer Graduate (Ads Interface) - 2027 Start | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=30fb330d90945e6e) |
+| TikTok | Software Engineer Graduate (Transaction Platform) - 2027 Start | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=907e3f37086d8025) |
+| TikTok | Software Engineer Graduate (AI Agent &amp; Global Revenue Platform) - 2027 Start | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=a1b4aebf3db93012) |
+| TikTok | Frontend Software Engineer Graduate (Global CRM) - 2027 Start | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=1595bc964bcb8653) |
+| TikTok | AI Effects Workflow Software Engineer Graduate (TikTok-Agentic Creation-Effect House) - 2027 Start | San Jose, CA, US | Pending | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=3411e27676fcb8f9) |
 | Samsara | Software Engineer I - New Grad, SF | San Francisco - SF9 | Pending | 2026-08-03 | [Apply](https://www.samsara.com/company/careers/roles/8097343?gh_jid=8097343) |
 | ByteDance | Product Security Engineer Graduate (Security BP) - 2027 Start | San Jose, CA, US | Pending | 2026-08-03 | [Apply](https://www.indeed.com/viewjob?jk=98a3b834f6e5daf2) |
 | TikTok | Machine Learning Engineer Graduate (TikTok Trust and Safety) - 2027 Start | Seattle, WA, US | Pending | 2026-08-03 | [Apply](https://www.indeed.com/viewjob?jk=f5725f9e436797be) |
@@ -18,19 +36,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | ByteDance | Software Engineer Graduate (AI Infra Compute) - 2027 Start | Seattle, WA, US | Pending | 2026-08-03 | [Apply](https://www.indeed.com/viewjob?jk=28777bdb467fb1a4) |
 | ByteDance | Software Engineer Graduate (AI Infra Compute) - 2027 Start | San Jose, CA, US | Pending | 2026-08-03 | [Apply](https://www.indeed.com/viewjob?jk=005f8deb92799bb1) |
 | TikTok | (General Hire) Machine Learning Engineer Graduate (TikTok Recommendation) - 2027 Start | San Jose, CA, US | Pending | 2026-08-03 | [Apply](https://www.indeed.com/viewjob?jk=8d7ddfd2782b2514) |
-| TikTok | Software Engineer Graduate (Quality and Efficiency Technology) - 2027 Start | San Jose, CA, US | Pending | 2026-08-02 | [Apply](https://www.indeed.com/viewjob?jk=43550d7c3a74b40a) |
-| TikTok | Software Engineer Graduate (Business Integrity) - 2027 Start | San Jose, CA, US | Pending | 2026-08-02 | [Apply](https://www.indeed.com/viewjob?jk=c478dcd1ce7720ae) |
-| TikTok | Software Engineer Graduate (Ads Measurement Signal Technology) - 2027 Start | San Jose, CA, US | Pending | 2026-08-02 | [Apply](https://www.indeed.com/viewjob?jk=fb22d897eac0fcbf) |
-| TikTok | Software Engineer Graduate (Ads Delivery) - 2027 Start | San Jose, CA, US | Pending | 2026-08-02 | [Apply](https://www.indeed.com/viewjob?jk=c92a0ffb78b431ce) |
-| TikTok | (General Hire) Backend Software Engineer Graduate (Trust &amp; Safety) - 2027 Start | San Jose, CA, US | Pending | 2026-08-02 | [Apply](https://www.indeed.com/viewjob?jk=939993c97e570c8d) |
-| TikTok | Backend Software Engineer Graduate (Machine Moderation Platform) - 2027 Start | Seattle, WA, US | Pending | 2026-08-02 | [Apply](https://www.indeed.com/viewjob?jk=621728207e986115) |
-| TikTok | Backend Software Engineer Graduate (Business Governace) - 2027 Start | San Jose, CA, US | Pending | 2026-08-02 | [Apply](https://www.indeed.com/viewjob?jk=81059fa4b0e7d3ee) |
-| TikTok | Backend Software Engineer Graduate (Risk &amp; Response) - 2027 Start | Seattle, WA, US | Pending | 2026-08-02 | [Apply](https://www.indeed.com/viewjob?jk=666e54bce6240fdf) |
-| TikTok | Backend Software Engineer Graduate (Emerging Products &amp; AI Safety) - 2027 Start | San Jose, CA, US | Pending | 2026-08-02 | [Apply](https://www.indeed.com/viewjob?jk=aa727adbbfc5a1bd) |
-| TikTok | Backend Software Engineer Graduate (Feed Safety) - 2027 Start | Seattle, WA, US | Pending | 2026-08-02 | [Apply](https://www.indeed.com/viewjob?jk=724c4f93bbacb5f4) |
-| TikTok | AI Infrastructure Engineer Graduate (Algorithm Infrastructure) - 2027 Start (PhD) | San Jose, CA, US | Pending | 2026-08-02 | [Apply](https://www.indeed.com/viewjob?jk=4cb6173291c4004f) |
-| TikTok | (General hire) Backend Software Engineer Graduate (Trust &amp; Safety) - 2027 Start | Seattle, WA, US | Pending | 2026-08-02 | [Apply](https://www.indeed.com/viewjob?jk=78ae8f2c0a685cdf) |
-| Lightfield | Software Engineer: Infrastructure (Early Career) | Boston | Pending | 2026-08-02 | [Apply](https://jobs.ashbyhq.com/lightfield/9a7ef2f9-577a-4242-b884-719e3cdf4420) |
 | Syncreon Consulting | Full Stack Developer - ONLY GC/Citizens - Overall 5yrs also okay | Fremont, CA | Evaluation failed — Job posting returned HTTP 403. | 2026-08-01 | [Apply](https://jobs.smartrecruiters.com/SyncreonConsulting/744000140943409-full-stack-developer-only-gc-citizens-overall-5yrs-also-okay?oga=true) |
 | Syncreon Consulting | Informatica ETL Developer - PL/SQL - Exadata skills are mandatory - W2 Position - Independent profiles only | Dallas, TX | Evaluation failed — Job posting returned HTTP 403. | 2026-08-01 | [Apply](https://jobs.smartrecruiters.com/SyncreonConsulting/744000140943189-informatica-etl-developer-pl-sql-exadata-skills-are-mandatory-w2-position-independent-profiles-only-?oga=true) |
 | Syncreon Consulting | Python Developer with Risk Modelling | New York City, NY | Evaluation failed — Job posting returned HTTP 403. | 2026-08-01 | [Apply](https://jobs.smartrecruiters.com/SyncreonConsulting/744000140941596-python-developer-with-risk-modelling?oga=true) |
@@ -151,6 +156,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Cincinnati Children’s | Developer I | Burnet, TX | Pending | 2026-07-29 | [Apply](https://cincinnatichildrens.wd5.myworkdayjobs.com/en-US/careersatcincinnatichildrens/job/Burnet-Campus/Developer-I_JR223867) |
 | C.H. Robinson | Software Engineer III | Eden Prairie, MN | Pending | 2026-07-29 | [Apply](https://chrobinson.wd5.myworkdayjobs.com/en-US/chrobinson/job/Eden-Prairie-MN-United-States-of-America/Software-Engineer-III_R48937) |
 | Booz Allen | Software Engineer - Junior | Springfield, VA | Pending | 2026-07-29 | [Apply](https://bah.wd1.myworkdayjobs.com/en-US/bah_jobs/job/Springfield-VA/Software-Engineer--Junior_R0245572) |
+| Boeing | Entry-level Software Engineer-Developers | El Segundo, CA | Pending | 2026-07-29 | [Apply](https://boeing.wd1.myworkdayjobs.com/en-US/external_careers/job/USA---El-Segundo-CA/Entry-level-Software-Engineer-Developers_JR2026518452-1) |
 | Boeing | Entry-level Software Engineer-Developers | El Segundo, CA | Pending | 2026-07-29 | [Apply](https://boeing.wd1.myworkdayjobs.com/en-US/external_subsidiary/job/USA---El-Segundo-CA/Entry-level-Software-Engineer-Developers_JR2026518452) |
 | Abnormal Security | Software Engineer I - Data Platform | Remote - USA | Pending | 2026-07-29 | [Apply](https://abnormal.ai/careers/jobs/7814567003?gh_jid=7814567003) |
 | Roblox | Developer Engagement Representative - Philippines (Part-Time Contract) | Remote | Pending | 2026-07-29 | [Apply](https://careers.roblox.com/jobs/8083281?gh_jid=8083281) |
@@ -520,6 +526,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Robinhood | Software Engineer | Menlo Park, CA | Pending | 2026-06-02 | [Apply](https://boards.greenhouse.io/robinhood/jobs/7975550?gh_jid=7975550&t=gh_src%3D) |
 | Robinhood | Software Engineer | Menlo Park, CA | Pending | 2026-06-02 | [Apply](https://boards.greenhouse.io/robinhood/jobs/7975558?gh_jid=7975558&t=gh_src%3D) |
 | Robinhood | Software Engineer | Menlo Park, CA | Pending | 2026-06-02 | [Apply](https://boards.greenhouse.io/robinhood/jobs/7975526?gh_jid=7975526&t=gh_src%3D) |
+| Leidos | Junior Python Developer | Chantilly, VA +1 | Pending | 2026-06-02 | [Apply](https://leidos.wd5.myworkdayjobs.com/en-US/external/job/Chantilly-VA/Junior-Python-Developer_R-00183794-1) |
 | Leidos | Junior DevOps Engineer | Chantilly, VA +1 | Pending | 2026-06-02 | [Apply](https://leidos.wd5.myworkdayjobs.com/en-US/external/job/Chantilly-VA/Junior-DevOps-Engineer_R-00183797-1) |
 | Belay Technologies | Junior Software Engineer | Annapolis Junction, MD | Pending | 2026-06-02 | [Apply](http://belaytechnologies.applytojob.com/apply/6XkgXjwrHB/Junior-Software-Engineer) |
 | NAVEX | Junior Software Engineer | Charlotte, NC +2 | Pending | 2026-06-01 | [Apply](https://jobs.dayforcehcm.com/en-US/navex/jobopenings/jobs/4334) |
