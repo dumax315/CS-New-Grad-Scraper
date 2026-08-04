@@ -444,6 +444,10 @@ def evaluate_listings(session: Session, listings: list[Listing]) -> int:
             session.rollback()
             listing.fit_evaluation_failed_at = datetime.now(timezone.utc)
             listing.fit_evaluation_error = reason
+            if stage == "job_page":
+                # An inaccessible posting cannot be fixed by retrying Codex and
+                # must not reserve a place in every later scheduled batch.
+                listing.fit_selected_at = None
             session.commit()
             logger.error(
                 "Could not evaluate listing %s: %s (%s)",
@@ -461,15 +465,25 @@ def evaluate_new_listings(session: Session, listings: list[Listing]) -> int:
         .order_by(Listing.fit_selected_at, Listing.id)
         .limit(settings.codex_max_evaluations)
     ).all()
-    if selected:
-        return evaluate_listings(session, list(selected))
 
-    ranked = rank_new_listings(listings)
-    newly_selected = ranked[:settings.codex_max_evaluations]
+    evaluated = 0
+    attempted = len(selected)
+    if selected:
+        evaluated += evaluate_listings(session, list(selected))
+
+    remaining_capacity = settings.codex_max_evaluations - attempted
+    if remaining_capacity <= 0:
+        return evaluated
+
+    ranked = rank_new_listings([
+        listing for listing in listings
+        if listing.fit_selected_at is None and listing.fit_evaluated_at is None
+    ])
+    newly_selected = ranked[:remaining_capacity]
     if len(ranked) > len(newly_selected):
         logger.info(
             "Capping Codex evaluations at the highest-priority %s of %s new listings",
-            settings.codex_max_evaluations,
+            remaining_capacity,
             len(ranked),
         )
     selected_at = datetime.now(timezone.utc)
@@ -477,16 +491,19 @@ def evaluate_new_listings(session: Session, listings: list[Listing]) -> int:
         listing.fit_selected_at = listing.fit_selected_at or selected_at
     session.commit()
 
-    # A deployment may ingest before the operator completes device login.
-    # Persisting selection lets a worker restart retry only the same batch
-    # rather than silently losing or expanding that batch.
+    # Persist selection before invoking Codex so authentication or transient
+    # Codex failures remain retryable after a worker restart.
     selected = session.scalars(
         select(Listing)
-        .where(Listing.fit_selected_at.is_not(None), Listing.fit_evaluated_at.is_(None))
+        .where(
+            Listing.id.in_([listing.id for listing in newly_selected]),
+            Listing.fit_selected_at.is_not(None),
+            Listing.fit_evaluated_at.is_(None),
+        )
         .order_by(Listing.fit_selected_at, Listing.id)
-        .limit(settings.codex_max_evaluations)
-    ).all()
-    return evaluate_listings(session, list(selected))
+        .limit(remaining_capacity)
+    ).all() if newly_selected else []
+    return evaluated + evaluate_listings(session, list(selected))
 
 
 def evaluation_priority(listing: Listing) -> tuple:

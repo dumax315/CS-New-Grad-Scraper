@@ -372,7 +372,7 @@ def test_priority_is_independent_of_input_registry_order():
     ]
 
 
-def test_existing_failed_batch_is_not_expanded_by_new_ingestion(monkeypatch):
+def test_existing_batch_uses_remaining_capacity_for_new_ingestion(monkeypatch):
     engine = create_engine("sqlite://")
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine, expire_on_commit=False)
@@ -395,8 +395,35 @@ def test_existing_failed_batch_is_not_expanded_by_new_ingestion(monkeypatch):
         session.commit()
         assert worker.evaluate_new_listings(session, [newly_ingested]) == 0
 
-    assert seen == [job.application_url for job in selected]
-    assert newly_ingested.fit_selected_at is None
+    assert seen == [
+        selected[0].application_url,
+        selected[1].application_url,
+        newly_ingested.application_url,
+    ]
+    assert newly_ingested.fit_selected_at is not None
+
+
+def test_job_page_failure_is_released_from_scheduled_retry_batch(monkeypatch):
+    engine = create_engine("sqlite://")
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
+    job = listing()
+
+    def failed_scrape(url):
+        request = httpx.Request("GET", url)
+        response = httpx.Response(403, request=request)
+        raise httpx.HTTPStatusError("forbidden", request=request, response=response)
+
+    monkeypatch.setattr(worker, "scrape_job_listing", failed_scrape)
+
+    with Session() as session:
+        session.add(job)
+        session.commit()
+
+        assert worker.evaluate_new_listings(session, [job]) == 0
+        assert job.fit_selected_at is None
+        assert job.fit_evaluated_at is None
+        assert job.fit_evaluation_error == "Job posting returned HTTP 403."
 
 
 def test_failed_evaluation_is_persisted_and_remains_retryable(monkeypatch):

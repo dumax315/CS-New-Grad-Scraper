@@ -85,15 +85,16 @@ def test_render_digest_omits_browse_button_without_public_url():
 def test_render_digest_distinguishes_failed_evaluation_from_pending():
     failed = listing("Failed", None)
     failed.fit_evaluation_failed_at = datetime(2026, 7, 25, tzinfo=timezone.utc)
-    failed.fit_evaluation_error = "Codex review timed out."
+    failed.fit_evaluation_error = "Job posting returned HTTP 403."
 
     digest = render_digest([failed], include_resume_fit=True)
 
-    assert "IS SPRING 2027 NEW GRAD: EVALUATION FAILED" in digest.text
+    assert "IS SPRING 2027 NEW GRAD: HTTP 403" in digest.text
     assert "THEO'S RESUME FIT: EVALUATION FAILED" in digest.text
-    assert "Evaluation error: Codex review timed out." in digest.text
+    assert "Evaluation error: Job posting returned HTTP 403." in digest.text
     assert "Evaluation failed" in digest.html
-    assert "Codex review timed out." in digest.html
+    assert "HTTP 403" in digest.html
+    assert "Job posting returned HTTP 403." in digest.html
     assert "background:#fdf0f0;color:#923e3e" in digest.html
 
 

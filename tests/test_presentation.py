@@ -74,6 +74,18 @@ def test_present_listing_distinguishes_failed_evaluation_from_pending():
     assert job.resume_fit_reasoning is None
 
 
+def test_present_listing_promotes_http_failure_to_fit_label():
+    item = listing()
+    item.fit_evaluation_failed_at = datetime(2026, 7, 25, tzinfo=timezone.utc)
+    item.fit_evaluation_error = "Job posting returned HTTP 403."
+
+    job = present_listing(item)
+
+    assert job.fit_label == "HTTP 403"
+    assert job.fit_evaluation_error == "Job posting returned HTTP 403."
+    assert job.resume_fit_label == "Evaluation failed"
+
+
 def test_present_listings_places_highest_scores_first_and_unscored_last():
     jobs = [
         listing("Unscored", None),

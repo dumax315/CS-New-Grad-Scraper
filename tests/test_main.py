@@ -118,7 +118,7 @@ def test_index_hides_resume_fit_and_resume_page_shows_both_evaluations():
         ]
         failed = listing("failed", date(2026, 7, 22))
         failed.fit_evaluation_failed_at = datetime(2026, 7, 25, tzinfo=timezone.utc)
-        failed.fit_evaluation_error = "Codex review timed out."
+        failed.fit_evaluation_error = "Job posting returned HTTP 403."
         failed.sources = [
             ListingSource(source_name="Curated List", source_url="https://github.com/example/list"),
         ]
@@ -157,9 +157,10 @@ def test_index_hides_resume_fit_and_resume_page_shows_both_evaluations():
     assert "$120k–$140k" in html
     assert "Class of 2027" in html
     assert html.count("Not yet evaluated") == 1
-    assert html.count("Evaluation failed") == 1
+    assert "HTTP 403" in html
+    assert "Evaluation failed" not in html
     assert html.count("fit-score--failed") == 1
-    assert "Codex review timed out." in html
+    assert "Job posting returned HTTP 403." in html
     assert 'class="fit-reasoning fit-error"' in html
     assert ">Sources</span>" in html
     assert "Acme &amp; &lt;Partners&gt;" in html
@@ -182,7 +183,8 @@ def test_index_hides_resume_fit_and_resume_page_shows_both_evaluations():
     assert "93% match" in resume_html
     assert "Resume shows strong Python experience." in resume_html
     assert resume_html.count("Not yet evaluated") == 2
-    assert resume_html.count("Evaluation failed") == 2
+    assert resume_html.count("HTTP 403") == 2
+    assert resume_html.count("Evaluation failed") == 1
     assert resume_html.count("fit-score--failed") == 2
 
 

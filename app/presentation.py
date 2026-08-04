@@ -1,8 +1,12 @@
 from dataclasses import dataclass
 from datetime import date
+import re
 from typing import Iterable
 
 from app.models import Listing
+
+
+HTTP_STATUS_RE = re.compile(r"\bHTTP ([1-5]\d{2})\b")
 
 
 @dataclass(frozen=True, slots=True)
@@ -55,6 +59,14 @@ def _fit_tone(confidence: int | None, *, evaluation_failed: bool = False) -> str
     return "limited"
 
 
+def _fit_failure_label(error: str | None) -> str:
+    if error:
+        status_match = HTTP_STATUS_RE.search(error)
+        if status_match:
+            return f"HTTP {status_match.group(1)}"
+    return "Evaluation failed"
+
+
 def present_listing(listing: Listing) -> JobView:
     meta = [listing.location or "Location not listed"]
     if listing.salary:
@@ -78,7 +90,7 @@ def present_listing(listing: Listing) -> JobView:
         ),
         fit_confidence=confidence,
         fit_label=(
-            "Evaluation failed"
+            _fit_failure_label(listing.fit_evaluation_error)
             if evaluation_failed
             else f"{confidence}% match" if confidence is not None else "Not yet evaluated"
         ),
