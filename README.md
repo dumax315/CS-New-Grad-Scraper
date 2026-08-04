@@ -5,10 +5,11 @@ A small, public job board that aggregates software-engineering new-grad listings
 <!-- BEGIN GENERATED JOBS -->
 ## Current Openings
 
-1042 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
+1041 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
 
 | Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |
 |---|---|---|---|---|---|
+| Samsara | Software Engineer I - New Grad, SF | San Francisco - SF9 | Pending | 2026-08-03 | [Apply](https://www.samsara.com/company/careers/roles/8097343?gh_jid=8097343) |
 | ByteDance | Product Security Engineer Graduate (Security BP) - 2027 Start | San Jose, CA, US | Pending | 2026-08-03 | [Apply](https://www.indeed.com/viewjob?jk=98a3b834f6e5daf2) |
 | TikTok | Machine Learning Engineer Graduate (TikTok Trust and Safety) - 2027 Start | Seattle, WA, US | Pending | 2026-08-03 | [Apply](https://www.indeed.com/viewjob?jk=f5725f9e436797be) |
 | TikTok | Machine Learning Engineer Graduate (TikTok Trust and Safety) - 2027 Start | San Jose, CA, US | Pending | 2026-08-03 | [Apply](https://www.indeed.com/viewjob?jk=c6c87b24eb910e63) |
@@ -1049,8 +1050,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | TikTok | SDET, Software Development Engineer in Test Graduate (TikTok Eng Test-Privacy Product) | San Jose, CA | Pending | 2025-08-07 | [Apply](https://lifeattiktok.com/search/7533387057666754834?spread=5MWH5CQ) |
 | TikTok | New Grad 2026: Software Engineer Graduate PGC | Seattle, WA | Pending | 2025-08-07 | [Apply](https://lifeattiktok.com/search/7532631803707263240?spread=5MWH5CQ) |
 | TikTok | New Grad 2026: Software Engineer Graduate - Data-Search | San Jose, CA | Pending | 2025-08-07 | [Apply](https://lifeattiktok.com/search/7533719102990190866?spread=5MWH5CQ) |
-| Ramp | New Grad 2026: Software Engineer - Backend | New York, NY | Pending | 2025-08-03 | [Apply](https://jobs.ashbyhq.com/ramp/83075cf0-9c22-4475-9c6b-e21923a96df8) |
-| Ramp | New Grad 2026: Software Engineer - Frontend | New York, NY | Pending | 2025-08-03 | [Apply](https://jobs.ashbyhq.com/ramp/a1229aec-1105-4c47-8533-b912e732ed89) |
 <!-- END GENERATED JOBS -->
 
 ## Prerequisites
