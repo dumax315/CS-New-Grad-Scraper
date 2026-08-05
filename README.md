@@ -5,10 +5,11 @@ A small, public job board that aggregates software-engineering new-grad listings
 <!-- BEGIN GENERATED JOBS -->
 ## Current Openings
 
-1044 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
+1040 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
 
 | Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |
 |---|---|---|---|---|---|
+| Meta | Data Engineer, Product Analytics | San Francisco, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=54b1468127454d91) |
 | Visa | Software Engineer | Highlands Ranch, CO, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=80ea595aaa9621ab) |
 | Visa | Software Engineer | Highlands Ranch, CO, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=f63b53cd9e49e15b) |
 | Visa | Software Engineer | Highlands Ranch, CO, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=f1d294c4eaef16ce) |
@@ -17,14 +18,9 @@ A small, public job board that aggregates software-engineering new-grad listings
 | TikTok | Machine Learning Engineer Graduate (TikTok Content Ecology) - 2027 Start (PhD) | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=09a451ec86b2b11d) |
 | TikTok | Machine Learning Engineer Graduate (Commercial AI-CRM and Transaction) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=e09ae67c0464955f) |
 | TikTok | Machine Learning Engineer Graduate (TikTok-Data-Search-Recommendation-Global E-Commerce) - 2027 Start | Seattle, WA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=18d7d230b8ef350c) |
-| TikTok | (General Hire) Machine Learning Engineer Graduate (Performance Monetization) - 2027 Start (PhD) | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=c4a0d3a2fff09209) |
 | TikTok | Backend Software Engineer Graduate (Global E-commerce) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=f56cd6f926bf27c0) |
 | TikTok | Mobile Software Engineer Graduate (Global E-commerce) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=78ff59f107e7a2e6) |
-| TikTok | Software Engineer Graduate(Ads Infrastructure) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=da4843203e269ae5) |
-| TikTok | Software Engineer Graduate (Global SRE) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=84a4b56507a4ce3e) |
-| TikTok | Machine Learning Engineer Graduate (Search Ads) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=093ddf2a1d79fa22) |
 | TikTok | Backend Software Engineer Graduate (TikTok-PGC-Digital Content Center) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=4d22af308ad0bf59) |
-| TikTok | Software Engineer Graduate (TikTok Global Live) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=e738e27f8a76abfa) |
 | TikTok | Frontend Software Engineer Graduate (Ads Interface) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=30fb330d90945e6e) |
 | TikTok | Software Engineer Graduate (Transaction Platform) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=907e3f37086d8025) |
 | TikTok | Software Engineer Graduate (AI Agent &amp; Global Revenue Platform) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-04 | [Apply](https://www.indeed.com/viewjob?jk=a1b4aebf3db93012) |
