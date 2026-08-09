@@ -5,11 +5,10 @@ A small, public job board that aggregates software-engineering new-grad listings
 <!-- BEGIN GENERATED JOBS -->
 ## Current Openings
 
-1090 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
+1089 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
 
 | Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |
 |---|---|---|---|---|---|
-| Wayne State University | Systems Software Engineer I | Detroit, MI, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-07 | [Apply](https://www.indeed.com/viewjob?jk=8abd5ec67d4c638a) |
 | Google | Software Developer, Early Career, Campus | Waterloo, ON, CA | Evaluation failed — Job posting returned HTTP 403. | 2026-08-07 | [Apply](https://ca.indeed.com/viewjob?jk=1a2dec0029d845d0) |
 | Google | Software Developer, Early Career, Campus | Montréal, QC, CA | Evaluation failed — Job posting returned HTTP 403. | 2026-08-07 | [Apply](https://ca.indeed.com/viewjob?jk=ee34826facf330aa) |
 | L3Harris | Associate, Software Engineer | Salt Lake City, UT, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-07 | [Apply](https://www.indeed.com/viewjob?jk=83a16da569ed323c) |
