@@ -5,7 +5,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 <!-- BEGIN GENERATED JOBS -->
 ## Current Openings
 
-1096 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
+1090 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
 
 | Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |
 |---|---|---|---|---|---|
@@ -60,8 +60,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | TikTok | Software Engineer Graduate - Global E-commerce-Search - 2027 Start | Seattle, WA | 95% — Explicit “2027 Start” supports spring 2027 timing; the end-of-year onboarding requirement should be confirmed | 2026-08-06 | [Apply](https://lifeattiktok.com/search/7670558992960358661) |
 | Boeing | Software Engineer-Systems - Associate/Experienced | Chantilly, VA +2 | 30% — Spring 2027 timing is unstated; the active opening appears near-term and requires an active Top Secret clearance | 2026-08-05 | [Apply](https://boeing.wd1.myworkdayjobs.com/en-US/external_careers/job/USA---Chantilly-VA/Software-Engineer-Systems--Associate-Experienced-_JR2026511797-1) |
 | Crusoe | Software Engineer I - DCIE | San Francisco, CA | 60% — Spring 2027 timing is unstated; the posting appears to target a near-term full-time hire | 2026-08-05 | [Apply](https://jobs.ashbyhq.com/crusoe/8184c413-a95a-49d7-bb75-ff3162ca198f) |
-| Boeing | Associate Software Engineer | Maryland Heights, MO +1 | 65% — Spring 2027 timing is unstated; the active opening appears aimed at a near-term start, so applying now is uncertain | 2026-08-05 | [Apply](https://boeing.wd1.myworkdayjobs.com/en-US/external_subsidiary/job/USA---Maryland-Heights-MO/Associate-Software-Engineer_JR2026516706) |
-| Boeing | Entry-Level Software Engineer | Maryland Heights, MO +1 | 70% — Spring 2027 timing is unstated; the posting appears geared toward a near-term start, though its entry-level requirements are otherwise compatible | 2026-08-05 | [Apply](https://boeing.wd1.myworkdayjobs.com/en-US/external_subsidiary/job/USA---Maryland-Heights-MO/Entry-Level-Software-Engineer_JR2026516694) |
 | TikTok | Backend Software Engineer Graduate - TikTok - Data Lifecycle Management - 2027 Start | San Jose, CA | 35% — The 2027-start title supports eligibility, but the required onboarding by year-end likely contradicts a spring 2027 start | 2026-08-05 | [Apply](https://lifeattiktok.com/search/7670391173613160757) |
 | TikTok | Backend Software Engineer Graduate - TikTok - Privacy and Security - Product - 2027 Start | San Jose, CA | 90% — Spring 2027 timing is supported by the explicit 2027 start date, though the end-of-year onboarding requirement should be confirmed | 2026-08-05 | [Apply](https://lifeattiktok.com/search/7670387719826786565) |
 | L3Harris | Associate, Software Engineer | Salt Lake City, UT, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-05 | [Apply](https://www.indeed.com/viewjob?jk=70c7ab5b5af8d73b) |
@@ -454,7 +452,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Akumen | Junior Software Developer | Washington, DC | Pending | 2026-07-08 | [Apply](https://akumeninc.com/career?gh_jid=4308114009) |
 | Amazon | Software Engineer I - Discovery | San Francisco, CA | Pending | 2026-07-08 | [Apply](https://www.amazon.jobs/jobs/10468973/apply) |
 | ReliaQuest | Associate Software Engineer | Tampa, FL | Pending | 2026-07-07 | [Apply](https://reliaquest.wd5.myworkdayjobs.com/en-US/reliaquest_careers/job/Tampa-FL/Associate-Software-Engineer_R15047) |
-| GDIT | Front End/Angular 2+/Full Stack Java Developer | Hanover, MD | Pending | 2026-07-07 | [Apply](https://gdit.wd5.myworkdayjobs.com/en-US/external_career_site/job/USA-MD-Hanover/Front-End-Angular-2--Full-Stack-Java-Developer_RQ220540) |
 | GDIT | Software Developer TS/SCI w/Polygraph | McLean, VA | Pending | 2026-07-07 | [Apply](https://gdit.wd5.myworkdayjobs.com/en-US/external_career_site/job/USA-VA-McLean/Software-Developer-TS-SCI-w-Polygraph_RQ207428) |
 | Analog Devices | Associate Engineer: Embedded Audio Software | San Jose, CA | Pending | 2026-07-07 | [Apply](https://analogdevices.wd1.myworkdayjobs.com/en-US/external/job/US-CA-San-Jose-Rio-Robles/Associate-Engineer--Embedded-Audio-Software_R263781) |
 | HavocAI | Software Engineer - Business Analytics | San Diego, CA +1 | Pending | 2026-07-07 | [Apply](https://jobs.ashbyhq.com/havocai/06ef43f0-0d23-4062-a95c-aa9e913844e1) |
@@ -762,9 +759,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Tesla | Frontend Engineer, GenAI Model Evaluation | Palo Alto, CA | Pending | 2026-04-12 | [Apply](https://www.tesla.com/careers/search/job/frontend-engineer-genai-model-evaluation-226925) |
 | Tesla | Software Engineer, AI Driven Test Automation | Palo Alto, CA | Pending | 2026-04-12 | [Apply](https://www.tesla.com/careers/search/job/235630) |
 | Tesla | Linux Site Reliability Engineer, IT Manufacturing Site Reliability Engineering | Fremont, CA | Pending | 2026-04-12 | [Apply](https://www.tesla.com/careers/search/job/241276) |
-| Raytheon | 2026 Fulltime Raytheon Software Engineer II - Test Equipment - Onsite | Tucson, AZ | Pending | 2026-04-10 | [Apply](https://globalhr.wd5.myworkdayjobs.com/en-US/rec_rtx_ext_gateway/job/US-AZ-TUCSON-801--1151-E-Hermans-Rd--BLDG-801-External-Site/XMLNAME-2026-Fulltime-Raytheon-Software-Engineer-II---Test-Equipment---Onsite_01790413) |
-| Loft Orbital | Frontend Engineer | Golden, CO | Pending | 2026-04-10 | [Apply](https://jobs.lever.co/loftorbital/37f45d77-4e6c-4ad0-bdc5-82cf095c9285) |
-| TikTok | Software Engineer - AI Agent | San Jose, CA | Pending | 2026-04-10 | [Apply](https://lifeattiktok.com/search/7626968373985429765) |
 | Credit Genie | New Grad: Software Engineer | New York, NY | Pending | 2026-04-09 | [Apply](https://jobs.ashbyhq.com/creditgenie/016056e0-61cd-4a19-9d42-5f3cd88fed02) |
 | SpaceX | New Graduate Engineer, Propulsion (Starship) | Starbase, TX | Pending | 2026-04-07 | [Apply](https://boards.greenhouse.io/spacex/jobs/8497447002?gh_jid=8497447002) |
 | SpaceX | New Graduate Engineer, Mechanical | McGregor, TX | Pending | 2026-04-07 | [Apply](https://boards.greenhouse.io/spacex/jobs/8497524002?gh_jid=8497524002) |
