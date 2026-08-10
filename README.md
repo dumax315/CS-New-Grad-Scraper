@@ -5,7 +5,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 <!-- BEGIN GENERATED JOBS -->
 ## Current Openings
 
-1089 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
+1088 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
 
 | Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |
 |---|---|---|---|---|---|
@@ -1097,7 +1097,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Tesla | Technical Program Manager, Energy Software | Palo Alto, CA | Pending | 2025-08-13 | [Apply](https://www.tesla.com/careers/search/job/242474) |
 | TikTok | New Grad 2026: Machine Learning Engineer (Monetization Technology - TikTok Ads Creative &amp; Ecosystem) | San Jose, CA | Pending | 2025-08-13 | [Apply](https://lifeattiktok.com/search/7535606471191824647?spread=5MWH5CQ) |
 | TikTok | New Grad 2026: Software Engineer Graduate (Recommendation Platform) | San Jose | Pending | 2025-08-13 | [Apply](https://lifeattiktok.com/search/7536356589390301458?spread=5MWH5CQ) |
-| Databricks | New Grad 2026: Software Engineer | Bellevue, WAMountain View, CASan Francisco, CA | Pending | 2025-08-09 | [Apply](https://www.databricks.com/company/careers/university-recruiting/software-engineer---new-grad-2026-start-6865698002) |
 <!-- END GENERATED JOBS -->
 
 ## Prerequisites
