@@ -5,7 +5,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 <!-- BEGIN GENERATED JOBS -->
 ## Current Openings
 
-1092 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
+1073 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
 
 | Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |
 |---|---|---|---|---|---|
@@ -67,7 +67,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | P&amp;G - Procter &amp; Gamble | Forward Deployed Software Engineer - Warehouse Innovation | Cincinnati, OH | 70% — Spring 2027 timing is unstated; no graduation window or future start date is provided, so applying now is uncertain | 2026-08-13 | [Apply](https://pg.wd5.myworkdayjobs.com/en-US/1000/job/CINCINNATI-GENERAL-OFFICES/Forward-Deployed-Software-Engineer--Warehouse-Innovation_R000155929) |
 | MRI Software | Account Manager - Occupier Software Solutions | Cleveland, OH | 10% — Spring 2027 timing is unstated, and the role requires 2+ years of software sales experience, indicating a near-term experienced-hire opening | 2026-08-13 | [Apply](https://mrisoftware.wd501.myworkdayjobs.com/en-US/external_careersite/job/Cleveland-Ohio-Office/Account-Manager---Occupier-Software-Solutions_R-109192) |
 | Dexcom | Software Development Engineer 1 | Remote - USA | 70% — Spring 2027 timing is unstated; the opening appears aimed at near-term availability, though its entry-level requirements are otherwise compatible | 2026-08-13 | [Apply](https://dexcom.wd1.myworkdayjobs.com/en-US/dexcom/job/Remote---United-States/Software-Development-Engineer-1_JR120540) |
-| Boeing | Embedded Software Engineer - Entry-Level | Hazelwood, MO +1 | 60% — Spring 2027 timing is unstated; the posting requires a bachelor's degree and gives no future start date, so applying now is only cautiously reasonable | 2026-08-13 | [Apply](https://boeing.wd1.myworkdayjobs.com/en-US/external_careers/job/USA---Hazelwood-MO/Embedded-Software-Engineer---Entry-Level_JR2026522089-1) |
 | Bank of America | Software Engineer II - AI/ML | Plano, TX +1 | 35% — Spring 2027 timing is unstated; the Software Engineer II title and 1+ years’ experience requirement suggest a near-term experienced hire | 2026-08-13 | [Apply](https://ghr.wd1.myworkdayjobs.com/en-US/us-emplsv/job/Plano/Software-Engineer-II--AI-ML-_26026987-1) |
 | Applied Materials | 2027 Software Engineer - DevOps - New College Grad - Bachelor's - Gloucester - MA | Gloucester, MA | 98% — Spring 2027 timing is strongly supported; the role explicitly starts in Summer 2027 and targets bachelor's degree graduates | 2026-08-13 | [Apply](https://amat.wd1.myworkdayjobs.com/en-US/external/job/GloucesterMA/XMLNAME-2027-Software-Engineer--DevOps---New-College-Grad---Bachelor-s--Gloucester--MA-_R2625762) |
 | TikTok | Software Engineer Graduate - Ads Infra - 2027 Start | San Jose, CA | 55% — 2027 start supports spring 2027 timing, but the required onboarding by the end of the year may contradict availability after graduation | 2026-08-13 | [Apply](https://lifeattiktok.com/search/7673409179353139461) |
@@ -83,6 +82,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 | ByteDance | Research Scientist Graduates (Seed AI Foundation Model Infrastructure) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-13 | [Apply](https://www.indeed.com/viewjob?jk=2ec8495d37914d6f) |
 | TikTok USDS JV | Machine Learning Engineer Graduate (E-Commerce) - 2027 Start (PhD) | Seattle, WA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-13 | [Apply](https://www.indeed.com/viewjob?jk=6c717053c4e2ac49) |
 | TikTok USDS JV | Machine Learning Engineer Graduate (E-Commerce) - 2027 Start (PhD) | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-13 | [Apply](https://www.indeed.com/viewjob?jk=e01f48bbb2b5e010) |
+| TikTok USDS JV | Software Engineer Graduate (E-Commerce) - 2027 Start | Seattle, WA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-13 | [Apply](https://www.indeed.com/viewjob?jk=21614e2864915e06) |
 | DigitalOcean | Software Engineer II, AI/ML | KA, IN | Evaluation failed — Job posting returned HTTP 403. | 2026-08-13 | [Apply](https://in.indeed.com/viewjob?jk=4cfd8a3efb3ba71c) |
 | Uniswap Labs | Software Engineer - Early Career | New York City, NY | 10% — Spring 2027 timing is contradicted; the role requires completing a degree between December 2024 and September 2026 | 2026-08-13 | [Apply](https://jobs.ashbyhq.com/uniswap/fb4d4137-f003-4669-beb7-2a5caca88012) |
 | Sonalysts | Junior Software Engineer | Middletown, RI | 60% — Spring 2027 timing is unstated; the active opening appears near-term, so applying now is uncertain | 2026-08-13 | [Apply](https://careers-sonalysts.icims.com/jobs/2463/junior-software-engineer/job) |
@@ -97,7 +97,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Roblox | Software Engineer - Account Authentication | San Mateo, CA | 65% — Spring 2027 timing is unstated; the active opening appears geared toward a near-term start, though its Early Career designation is somewhat supportive | 2026-08-13 | [Apply](https://careers.roblox.com/jobs/8097701?gh_jid=8097701) |
 | Amazon | Software Dev Engineer | San Francisco, CA | 20% — Spring 2027 timing is unstated; the posting appears aimed at a near-term hire and requires 1+ years of non-internship software development experience | 2026-08-12 | [Apply](https://www.amazon.jobs/jobs/10502486/apply) |
 | Amentum | Software Developer | Dahlgren, VA | 45% — Spring 2027 timing is unstated; the posting appears aimed at a near-term hire and requires a bachelor’s degree, so applying now is uncertain | 2026-08-12 | [Apply](https://pae.wd1.myworkdayjobs.com/en-US/amentum_careers/job/US-VA-Dahlgren/Software-Developer_R0168140) |
-| TikTok | Software Engineer Graduate (Video-on-Demand Algorithm) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-12 | [Apply](https://www.indeed.com/viewjob?jk=cefcd89d60145626) |
 | TikTok | Software Engineer Graduate (Media Engine) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-12 | [Apply](https://www.indeed.com/viewjob?jk=801dda2daff62d0f) |
 | TikTok | Backend Software Engineer Graduate (Creation Platform) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-12 | [Apply](https://www.indeed.com/viewjob?jk=607b8b7cbfd4b310) |
 | TikTok | Backend Software Engineer Graduate (TikTok-PGC-Creator Strategy) - 2027 Start | San Jose, CA, US | Evaluation failed — Job posting returned HTTP 403. | 2026-08-12 | [Apply](https://www.indeed.com/viewjob?jk=464efc821873b242) |
@@ -123,6 +122,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Amentum | C/C++ Software Developer | Dahlgren, VA | 35% — Spring 2027 timing is unstated; the active opening appears intended for a near-term start and requires an active Secret clearance | 2026-08-12 | [Apply](https://pae.wd1.myworkdayjobs.com/en-US/amentum_careers/job/US-VA-Dahlgren/C-C---Software-Developer_R0168169) |
 | Amentum | SQL Database Developer | Dahlgren, VA | 55% — Spring 2027 timing is unstated; the active, until-filled posting suggests a near-term hire | 2026-08-12 | [Apply](https://pae.wd1.myworkdayjobs.com/en-US/amentum_careers/job/US-VA-Dahlgren/SQL-Database-Developer_R0168095) |
 | TikTok | Backend Software Engineer Graduate - TikTok-PGC-Creator Strategy - 2027 Start | San Jose, CA | 95% — Explicitly states a 2027 start and targets completing Bachelor's degree candidates; spring 2027 timing is supported, though onboarding must occur by year-end | 2026-08-12 | [Apply](https://lifeattiktok.com/search/7672976491146004741) |
+| Quest Global | Graduate Engineer Trainee (GET) – Electronics &amp; Embedded Systems | KL, IN | Evaluation failed — Job posting returned HTTP 403. | 2026-08-12 | [Apply](https://in.indeed.com/viewjob?jk=c72683b6e61a8ca2) |
 | Quest Global | Graduate Engineer Trainee (GET) – Electronics &amp; Embedded Systems | KL, IN | Evaluation failed — Job posting returned HTTP 403. | 2026-08-12 | [Apply](https://in.indeed.com/viewjob?jk=81e4fe12dd00a406) |
 | Valon Tech | Software Engineer II | Remote - New York City, NY +1 | 60% — Spring 2027 timing is unstated; the full-time Software Engineer II opening appears oriented toward a near-term start and requires one year of experience | 2026-08-12 | [Apply](https://jobs.ashbyhq.com/valon/2de94485-130f-4f93-abe7-c21d70401b0b) |
 | OmegaHires | UI Developer | USA | 55% — Spring 2027 timing is unstated; no graduation window or future start date is provided, so applying now is uncertain | 2026-08-12 | [Apply](http://omegahires.applytojob.com/apply/FU2ji4G4v5/UI-Developer) |
@@ -772,7 +772,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Ciena | Enterprise Integration Developer | Baltimore, MD | Pending | 2026-04-24 | [Apply](https://ciena.wd5.myworkdayjobs.com/en-US/careers/job/Baltimore/Enterprise-Integration-Developer_R030725) |
 | Valerie Health | Software Engineer | San Francisco, CA | Pending | 2026-04-24 | [Apply](https://jobs.ashbyhq.com/valeriehealth/ee23652a-c33f-4e88-b0eb-a750e444d14b) |
 | Amazon | Software Dev Engineer II - EC2 ML Provisioning | Seattle, WA | Pending | 2026-04-21 | [Apply](https://www.amazon.jobs/jobs/10418900/apply) |
-| Saronic Technologies | Systems Software Engineer | Austin, TX | Pending | 2026-04-18 | [Apply](https://jobs.ashbyhq.com/saronic/e7e93e6e-1c61-45e6-8209-e6276564535d) |
 | SpaceX | New Graduate Engineer, Mechanical (Starship) | Starbase, TX | Pending | 2026-04-14 | [Apply](https://boards.greenhouse.io/spacex/jobs/8497499002?gh_jid=8497499002) |
 | 21CS | Graduate Software Engineer | Morehead City, NC | Pending | 2026-04-14 | [Apply](https://recruiting.ultipro.com/VMS1002VMOO/JobBoard/3dde3e78-a60b-47af-93cf-ef6db6ed312b/OpportunityDetail?opportunityId=fa0772d7-fa49-4ce9-b7ae-de1a0da018eb) |
 | Bentley | Software Engineer | Exton, PA | Pending | 2026-04-14 | [Apply](https://jobs.bentley.com/job/Exton-Software-Engineer-PA-19341/1281097600) |
@@ -1083,24 +1082,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | TikTok | New Grad 2026: Software Engineer Graduate (Video-on-Demand Algorithm) | San Jose, CA | Pending | 2025-08-19 | [Apply](https://lifeattiktok.com/search/7538319953965287698) |
 | Edgehog Trading | C++ Software Developer – Trading Strategy Execution | Chicago, IL | Pending | 2025-08-18 | [Apply](https://ats.rippling.com/en-CA/edgehog-trading/jobs/a39cf004-d79c-4588-9a5f-6bdce04a85ee) |
 | BAE Systems | Junior Software Engineer 🇺🇸 | Hill AFB, UT | Pending | 2025-08-17 | [Apply](https://jobs.baesystems.com/global/en/job/BAE1US115338BREXTERNAL/Junior-Software-Engineer) |
-| ByteDance | Site Reliability Engineer (Data Infrastructure) | Seattle | Pending | 2025-08-16 | [Apply](https://joinbytedance.com/search/7535903852755814674) |
-| ByteDance | New Grad 2026: Cloud Network Engineer (Physical Network Infra) | San Jose, CA | Pending | 2025-08-16 | [Apply](https://joinbytedance.com/search/7538114876280817927) |
-| ByteDance | New Grad 2026: Network Engineer (Physical Network Infra) | Seattle, WA | Pending | 2025-08-16 | [Apply](https://joinbytedance.com/search/7538109046751463688) |
-| ByteDance | New Grad 2026: Network Engineer (Physical Network Infra) | San Jose, CA | Pending | 2025-08-16 | [Apply](https://joinbytedance.com/search/7538106304578963730) |
-| ByteDance | New Grad 2026: Cloud Network Engineer (Physical Network Infra) | Seattle, WA | Pending | 2025-08-16 | [Apply](https://joinbytedance.com/search/7538433821165259015) |
-| ByteDance | New Grad 2026: Software Engineer (Edge Platform) | San Jose, CA | Pending | 2025-08-16 | [Apply](https://joinbytedance.com/search/7538120693880834322) |
-| Canonical | Software Engineer - Python - Cloud | Remote | Pending | 2025-08-16 | [Apply](https://job-boards.greenhouse.io/canonical/jobs/3257589) |
-| Disney | Software Engineer I | Seattle, WA | Pending | 2025-08-16 | [Apply](https://www.disneycareers.com/en/job/-/-/391/85002977104) |
-| Notion | Software Engineer, Search Platform | New York, NYSan Francisco, CA | Pending | 2025-08-16 | [Apply](https://jobs.ashbyhq.com/notion/4b10e40a-6136-4efe-8b05-cad43458e9e9) |
-| PayPal | New Grad: Software Engineer | 5 locationsSan Jose, CAChicago, ILOmaha, NEScottsdale, AZAustin, TX | Pending | 2025-08-16 | [Apply](https://paypal.eightfold.ai/careers/job/274908696559) |
-| SoFi | New Grad 2025: Fullstack Software Engineer | Seattle, WAHelena, MT | Pending | 2025-08-16 | [Apply](https://www.sofi.com/careers/sofi-university) |
-| Tesla | Software Engineer, Core Infrastructure, AI | Palo Alto, CA | Pending | 2025-08-16 | [Apply](https://www.tesla.com/careers/search/job/248409) |
-| TikTok | New Grad 2026: Software Engineer Graduate (Foundation Platform) | San Jose, CA | Pending | 2025-08-16 | [Apply](https://lifeattiktok.com/search/7538325343598741767) |
-| TikTok | New Grad 2026: Software Engineer (Media Platform) | San Jose, CA | Pending | 2025-08-16 | [Apply](https://lifeattiktok.com/search/7538318336657606930) |
-| TikTok | Machine Learning Engineer Graduate (TikTok Short Video Content Understanding/Multimodal Recommendation) | San Jose, CA | Pending | 2025-08-16 | [Apply](https://lifeattiktok.com/search/7534982208201984274) |
-| TikTok | New Grad 2026: Software Engineer (Media Engine) | San Jose, CA | Pending | 2025-08-16 | [Apply](https://lifeattiktok.com/search/7538320612860446994) |
-| TikTok | New Grad 2026: Software Engineer (Live Service) | San Jose, CA | Pending | 2025-08-16 | [Apply](https://lifeattiktok.com/search/7538325771954637074) |
-| TikTok | New Grad 2026: Software Engineer (Commerce Ads) | San Jose, CA | Pending | 2025-08-16 | [Apply](https://lifeattiktok.com/search/7538213896365689096) |
 <!-- END GENERATED JOBS -->
 
 ## Prerequisites
