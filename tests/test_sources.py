@@ -98,7 +98,7 @@ def test_two_source_baseline_preserves_counts_order_and_canonical_overlap():
         candidates = fetch_candidates(client)
 
     assert requested_urls[:2] == [source.raw_url for source in SOURCES]
-    assert len(requested_urls) == len(CURATED_SOURCES) + len(DIRECT_SOURCES)
+    assert len(requested_urls) == len(CURATED_SOURCES) + len(DIRECT_SOURCES) - 1
     assert [candidate.company for candidate in candidates] == [
         "Acme",
         "Beta",

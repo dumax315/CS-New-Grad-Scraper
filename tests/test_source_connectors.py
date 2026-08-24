@@ -9,11 +9,15 @@ from app.source_types import SourceSpec
 
 
 def spec(kind: str) -> SourceSpec:
-    parameters = (
-        {"feed_url": "https://raw.githubusercontent.com/example/jobs.json"}
-        if kind == "ambicuity"
-        else {"tenant": "acme", "employer": "Acme"}
-    )
+    if kind == "applyguy":
+        parameters = {"feed_url": "https://raw.githubusercontent.com/example/jobs.json"}
+    elif kind == "aggregate":
+        parameters = {
+            "feed_url": "https://raw.githubusercontent.com/example/jobs.md",
+            "format": "markdown",
+        }
+    else:
+        parameters = {"tenant": "acme", "employer": "Acme"}
     return SourceSpec(
         key=f"{kind}:acme",
         name=f"Acme Careers ({kind})",
@@ -23,7 +27,7 @@ def spec(kind: str) -> SourceSpec:
     )
 
 
-def test_ambicuity_connector_normalizes_and_scopes_live_feed_shape():
+def test_applyguy_connector_normalizes_and_scopes_live_feed_shape():
     def handler(request: httpx.Request) -> httpx.Response:
         assert request.url.path == "/example/jobs.json"
         return httpx.Response(200, json={"jobs": [
@@ -32,45 +36,45 @@ def test_ambicuity_connector_normalizes_and_scopes_live_feed_shape():
                 "company": "Acme",
                 "title": "Software Engineer, New Grad 2027",
                 "location": "New York, NY",
-                "url": "https://jobs.example/new-grad?utm_source=ambicuity",
-                "posted_at": "2026-07-26T12:30:00+00:00",
-                "posted_display": "Today",
-                "category": {"id": "software_engineering", "name": "Software Engineering"},
-                "comp": {"min": 120000, "max": 150000, "currency": "USD"},
-                "full_description": "Class of 2027 candidates are welcome.",
-                "is_closed": False,
+                "eligibility": "New Grad",
+                "matchKind": "explicit",
+                "posted": "2026-07-26",
+                "age": "Today",
+                "url": "https://applyguy.example/jobs/acme-new-grad",
+                "listingUrl": "https://jobs.example/new-grad?utm_source=applyguy",
             },
             {
                 "id": "acme-experienced",
                 "company": "Acme",
-                "title": "Platform Software Engineer",
+                "title": "Senior Platform Software Engineer",
                 "location": "Remote",
-                "url": "https://jobs.example/experienced",
-                "description": "Candidates need 4+ years of professional experience.",
-                "is_closed": False,
+                "eligibility": "Entry Level",
+                "posted": "2026-07-25",
+                "age": "1d",
+                "url": "https://applyguy.example/jobs/acme-experienced",
+                "listingUrl": "https://jobs.example/experienced",
             },
             {
-                "id": "acme-closed",
+                "id": "acme-older-cohort",
                 "company": "Acme",
-                "title": "New Grad Software Engineer",
+                "title": "New Grad Software Engineer, 2026 Start",
                 "location": "Remote",
-                "url": "https://jobs.example/closed",
-                "is_closed": True,
+                "eligibility": "New Grad",
+                "listingUrl": "https://jobs.example/older-cohort",
             },
             {
                 "id": "acme-civil",
                 "company": "Acme",
                 "title": "Civil Engineer (Entry-Level)",
                 "location": "New York, NY",
-                "url": "https://jobs.example/civil",
-                "description": "University candidates with 0-1 years welcome.",
-                "is_closed": False,
+                "eligibility": "Entry Level",
+                "listingUrl": "https://jobs.example/civil",
             },
             {"id": "broken", "company": "Acme", "title": "Software Engineer"},
         ]})
 
     with httpx.Client(transport=httpx.MockTransport(handler)) as client:
-        result = fetch_source(spec("ambicuity"), client)
+        result = fetch_source(spec("applyguy"), client)
 
     assert result.succeeded is True
     assert result.fetched_count == 5
@@ -80,14 +84,13 @@ def test_ambicuity_connector_normalizes_and_scopes_live_feed_shape():
     assert candidate.application_url == "https://jobs.example/new-grad"
     assert candidate.posted_at == date(2026, 7, 26)
     assert candidate.graduation_year == 2027
-    assert candidate.salary == "$120,000–$150,000"
     assert candidate.category == "Software Engineering"
     assert candidate.scope_decision == "include_explicit"
     assert candidate.timing_explicit is True
     assert candidate.exact_posted_date is True
     assert dict(result.exclusion_counts) == {
-        "exclude_closed": 1,
-        "exclude_experience": 1,
+        "exclude_seniority": 1,
+        "exclude_timing": 1,
         "exclude_non_engineering": 1,
         "exclude_unknown": 1,
     }
@@ -103,21 +106,20 @@ def test_ambicuity_connector_normalizes_and_scopes_live_feed_shape():
         "Embedded Software Engineer I",
     ],
 )
-def test_ambicuity_connector_accepts_swe_title_keywords(title):
+def test_applyguy_connector_accepts_swe_title_keywords(title):
     record = {
         "id": title,
         "company": "Acme",
         "title": title,
-        "url": f"https://jobs.example/{title.replace(' ', '-')}",
-        "description": "Class of 2027 candidates are welcome.",
-        "is_closed": False,
+        "eligibility": "New Grad",
+        "listingUrl": f"https://jobs.example/{title.replace(' ', '-')}",
     }
     with httpx.Client(
         transport=httpx.MockTransport(
             lambda request: httpx.Response(200, json={"jobs": [record]}),
         ),
     ) as client:
-        result = fetch_source(spec("ambicuity"), client)
+        result = fetch_source(spec("applyguy"), client)
 
     assert [candidate.title for candidate in result.candidates] == [title]
 
@@ -132,21 +134,20 @@ def test_ambicuity_connector_accepts_swe_title_keywords(title):
         "Technical Support Engineer - University Graduate",
     ],
 )
-def test_ambicuity_connector_rejects_titles_without_swe_keywords(title):
+def test_applyguy_connector_rejects_titles_without_swe_keywords(title):
     record = {
         "id": title,
         "company": "Acme",
         "title": title,
-        "url": f"https://jobs.example/{title.replace(' ', '-')}",
-        "description": "Class of 2027 candidates are welcome.",
-        "is_closed": False,
+        "eligibility": "New Grad",
+        "listingUrl": f"https://jobs.example/{title.replace(' ', '-')}",
     }
     with httpx.Client(
         transport=httpx.MockTransport(
             lambda request: httpx.Response(200, json={"jobs": [record]}),
         ),
     ) as client:
-        result = fetch_source(spec("ambicuity"), client)
+        result = fetch_source(spec("applyguy"), client)
 
     assert result.candidates == ()
     assert dict(result.exclusion_counts) == {"exclude_non_engineering": 1}
@@ -269,7 +270,10 @@ def test_ashby_connector_handles_optional_fields_and_scope_exclusions():
     }
 
 
-@pytest.mark.parametrize("kind", ["ambicuity", "greenhouse", "lever", "ashby"])
+@pytest.mark.parametrize(
+    "kind",
+    ["aggregate", "applyguy", "greenhouse", "lever", "ashby"],
+)
 def test_connector_http_failure_returns_sanitized_result(kind):
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(
@@ -297,7 +301,7 @@ def test_connector_timeout_is_isolated():
     assert timed_out.error_summary == "Source request timed out."
 
 
-@pytest.mark.parametrize("kind", ["ambicuity", "greenhouse"])
+@pytest.mark.parametrize("kind", ["applyguy", "greenhouse"])
 def test_connector_schema_failure_is_isolated(kind):
     with httpx.Client(
         transport=httpx.MockTransport(
@@ -343,5 +347,17 @@ def test_direct_registry_contains_all_reviewed_boards():
         "markdown:speedyapply-2027-swe",
         "markdown:vansh-new-grad-2027",
         "json:ambicuity-new-grad-jobs",
+        "json:applyguy-2027-new-grad-jobs",
+        "markdown:keryx-2027-new-grad",
+        "html:simplify-new-grad-positions",
+        "markdown:jobright-swe-new-grad",
+        "markdown:zapply-new-grad-2027",
+        "markdown:harry-new-grad-2027",
     ]
+    retired, applyguy = CURATED_SOURCES[2:4]
+    assert retired.kind == "retired"
+    assert retired.public_url == "https://github.com/ambicuity/New-Grad-Jobs"
+    assert applyguy.kind == "applyguy"
+    assert applyguy.public_url == "https://github.com/ApplyGuy/2027-New-Grad-Jobs"
+    assert applyguy.parameters["feed_url"].endswith("/data/new-grad-jobs.json")
     assert all(source.enabled is True for source in CURATED_SOURCES)

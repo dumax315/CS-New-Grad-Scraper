@@ -1,4 +1,4 @@
-"""Connector for Ambicuity's machine-readable new-grad feed."""
+"""Connector for ApplyGuy's machine-readable 2027 new-grad feed."""
 
 from collections import Counter
 from datetime import datetime, timezone
@@ -6,8 +6,8 @@ import re
 
 import httpx
 
-from app.source_connectors.common import clean_description, failed_result, parse_iso_date
-from app.source_scope import scope_direct_candidates
+from app.source_connectors.common import failed_result, parse_iso_date
+from app.source_scope import ScopeResult, classify_direct_candidate
 from app.source_types import Candidate, SourceFetchResult, SourceSpec
 from app.source_utils import canonicalize_url
 
@@ -21,27 +21,18 @@ SWE_TITLE_RE = re.compile(
     r"quality assurance|qa engineer(?:ing)?|test automation)\b",
     re.I,
 )
+SUPPORTED_ELIGIBILITY = {"Entry Level", "New Grad"}
 
 
-def _salary_text(value: object) -> str:
-    if not isinstance(value, dict):
-        return ""
-    minimum = value.get("min")
-    maximum = value.get("max")
-    if (
-        not isinstance(minimum, (int, float))
-        or isinstance(minimum, bool)
-        or not isinstance(maximum, (int, float))
-        or isinstance(maximum, bool)
-    ):
-        return ""
-    currency = value.get("currency")
-    currency_label = currency if isinstance(currency, str) else ""
-    symbol = "$" if currency_label == "USD" else ""
-    suffix = "" if symbol or not currency_label else f" {currency_label}"
-    return (
-        f"{symbol}{minimum:,.0f}–{symbol}{maximum:,.0f}{suffix}"
-    )
+def _scope_result(title: str, eligibility: str) -> ScopeResult:
+    result = classify_direct_candidate(title, eligibility)
+    if result.code != "exclude_unknown":
+        return result
+    if eligibility == "New Grad":
+        return ScopeResult("include_explicit", "curated new-grad eligibility")
+    if eligibility == "Entry Level":
+        return ScopeResult("include_plausible", "curated entry-level eligibility")
+    return result
 
 
 def fetch(spec: SourceSpec, client: httpx.Client) -> SourceFetchResult:
@@ -52,47 +43,46 @@ def fetch(spec: SourceSpec, client: httpx.Client) -> SourceFetchResult:
         payload = response.json()
         records = payload.get("jobs") if isinstance(payload, dict) else None
         if not isinstance(records, list):
-            raise ValueError("Ambicuity response has no jobs list")
+            raise ValueError("ApplyGuy response has no jobs list")
     except (httpx.HTTPError, ValueError, TypeError, KeyError) as error:
         return failed_result(spec, error, started_at)
 
     candidates: list[Candidate] = []
-    malformed_count = 0
-    closed_count = 0
-    non_swe_title_count = 0
+    exclusion_counts: Counter[str] = Counter()
     for record in records:
         if not isinstance(record, dict):
-            malformed_count += 1
-            continue
-        if record.get("is_closed") is True:
-            closed_count += 1
+            exclusion_counts["exclude_unknown"] += 1
             continue
         company = record.get("company")
         title = record.get("title")
         location = record.get("location")
-        application_url = record.get("url")
+        eligibility = record.get("eligibility")
+        application_url = record.get("listingUrl")
         external_id = record.get("id")
         if (
             not isinstance(company, str)
             or not company.strip()
             or not isinstance(title, str)
             or not title.strip()
+            or eligibility not in SUPPORTED_ELIGIBILITY
             or not isinstance(application_url, str)
             or not application_url.startswith(("http://", "https://"))
             or external_id is None
         ):
-            malformed_count += 1
+            exclusion_counts["exclude_unknown"] += 1
             continue
         if not SWE_TITLE_RE.search(title):
-            non_swe_title_count += 1
+            exclusion_counts["exclude_non_engineering"] += 1
             continue
-        category = record.get("category")
-        category_name = category.get("name", "") if isinstance(category, dict) else ""
-        posted_at = parse_iso_date(record.get("posted_at"))
-        description = clean_description(
-            record.get("full_description") or record.get("description"),
-        )
+
+        scope_result = _scope_result(title, eligibility)
+        if not scope_result.included:
+            exclusion_counts[scope_result.code] += 1
+            continue
+
+        posted_at = parse_iso_date(record.get("posted"))
         year_match = YEAR_RE.search(title)
+        graduation_year = int(year_match.group(1)) if year_match else None
         candidates.append(Candidate(
             company=company.strip(),
             title=title.strip(),
@@ -100,36 +90,29 @@ def fetch(spec: SourceSpec, client: httpx.Client) -> SourceFetchResult:
             application_url=canonicalize_url(application_url),
             source_name=spec.name,
             source_url=spec.public_url,
-            category=category_name if isinstance(category_name, str) else "",
-            salary=_salary_text(record.get("comp")),
+            category="Software Engineering",
             source_age=(
-                record.get("posted_display", "")
-                if isinstance(record.get("posted_display"), str)
+                record.get("age", "")
+                if isinstance(record.get("age"), str)
                 else ""
             ),
             posted_at=posted_at,
-            graduation_year=int(year_match.group(1)) if year_match else None,
+            graduation_year=graduation_year,
             source_key=spec.key,
             source_external_id=str(external_id),
             source_kind=spec.kind,
-            description_text=description,
+            scope_decision=scope_result.code,
+            timing_explicit=(
+                scope_result.timing_explicit or graduation_year == 2027
+            ),
             exact_posted_date=posted_at is not None,
         ))
 
-    accepted, exclusions = scope_direct_candidates(
-        candidates,
-        malformed_count=malformed_count,
-    )
-    exclusion_counts = Counter(dict(exclusions))
-    if closed_count:
-        exclusion_counts["exclude_closed"] += closed_count
-    if non_swe_title_count:
-        exclusion_counts["exclude_non_engineering"] += non_swe_title_count
     return SourceFetchResult(
         source_key=spec.key,
         source_name=spec.name,
         succeeded=True,
-        candidates=accepted,
+        candidates=tuple(candidates),
         fetched_count=len(records),
         started_at=started_at,
         finished_at=datetime.now(timezone.utc),

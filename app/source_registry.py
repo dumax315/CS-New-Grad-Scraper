@@ -36,14 +36,86 @@ CURATED_SOURCES = (
     ),
     SourceSpec(
         key="json:ambicuity-new-grad-jobs",
-        name="Ambicuity New Grad Jobs",
-        kind="ambicuity",
+        name="Ambicuity New Grad Jobs (retired)",
+        kind="retired",
         public_url="https://github.com/ambicuity/New-Grad-Jobs",
+        parameters={},
+    ),
+    SourceSpec(
+        key="json:applyguy-2027-new-grad-jobs",
+        name="ApplyGuy 2027 New Grad Jobs",
+        kind="applyguy",
+        public_url="https://github.com/ApplyGuy/2027-New-Grad-Jobs",
         parameters={
             "feed_url": (
-                "https://raw.githubusercontent.com/ambicuity/"
-                "New-Grad-Jobs/main/docs/jobs.json"
+                "https://raw.githubusercontent.com/ApplyGuy/"
+                "2027-New-Grad-Jobs/main/data/new-grad-jobs.json"
             ),
+        },
+    ),
+    SourceSpec(
+        key="markdown:keryx-2027-new-grad",
+        name="Keryx 2027 New Grad",
+        kind="aggregate",
+        public_url="https://github.com/GodlyDonuts/keryx/blob/main/new-grad/2027.md",
+        parameters={
+            "feed_url": (
+                "https://raw.githubusercontent.com/GodlyDonuts/"
+                "keryx/main/new-grad/2027.md"
+            ),
+            "format": "markdown",
+        },
+    ),
+    SourceSpec(
+        key="html:simplify-new-grad-positions",
+        name="Simplify New Grad Positions",
+        kind="aggregate",
+        public_url="https://github.com/SimplifyJobs/New-Grad-Positions",
+        parameters={
+            "feed_url": (
+                "https://raw.githubusercontent.com/SimplifyJobs/"
+                "New-Grad-Positions/dev/README.md"
+            ),
+            "format": "simplify_html",
+        },
+    ),
+    SourceSpec(
+        key="markdown:jobright-swe-new-grad",
+        name="Jobright SWE New Grad",
+        kind="aggregate",
+        public_url="https://github.com/jobright-ai/2026-Software-Engineer-New-Grad",
+        parameters={
+            "feed_url": (
+                "https://raw.githubusercontent.com/jobright-ai/"
+                "2026-Software-Engineer-New-Grad/master/README.md"
+            ),
+            "format": "markdown_title_link",
+        },
+    ),
+    SourceSpec(
+        key="markdown:zapply-new-grad-2027",
+        name="Zapply New Grad 2027",
+        kind="aggregate",
+        public_url="https://github.com/zapplyjobs/New-Grad-Jobs-2027",
+        parameters={
+            "feed_url": (
+                "https://raw.githubusercontent.com/zapplyjobs/"
+                "New-Grad-Jobs-2027/main/README.md"
+            ),
+            "format": "markdown",
+        },
+    ),
+    SourceSpec(
+        key="markdown:harry-new-grad-2027",
+        name="Harry New Grad 2027 Tracker",
+        kind="aggregate",
+        public_url="https://github.com/harrycodingnow/new-grad-2027-tracker",
+        parameters={
+            "feed_url": (
+                "https://raw.githubusercontent.com/harrycodingnow/"
+                "new-grad-2027-tracker/main/README.md"
+            ),
+            "format": "markdown",
         },
     ),
 )
