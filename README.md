@@ -5,7 +5,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 <!-- BEGIN GENERATED JOBS -->
 ## Current Openings
 
-1077 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
+1069 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
 
 | Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |
 |---|---|---|---|---|---|
@@ -1078,14 +1078,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | Tesla | Software Integration Engineer, Factory Firmware | Fremont, CA | Pending | 2025-08-28 | [Apply](https://www.tesla.com/careers/search/job/249467) |
 | Tesla | Mobile App Developer, Frontend, Claims &amp; Customer Support | Fremont, CA | Pending | 2025-08-28 | [Apply](https://www.tesla.com/careers/search/job/249335) |
 | TikTok | New Grad 2026: AI/ML Software Engineer (Data Platform TikTok BP) | San Jose, CA | Pending | 2025-08-28 | [Apply](https://lifeattiktok.com/search/7541178634444589319) |
-| Adobe | New Grad 2026: Machine Learning Engineer | San Jose, CASan Francisco, CA | Pending | 2025-08-23 | [Apply](https://careers.adobe.com/us/en/job/ADOBUSR158632EXTERNALENUS/2026-University-Graduate-Machine-Learning-Engineer) |
-| Amazon | Antenna Systems Engineer, Antenna Calibration, Kuiper 🇺🇸 | Redmond, WA | Pending | 2025-08-23 | [Apply](https://www.amazon.jobs/en/jobs/3064596/antenna-systems-engineer-antenna-calibration-kuiper) |
-| Citizen Health | Software Engineer | San Francisco, CASan Mateo, CA | Pending | 2025-08-23 | [Apply](https://jobs.ashbyhq.com/Citizen%20Health/ea388b8a-16cb-4b1b-b64f-479f0dc69764) |
-| Epsilon | New Grad 2025: Associate, Software Engineer | Irving, TX | Pending | 2025-08-23 | [Apply](https://careers.publicisgroupe.com/jobs/119914) |
-| Harvey | New Grad: Software Engineer | San Francisco, CA | Pending | 2025-08-23 | [Apply](https://jobs.ashbyhq.com/harvey/fe8e594b-f2e1-453b-8a0d-e0b0bfdf745b) |
-| PayPal | New Grad: Software Engineer | 5 locationsSan Jose, CAChicago, ILOmaha, NEScottsdale, AZAustin, TX | Pending | 2025-08-23 | [Apply](https://paypal.eightfold.ai/careers/job/274908747686) |
-| Tesla | Electrical &amp; Software Engineer, Circuit Board Test Automation | Palo Alto, CA | Pending | 2025-08-23 | [Apply](https://www.tesla.com/careers/search/job/249182) |
-| Tesla | Machine Learning Engineer, Embodied Intelligence, Optimus | Palo Alto, CA | Pending | 2025-08-23 | [Apply](https://www.tesla.com/careers/search/job/249027) |
 <!-- END GENERATED JOBS -->
 
 ## Prerequisites
