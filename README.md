@@ -5,7 +5,7 @@ A small, public job board that aggregates software-engineering new-grad listings
 <!-- BEGIN GENERATED JOBS -->
 ## Current Openings
 
-1069 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
+1068 open roles currently listed. [Browse the searchable job board](https://cs-new-grad-scraper.theoh.dev).
 
 | Company | Role | Location | Is Spring 2027 New Grad | Posted | Application |
 |---|---|---|---|---|---|
@@ -793,7 +793,6 @@ A small, public job board that aggregates software-engineering new-grad listings
 | DV Trading | Software Developer - Toronto | Chicago, IL +2 | Pending | 2026-04-28 | [Apply](https://job-boards.greenhouse.io/dvtrading/jobs/4687466005) |
 | DV Trading | Software Developer - Chicago | Chicago, IL +2 | Pending | 2026-04-28 | [Apply](https://job-boards.greenhouse.io/dvtrading/jobs/4687398005) |
 | SpaceX | New Graduate Engineer, Propulsion (Raptor) | Hawthorne, CA | Pending | 2026-04-28 | [Apply](https://boards.greenhouse.io/spacex/jobs/8517361002?gh_jid=8517361002) |
-| Amazon | Software Dev Engineer II - Prime Video Pesonalization &amp; Discovery Growth Tech | Seattle, WA | Pending | 2026-04-25 | [Apply](https://www.amazon.jobs/jobs/10428623/apply) |
 | Notion | New Grad: Software Engineer | San Francisco, CA | Pending | 2026-04-25 | [Apply](https://jobs.ashbyhq.com/notion/a6311f97-4850-4674-a5f3-d9fe5f6f2555) |
 | Uber Technologies, Inc. | Software Engineer I, Masters | San Francisco, CA | Pending | 2026-04-25 | [Apply](https://www.uber.com/global/en/careers/list/157785) |
 | 21CS | Graduate Software Engineer | Morehead City, NC | Pending | 2026-04-14 | [Apply](https://recruiting.ultipro.com/VMS1002VMOO/JobBoard/3dde3e78-a60b-47af-93cf-ef6db6ed312b/OpportunityDetail?opportunityId=fa0772d7-fa49-4ce9-b7ae-de1a0da018eb) |
